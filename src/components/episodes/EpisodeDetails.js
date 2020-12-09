@@ -1,0 +1,66 @@
+import React, { Component } from 'react';
+import { Descriptions } from 'antd';
+import {convertKeyToText, checkIfIn} from "../../utils/utils";
+import parse from 'html-react-parser';
+
+class EpisodeDetails extends Component {
+
+    renderEpisodeDescriptionItems = () => {
+        const {episodeItem} = this.props;
+        let descriptionItems = [];
+        let key = `cd`
+
+        const seriesKeys = ["name", "rating", "episodeURL", "episodeNum", "description"]
+        const specialSeriesKeys = ["name", "episodeURL", "description"];
+        seriesKeys.map(seriesKey => {
+            let privateKey = `${key}-${seriesKey}`;
+            let privateLabel = convertKeyToText(seriesKey);
+            if (checkIfIn(seriesKey, specialSeriesKeys)) {
+                if (seriesKey === "episodeURL") {
+                    return descriptionItems.push(
+                        <Descriptions.Item key={privateKey} span={3} label={privateLabel} className="text-center">
+                            <video width="300" height="200" controls>
+                                <source src={episodeItem[seriesKey]} type="video/mp4"/>
+                                Your browser does not support the video tag.
+                            </video>
+                        </Descriptions.Item>
+                    )
+                }
+                if (seriesKey === "description") {
+                    return descriptionItems.push(
+                        <Descriptions.Item key={privateKey} span={3} label={privateLabel}>
+                            {parse(episodeItem[seriesKey])}
+                        </Descriptions.Item>
+                    )
+                }
+                return descriptionItems.push(
+                    <Descriptions.Item key={privateKey} span={3} label={privateLabel}>{episodeItem[seriesKey]}</Descriptions.Item>
+                )
+            }
+            if (seriesKey === "rating") {
+                return descriptionItems.push(
+                    <Descriptions.Item key={privateKey} span={3} label={privateLabel}>
+                        {episodeItem[seriesKey]}/10
+                    </Descriptions.Item>
+                )
+            }
+            return descriptionItems.push(
+                <Descriptions.Item key={privateKey} span={3} label={privateLabel}>{episodeItem[seriesKey]}</Descriptions.Item>
+            )
+        })
+
+        return descriptionItems;
+    }
+
+    render() {
+        const {renderEpisodeDescriptionItems} = this;
+
+        return (
+            <Descriptions title="Episode Details" layout="vertical" bordered>
+                {renderEpisodeDescriptionItems()}
+            </Descriptions>
+        )
+    }
+}
+
+export default EpisodeDetails;

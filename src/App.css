@@ -1,0 +1,313 @@
+
+* {
+ padding: 0;
+ margin: 0;
+ box-sizing: border-box; 
+}
+
+.material-input {
+    width: 100%;
+}
+
+.section-padding {
+  padding-top: 0px;
+  padding-bottom: 80px;
+}
+
+.utils-box {
+  margin-bottom: 20px;
+}
+
+.table-container {
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+/********************SideNav*************/
+.wrapper{
+  display: flex;
+  position: relative;
+}
+
+.wrapper .sidebar{
+  width: 20%;
+  height: 100%;
+  background: #4b4276;
+  padding: 30px 0px;
+  position: fixed;
+  transition: all 0.3s ease;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.wrapper .sidebar h2{
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.wrapper .sidebar ul li{
+  border-bottom: 1px solid #bdb8d7;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}    
+
+.wrapper .sidebar ul li a{
+  color: #bdb8d7;
+  display: block;
+  padding: 10px 15px;
+}
+
+.wrapper .sidebar ul li a .fas{
+  width: 25px;
+  margin-top: 5px;
+}
+
+.wrapper .sidebar ul li:hover,
+.wrapper .sidebar ul li.active{
+  background-color: #594f8d;
+}
+    
+.wrapper .sidebar ul li:hover a,
+.wrapper .sidebar ul li.active a{
+  color: #fff;
+}
+ 
+.wrapper .main_content{
+  max-width: 80%;
+  width: 80%;
+  margin-left: 20%;
+}
+
+.wrapper .main_content .header{
+  padding: 20px;
+  background: #fff;
+  color: #717171;
+  border-bottom: 1px solid #e0e4e8;
+}
+
+.wrapper .main_content .info{
+  margin: 20px;
+  color: #717171;
+  line-height: 25px;
+}
+
+.wrapper .main_content .info div{
+  margin-bottom: 20px;
+}
+
+.sidebar-open {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  background-color: #4b4276;
+  color: #bdb8d7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.sidebar-close,
+  .sidebar-open {
+    display: none;
+  }
+
+.sidebar-close {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.sidebar-open i,
+.sidebar-close i{
+  font-size: 2em;
+  color: #bdb8d7;
+}
+
+.sidebar-open p {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px){
+   .wrapper .sidebar{
+    width: 250px;
+  }
+  
+  .wrapper .main_content{
+  margin-left: 250px;
+}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait){
+  .wrapper .sidebar{
+    left: -1000px;
+    width: 100%;
+  }
+
+  .wrapper .sidebar.active {
+    left: 0;
+  }
+  
+  .wrapper .main_content{
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+}
+  
+  .sidebar-close,
+  .sidebar-open {
+    display: block;
+  }
+  
+  .sidebar-open {
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px){
+  .wrapper .sidebar{
+    left: -1000px;
+    width: 100%;
+  }
+
+  .wrapper .sidebar.active {
+    left: 0;
+  }
+  
+  .wrapper .main_content{
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+}
+  
+  .sidebar-close,
+  .sidebar-open {
+    display: block;
+  }
+  
+  .sidebar-open {
+    display: flex;
+  }
+}
+/********************SideNav*************/
+
+/****************UpdateFileModal*********/
+.current-file-image-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.current-file-image {
+  width: 250px;
+}
+/***************UpdateFileModal***********/
+
+/********************Movie Item***********/
+.movie-item {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.movie-item h4 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.movie-actions {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  z-index: 3;
+}
+
+.movie-item-desc {
+  padding-top: 10px;
+}
+
+.movie-item-poster {
+  width: 100%;
+  height: 350px;
+  position: relative;
+}
+
+.movie-item-poster img {
+  height: 100%;
+  width: 100%;
+}
+
+.spin-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px){
+  .movie-item {
+    width: 70%;
+    max-width: 70%;
+  }
+
+  .movie-grid-list {
+    justify-content: space-around;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape){
+  .movie-item {
+    max-width: 33.33%;
+    flex: 33.33%;
+  }
+}
+
+/********************Movie Item***********/
+
+/*******************Login Page************/
+.login-page-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-image: url("https://www.wallpaperup.com/uploads/wallpapers/2015/12/12/859165/786c3dbc95c87135e16451d2013cb6c5.jpg");
+  background-size: cover;
+  position: relative;
+}
+
+.login-page-container::after {
+  content: "";
+  background-color: rgba(0,0,0,0.5);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.login-form {
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 3;
+}
+
+.login-form h2 {
+  text-align: center;
+}
+
+/*******************Login Page************/
