@@ -55,7 +55,7 @@ export const editMovie = (movieID, updatedMovie) => {
         try {
             message.loading('Action in progress..', 0);
 
-            const response = await getMovieByID(updatedMovie);
+            const response = await getMovieByID(movieID);
             let {trailerURL, movieURL, posterURL} = response;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = updatedMovie;
             let updateMovieObject = {name, genres, description, IMDB_ID};
