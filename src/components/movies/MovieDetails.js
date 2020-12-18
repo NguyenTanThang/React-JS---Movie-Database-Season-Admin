@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
+import SubtitleList from "../subtitles/SubtitleList";
 
 class MovieDetails extends Component {
 
+    renderSubtitleList = () => {
+        const {subtitles, movieItem} = this.props;
+        return <SubtitleList videoID={movieItem._id} subtitles={subtitles}/>
+    }
+
     renderMovieDescriptionItems = () => {
+        const {renderSubtitleList} = this;
         const {movieItem} = this.props;
         const {imdbMovie} = movieItem;
         let descriptionItems = [];
@@ -72,6 +79,7 @@ class MovieDetails extends Component {
             return descriptionItems.push(
                 <Descriptions.Item key={privateKey} label={privateLabel}>{movieItem[movieKey]}</Descriptions.Item>
             )
+            
         })
 
         const imdbMovieKeys = ["Year", "Rated", "Released", "Runtime", "Actors", "Director"]
@@ -82,6 +90,12 @@ class MovieDetails extends Component {
                 <Descriptions.Item key={privateKey} label={privateLabel}>{imdbMovie[imdbMovieKey]}</Descriptions.Item>
             )
         })
+
+        descriptionItems.push(
+            <Descriptions.Item key={"Subtitles"} span={3} label={"Subtitles"}>
+                {renderSubtitleList()}
+            </Descriptions.Item>
+        )
 
         return descriptionItems;
     }

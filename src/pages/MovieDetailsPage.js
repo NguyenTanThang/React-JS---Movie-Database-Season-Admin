@@ -6,6 +6,8 @@ import ComponentHeader from "../components/partials/ComponentHeader";
 import {getMovieByID} from "../requests/movieRequests";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message} from "antd";
+import {getAllSubtitlesByMovieID} from "../actions/subtitleActions";
+import {connect} from "react-redux";
 
 class MovieDetailsPage extends Component {
 
@@ -26,6 +28,8 @@ class MovieDetailsPage extends Component {
 
         const {movieID} = this.props.match.params;
         const movieItem = await getMovieByID(movieID);
+        this.props.getAllSubtitlesByMovieID(movieID);
+        localStorage.setItem("previousPathSubtitle", this.props.location.pathname);
         this.setState({
             movieItem
         })
@@ -33,6 +37,7 @@ class MovieDetailsPage extends Component {
 
     render() {
         const {movieItem, loggedIn} = this.state;
+        const {subtitles} = this.props;
 
         if (!movieItem || !loggedIn) {
             return (<></>)
@@ -42,11 +47,25 @@ class MovieDetailsPage extends Component {
             <LayoutSide>
                 <ComponentHeader returnURL="/movies" title="Movie Details"/>
                 <Container className="section-padding">
-                    <MovieDetails movieItem={movieItem}/>
+                    <MovieDetails movieItem={movieItem} subtitles={subtitles}/>
                 </Container>
             </LayoutSide>
         )
     }
 }
 
-export default MovieDetailsPage;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getAllSubtitlesByMovieID: (movieID) => {
+            dispatch(getAllSubtitlesByMovieID(movieID))
+        }
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        subtitles: state.subtitleReducer.subtitles
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MovieDetailsPage);

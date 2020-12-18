@@ -18,6 +18,9 @@ import {
     getMovieByID
 } from "../requests/movieRequests";
 import {
+    removeSubtitleByMovieID
+} from "../requests/subtitlesRequests";
+import {
     isObjectEmpty
 } from "../utils/validator";
 
@@ -27,6 +30,7 @@ export const deleteMovie = (movieID) => {
     return async (dispatch) => {
         try {
             let res = await removeMovieRelatedFiles(movieID);
+            res = await removeSubtitleByMovieID(movieID);
             res = await axios.delete(`${MOVIE_URL}/delete/${movieID}`);
             
             if (res.data.success) {

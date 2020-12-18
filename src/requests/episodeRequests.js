@@ -6,11 +6,12 @@ import {
     message
 } from "antd";
 import {
-    uploadEpisodeFirebase
-} from "./firebaseStorageRequests";
-import {
+    uploadEpisodeFirebase,
     deleteFileFirebase
 } from "./firebaseStorageRequests";
+import {
+    removeSubtitleByEpisodeID
+} from "./subtitlesRequests";
 
 const EPISODES_URL = `${MAIN_PROXY_URL}/episodes`;
 
@@ -221,7 +222,8 @@ export const deleteEpisodesBySeasonID = async (seasonID) => {
 
         for (let index = 0; index < episodeList.length; index++) {
             const episodeItem = episodeList[index];
-            await deleteFileFirebase(episodeItem.episodeURL)
+            await deleteFileFirebase(episodeItem.episodeURL);
+            await removeSubtitleByEpisodeID(episodeItem._id);
             await axios.delete(`${EPISODES_URL}/delete/${episodeItem._id}`);
         }
 

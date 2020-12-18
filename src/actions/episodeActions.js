@@ -17,6 +17,9 @@ import {
     getEpisodeByID
 } from "../requests/episodeRequests";
 import {
+    removeSubtitleByEpisodeID
+} from "../requests/subtitlesRequests";
+import {
     isObjectEmpty
 } from "../utils/validator";
 
@@ -26,6 +29,7 @@ export const deleteEpisode = (episodeID) => {
     return async (dispatch) => {
         try {
             let res = await removeEpisodeRelatedFiles(episodeID);
+            res = await removeSubtitleByEpisodeID(episodeID);
             res = await axios.delete(`${EPISODE_URL}/delete/${episodeID}`);
             
             if (res.data.success) {

@@ -48,3 +48,12 @@ export const uploadMovieFirebase = async (file) => {
     const returnedURL = await fileRef.getDownloadURL()
     return returnedURL;
 }
+
+export const uploadSubtitleFirebase = async (file) => {
+    const storageRef = storage.ref();
+    const newID = `${uuidv5()}-${file.name}`;
+    const fileRef = storageRef.child(`subtitles/${newID}`)
+    await fileRef.put(file)
+    const returnedURL = await fileRef.getDownloadURL()
+    return returnedURL;
+}

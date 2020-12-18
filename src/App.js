@@ -21,6 +21,7 @@ import AddMoviePage from "./pages/AddMoviePage";
 import AddSeriesPage from "./pages/AddSeriesPage";
 import AddSeasonPage from "./pages/AddSeasonPage";
 import AddEpisodePage from "./pages/AddEpisodePage";
+import AddSubtitlePage from "./pages/AddSubtitlePage";
 import EditManagerPage from "./pages/EditManagerPage";
 import EditPlanPage from "./pages/EditPlanPage";
 import EditCustomerPage from "./pages/EditCustomerPage";
@@ -28,6 +29,7 @@ import EditMoviePage from "./pages/EditMoviePage";
 import EditSeriesPage from "./pages/EditSeriesPage";
 import EditSeasonPage from "./pages/EditSeasonPage";
 import EditEpisodePage from "./pages/EditEpisodePage";
+import EditSubtitlePage from "./pages/EditSubtitlePage";
 import CustomerDetailsPage from "./pages/CustomerDetailsPage";
 import MovieDetailsPage from "./pages/MovieDetailsPage";
 import SeriesDetailsPage from "./pages/SeriesDetailsPage";
@@ -52,12 +54,14 @@ function App() {
           <Route exact path="/series/add" component={AddSeriesPage}/>
           <Route exact path="/seasons/add/:seriesID" component={AddSeasonPage}/>
           <Route exact path="/episodes/add/:seasonID" component={AddEpisodePage}/>
+          <Route exact path="/subtitles/add/:videoID" component={AddSubtitlePage}/>
           <Route path="/managers/edit/:managerID" component={EditManagerPage}/>
           <Route path="/customers/edit/:customerID" component={EditCustomerPage}/>
           <Route path="/movies/edit/:movieID" component={EditMoviePage}/>
           <Route path="/series/edit/:seriesID" component={EditSeriesPage}/>
           <Route exact path="/seasons/edit/:seasonID" component={EditSeasonPage}/>
           <Route exact path="/episodes/edit/:episodeID" component={EditEpisodePage}/>
+          <Route exact path="/subtitles/edit/:subtitleID" component={EditSubtitlePage}/>
           <Route path="/plans/edit/:planID" component={EditPlanPage}/>
           <Route path="/customers/details/:customerID" component={CustomerDetailsPage}/>
           <Route path="/movies/details/:movieID" component={MovieDetailsPage}/>

@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
+import SubtitleList from "../subtitles/SubtitleList";
 
 class EpisodeDetails extends Component {
 
+    renderSubtitleList = () => {
+        const {subtitles, episodeItem} = this.props;
+        return <SubtitleList videoID={episodeItem._id} subtitles={subtitles}/>
+    }
+
     renderEpisodeDescriptionItems = () => {
         const {episodeItem} = this.props;
+        const {renderSubtitleList} = this;
         let descriptionItems = [];
         let key = `cd`
 
@@ -48,6 +55,12 @@ class EpisodeDetails extends Component {
                 <Descriptions.Item key={privateKey} span={3} label={privateLabel}>{episodeItem[seriesKey]}</Descriptions.Item>
             )
         })
+
+        descriptionItems.push(
+            <Descriptions.Item key={"Subtitles"} span={3} label={"Subtitles"}>
+                {renderSubtitleList()}
+            </Descriptions.Item>
+        )
 
         return descriptionItems;
     }
