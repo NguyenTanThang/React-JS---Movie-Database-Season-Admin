@@ -44,12 +44,20 @@ class MovieDetailsPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/movies" title="Movie Details"/>
                 <Container className="section-padding">
                     <MovieDetails movieItem={movieItem} subtitles={subtitles}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/movies" title="Movie Details"/>
+                <Container className="section-padding">
+                    <MovieDetails movieItem={movieItem} subtitles={subtitles}/>
+                </Container>
+            </>
         )
     }
 }

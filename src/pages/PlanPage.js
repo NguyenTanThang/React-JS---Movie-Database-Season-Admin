@@ -24,6 +24,8 @@ class PlanPage extends Component {
 
     render() {
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Plans"/>
                 <Container className="section-padding">
@@ -37,6 +39,19 @@ class PlanPage extends Component {
                     </div>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/" title="Plans"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <Space>
+                            <Link className="btn btn-primary" to="/plans/add">Add Plan</Link>
+                        </Space>
+                    </div>
+                    <div className="table-container">
+                        <PlanList plans={this.props.plans}/>
+                    </div>
+                </Container>
+            </>
         )
     }
 }

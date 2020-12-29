@@ -27,12 +27,20 @@ class AddMoviePage extends Component {
         const {genres} = this.props;
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/movies" title="Add Movie"/>
                 <Container className="section-padding">
                     <AddMovie genres={genres}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/movies" title="Add Movie"/>
+                <Container className="section-padding">
+                    <AddMovie genres={genres}/>
+                </Container>
+            </>
         )
     }
 }

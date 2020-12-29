@@ -41,6 +41,7 @@ function App() {
   return (
     <div className="App">
       <Router>
+        <LayoutSide>
         <Switch>
           <Route exact path="/" component={LayoutSide}/>
           <Route exact path="/managers" component={ManagerPage}/>
@@ -75,6 +76,7 @@ function App() {
           <Route path="/logout" component={Logout}/>
           <Route path="/users/change-password" component={ChangePasswordPage}/>
         </Switch>
+        </LayoutSide>
       </Router>
     </div>
   );

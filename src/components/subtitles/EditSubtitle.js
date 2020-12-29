@@ -8,10 +8,11 @@ import {
 import {
     getSubtitleByID
 } from "../../requests/subtitlesRequests";
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import UpdateFileModal from "../partials/UpdateFileModal";
+import {getFileExtension} from "../../utils/utils";
 
 class EditSubtitle extends Component {
 
@@ -52,9 +53,16 @@ class EditSubtitle extends Component {
 
     handleFileChange = (e) => {
         const file = e.target.files[0];
-        this.setState({
-            [e.target.name]: file
-        })
+        if (file) {
+            const fileExt = getFileExtension(file.name);
+            if (fileExt !== "vtt") {
+                message.error("Please upload a .vtt file. Although the file's name is visible it will not be uploaded", 5);
+            } else {
+                this.setState({
+                    [e.target.name]: file
+                })
+            }
+        }
     }
 
     handleChange = (e) => {

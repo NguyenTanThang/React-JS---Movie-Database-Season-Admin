@@ -3,6 +3,8 @@ import {FormGroup, Label, Form} from "reactstrap";
 import TextField from '@material-ui/core/TextField';
 import { Button, message } from 'antd';
 import {login, getCurrentLoginStatus} from "../requests/authRequests";
+import {connect} from 'react-redux';
+import {setUserRole} from "../actions/authActions";
 
 class LoginPage extends Component {
 
@@ -31,6 +33,7 @@ class LoginPage extends Component {
             const {username, password} = this.state;
             const resData = await login(username, password);
             if (resData.success) {
+                this.props.setUserRole(resData.data);
                 this.props.history.push("/");
             }
           } catch (error) {
@@ -68,4 +71,12 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUserRole: (user) => {
+            dispatch(setUserRole(user))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(LoginPage);

@@ -5,10 +5,11 @@ import {
 import {
     addSubtitle
 } from "../../actions/subtitleActions";
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import FileUploader from "../partials/FileUploader";
 import languageCodes from "../../data/languageCodes";
+import {getFileExtension} from "../../utils/utils";
 
 class AddSubtitle extends Component {
 
@@ -29,9 +30,16 @@ class AddSubtitle extends Component {
 
     handleFileChange = (e) => {
         const file = e.target.files[0];
-        this.setState({
-            [e.target.name]: file
-        })
+        if (file) {
+            const fileExt = getFileExtension(file.name);
+            if (fileExt !== "vtt") {
+                message.error("Please upload a .vtt file. Although the file's name is visible it will not be uploaded", 5);
+            } else {
+                this.setState({
+                    [e.target.name]: file
+                })
+            }
+        }
     }
 
     handleChange = (e) => {
@@ -67,8 +75,8 @@ class AddSubtitle extends Component {
                         <div className="col-lg-12 col-md-12 col-sm-12">
                             <FormGroup>
                                 <Label>Language Label</Label>
-                                <select id="languageLabel" name="languageLabel" className="form-control" required onChange={handleChange} defaultValue={""} value={languageLabel}>
-                                    <option key="0" value="" disabled selected>Language</option>
+                                <select id="languageLabel" name="languageLabel" className="form-control" required onChange={handleChange} defaultValue={""}>
+                                    <option key="0" value="" disabled>Language</option>
                                     {renderLanguageCodes()}
                                 </select>
                             </FormGroup>

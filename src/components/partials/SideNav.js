@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import {Link, withRouter} from "react-router-dom";
+import {connect} from 'react-redux';
+import {getUserRole} from "../../actions/authActions";
 
 class SideNav extends Component {
-    
+
     componentDidMount() {
+        this.props.getUserRole();
+
         const sideBarOpen = document.querySelector(".sidebar-open");
         const sideBarClose = document.querySelector(".sidebar-close");
         const sideBar = document.querySelector(".sidebar");
+
+        /*
         const sideNavList = Array.from(document.querySelectorAll(".sidebar li"));
 
         const removeActives = (list) => {
@@ -22,6 +28,7 @@ class SideNav extends Component {
                 sideBar.classList.remove("active");
             })
         })
+        */
 
         sideBarOpen.addEventListener("click", (e) => {
             sideBar.classList.toggle("active");
@@ -33,9 +40,9 @@ class SideNav extends Component {
     }
 
     displayNavItems = () => {
-        let userID = localStorage.getItem("userID");
-        userID = "123";
-        if (userID) {
+        const {userRole} = this.props;
+        let userID = sessionStorage.getItem("userID");
+        if (userID && userRole === "admin") {
           return (
             <>
                 <li>
@@ -80,12 +87,14 @@ class SideNav extends Component {
                     </Link>
                 </li>
                 
-                <li>
-                    <Link to="/subscriptions">
-                    <i className="fas fa-calendar" aria-hidden="true"></i>
-                    Subscriptions
-                    </Link>
-                </li>
+                {/*
+                    <li>
+                        <Link to="/subscriptions">
+                        <i className="fas fa-calendar" aria-hidden="true"></i>
+                        Subscriptions
+                        </Link>
+                    </li>
+                */}
 
                 <li>
                     <Link to="/users/change-password">
@@ -102,22 +111,65 @@ class SideNav extends Component {
                 </li>
             </>
           )
-        } else {
+        } 
+        else if (userID && userRole === "staff") {
+            return (
+              <>
+                  <li>
+                      <Link to="/series">
+                      <i className="fas fa-video"></i>
+                          Series
+                      </Link>
+                  </li>
+  
+                  <li>
+                      <Link to="/movies">
+                      <i className="fas fa-film" aria-hidden="true"></i>
+                          Movies
+                      </Link>
+                  </li>
+  
+                  <li>
+                      <Link to="/genres">
+                      <i className="fas fa-th"></i>
+                      Genres
+                      </Link>
+                  </li>
+                  
+                  {/*
+                      <li>
+                          <Link to="/subscriptions">
+                          <i className="fas fa-calendar" aria-hidden="true"></i>
+                          Subscriptions
+                          </Link>
+                      </li>
+                  */}
+  
+                  <li>
+                      <Link to="/users/change-password">
+                      <i className="fas fa-lock"></i>
+                      Password
+                      </Link>
+                  </li>
+                  
+                  <li>
+                      <Link to="/logout">
+                      <i className="fas fa-sign-out-alt"></i>
+                      Logout
+                      </Link>
+                  </li>
+              </>
+            )
+          }
+        else {
           return (
             <>
                 <li>
-                    <Link to="/users/login">
+                    <Link to="/login">
                     <i className="fas fa-sign-in-alt"></i>
                     Login
                     </Link>
                 </li>
-                    
-                    <li>
-                        <Link to="/users/signup">
-                        <i className="fas fa-user-plus"></i>
-                        Sign Up
-                        </Link>
-                    </li>
             </>
           )
         }
@@ -128,16 +180,30 @@ class SideNav extends Component {
 
         return (
             <div className="sidebar">
-      <div className="sidebar-close">
-        <i className="fas fa-times" aria-hidden="true"></i>
-      </div>
-        <h2>Sidebar</h2>
-        <ul>
-            {displayNavItems()}
-        </ul> 
-    </div>
+            <div className="sidebar-close">
+                <i className="fas fa-times" aria-hidden="true"></i>
+            </div>
+                <h2>Sidebar</h2>
+                <ul>
+                    {displayNavItems()}
+                </ul> 
+            </div>
         )
     }
 }
 
-export default SideNav;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getUserRole: () => {
+            dispatch(getUserRole())
+        }
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        userRole: state.authReducer.userRole
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideNav);

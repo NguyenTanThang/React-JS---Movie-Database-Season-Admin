@@ -25,6 +25,8 @@ class CustomerPage extends Component {
 
     render() {
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Customers"/>
                 <Container className="section-padding">
@@ -38,6 +40,19 @@ class CustomerPage extends Component {
                     </div>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/" title="Customers"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <Space>
+                            <Link className="btn btn-primary" to="/customers/add">Add Customer</Link>
+                        </Space>
+                    </div>
+                    <div className="table-container">
+                        <CustomerList customers={this.props.customers}/>
+                    </div>
+                </Container>
+            </>
         )
     }
 }

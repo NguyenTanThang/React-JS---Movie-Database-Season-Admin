@@ -21,12 +21,20 @@ class AddSubtitlePage extends Component {
         const videoID = this.props.match.params.videoID;
         
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL={returnURL} title="Add Subtitle"/>
                 <Container className="section-padding">
                     <AddSubtitle videoID={videoID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL={returnURL} title="Add Subtitle"/>
+                <Container className="section-padding">
+                    <AddSubtitle videoID={videoID}/>
+                </Container>
+            </>
         )
     }
 }

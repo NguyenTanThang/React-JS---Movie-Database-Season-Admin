@@ -23,6 +23,8 @@ class SubscriptionPage extends Component {
 
     render() {
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Subscriptions"/>
                 <Container className="section-padding">
@@ -35,6 +37,18 @@ class SubscriptionPage extends Component {
                     </div>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/" title="Subscriptions"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <Space>
+                        </Space>
+                    </div>
+                    <div className="table-container">
+                        <SubscriptionList subscriptions={this.props.subscriptions}/>
+                    </div>
+                </Container>
+            </>
         )
     }
 }

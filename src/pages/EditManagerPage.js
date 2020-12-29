@@ -32,12 +32,20 @@ class EditManagerPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/managers" title="Edit Manager"/>
                 <Container className="section-padding">
                     <EditManager managerID={params.managerID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/managers" title="Edit Manager"/>
+                <Container className="section-padding">
+                    <EditManager managerID={params.managerID}/>
+                </Container>
+            </>
         )
     }
 }

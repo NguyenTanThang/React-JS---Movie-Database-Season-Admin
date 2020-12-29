@@ -18,12 +18,20 @@ class AddCustomerPage extends Component {
 
     render() {
         return (
-            <LayoutSide>
+            <>
+                {/*
+                <LayoutSide>
+                    <ComponentHeader returnURL="/customers" title="Add Customer"/>
+                    <Container className="section-padding">
+                        <AddCustomer/>
+                    </Container>
+                </LayoutSide>
+                */}
                 <ComponentHeader returnURL="/customers" title="Add Customer"/>
                 <Container className="section-padding">
                     <AddCustomer/>
                 </Container>
-            </LayoutSide>
+            </>
         )
     }
 }

@@ -15,7 +15,7 @@ import {getCurrentLoginStatus} from "../requests/authRequests";
 class MoviePage extends Component {
     
     state = {
-        currentView: "grid"
+        currentView: "list"
     }
 
     async componentDidMount() {
@@ -95,18 +95,32 @@ class MoviePage extends Component {
         const {renderChangeViewButtons, renderMovieView} = this;
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Movies"/>
                 <Container className="section-padding">
                     <div className="utils-box">
                         <Space>
                             <Link className="btn btn-primary" to="/movies/add">Add Movie</Link>
-                            {renderChangeViewButtons()}
+                            {//{renderChangeViewButtons()}//}
                         </Space>
                     </div>
                     {renderMovieView()}
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/" title="Movies"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <Space>
+                            <Link className="btn btn-primary" to="/movies/add">Add Movie</Link>
+                            {/*{renderChangeViewButtons()}*/}
+                        </Space>
+                    </div>
+                    {renderMovieView()}
+                </Container>
+            </>
         )
     }
 }

@@ -107,8 +107,12 @@ class CustomerList extends Component {
             },
             multiple: 4,
         },
-        render: (text) => {
-          return <a href={`mailto:${text}`} alt={text}>{text}</a>
+        render: (text, record) => {
+          return (
+            <Link to={`/customers/details/${record._id}`}>
+              {text}
+            </Link>
+          )
         }
       },
       {

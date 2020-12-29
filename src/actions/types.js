@@ -49,4 +49,7 @@ export const EDIT_SERIES = "EDIT_SERIES";
 
 export const GET_ALL_SUBS = "GET_ALL_SUBS";
 export const GET_SUBS_BY_CUSTOMER_ID = "GET_SUBS_BY_CUSTOMER_ID";
-export const DELETE_SUB = "DELETE_SUB"
+export const DELETE_SUB = "DELETE_SUB";
+
+export const SET_USER_ROLE = "SET_USER_ROLE";
+export const GET_USER_ROLE = "GET_USER_ROLE";

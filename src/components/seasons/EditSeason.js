@@ -8,11 +8,16 @@ import {
 import {
     getSeasonByID
 } from "../../requests/seasonRequests";
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import UpdateFileModal from "../partials/UpdateFileModal";
+import {
+    acceptImageExt,
+    acceptVideoExt,
+    getFileExtension
+} from "../../utils/validator";
 
 class EditSeason extends Component {
 
@@ -58,10 +63,37 @@ class EditSeason extends Component {
     }
 
     handleFileChange = (e) => {
+        const targetName = e.target.name;
         const file = e.target.files[0];
-        this.setState({
-            [e.target.name]: file
-        })
+        const fileExt = getFileExtension(file.name);
+
+        if (targetName == "posterFile") {
+            if (acceptImageExt(fileExt)) {
+                return this.setState({
+                    posterURL: "",
+                    [e.target.name]: file
+                })
+            }
+            message.warning("Poster can only be PNG, JPEG or JPG file. Although the file's name is visible it will not be uploaded", 5)
+        }
+        if (targetName == "trailerFile") {
+            if (acceptVideoExt(fileExt)) {
+                return this.setState({
+                    trailerURL: "",
+                    [e.target.name]: file
+                })
+            }
+            message.warning("Trailer can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
+        }
+        if (targetName == "movieFile") {
+            if (acceptVideoExt(fileExt)) {
+                return this.setState({
+                    movieURL: "",
+                    [e.target.name]: file
+                })
+            }
+            message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
+        }
     }
 
     handleChange = (e) => {

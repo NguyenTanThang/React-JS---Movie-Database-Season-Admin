@@ -27,12 +27,20 @@ class AddSeriesPage extends Component {
         const {genres} = this.props;
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/series" title="Add Series"/>
                 <Container className="section-padding">
                     <AddSeries genres={genres}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/series" title="Add Series"/>
+                <Container className="section-padding">
+                    <AddSeries genres={genres}/>
+                </Container>
+            </>
         )
     }
 }

@@ -33,12 +33,20 @@ class EditEpisodePage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL={returnURL} title="Edit Episode"/>
                 <Container className="section-padding">
                     <EditEpisode episodeID={episodeID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL={returnURL} title="Edit Episode"/>
+                <Container className="section-padding">
+                    <EditEpisode episodeID={episodeID}/>
+                </Container>
+            </>
         )
     }
 }

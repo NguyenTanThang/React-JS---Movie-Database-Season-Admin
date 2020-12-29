@@ -39,12 +39,20 @@ class EditSeriesPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/series" title="Edit Series"/>
                 <Container className="section-padding">
                     <EditSeries seriesID={params.seriesID} genres={genres}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/series" title="Edit Series"/>
+                <Container className="section-padding">
+                    <EditSeries seriesID={params.seriesID} genres={genres}/>
+                </Container>
+            </>
         )
     }
 }

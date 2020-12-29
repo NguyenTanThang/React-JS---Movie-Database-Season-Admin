@@ -44,6 +44,8 @@ class ChangePasswordPage extends Component {
         const {oldPassword, newPassword} = this.state;
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <div className="login-page-container">
                     <div className="login-form">
@@ -67,6 +69,29 @@ class ChangePasswordPage extends Component {
                     </div>
                 </div>
             </LayoutSide>
+            */}
+            <div className="login-page-container">
+                    <div className="login-form">
+                        <h2>{"Change Password"}</h2>
+
+                        <Form onSubmit={handleSubmit}>
+                            <FormGroup>
+                                <Label htmlFor="oldPassword">Current Password:</Label>
+                                <TextField id="oldPassword" type="password" label="Current Password" variant="outlined" className="material-input" required onChange={handleChange} value={oldPassword}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="newPassword">New Password:</Label>
+                                <TextField id="newPassword" type="password" label="New Password" variant="outlined" className="material-input" required onChange={handleChange} value={newPassword}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Button type="primary" htmlType="submit" block>
+                                    Change Password
+                                </Button>
+                            </FormGroup>
+                        </Form>
+                    </div>
+                </div>
+            </>
         )
     }
 }

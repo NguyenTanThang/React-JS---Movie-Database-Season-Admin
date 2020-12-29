@@ -39,12 +39,20 @@ class EditMoviePage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/movies" title="Edit Movie"/>
                 <Container className="section-padding">
                     <EditMovie movieID={params.movieID} genres={genres}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/movies" title="Edit Movie"/>
+                <Container className="section-padding">
+                    <EditMovie movieID={params.movieID} genres={genres}/>
+                </Container>
+            </>
         )
     }
 }

@@ -13,15 +13,13 @@ const SUB_URL = `${MAIN_PROXY_URL}/subtitles`;
 
 export const removeSubtitleRelatedFiles = async (subID) => {
     try {
-        const res = await getSubtitleByID(subID);
-
-        const subItem = res.data.data;
+        const subItem = await getSubtitleByID(subID);
 
         const {subtitleURL} = subItem;
 
         await deleteFileFirebase(subtitleURL);
 
-        return res.data.data;
+        return subItem;
     } catch (error) {
         console.log(error);
         message.error(`${error.message}`, 5);
@@ -30,17 +28,19 @@ export const removeSubtitleRelatedFiles = async (subID) => {
 
 export const removeSubtitleByMovieID = async (movieID) => {
     try {
-        const res = await axios.delete(`${SUB_URL}/delete/movieID/${movieID}`)
+        const res = await axios.delete(`${SUB_URL}/delete/movieID/${movieID}`);
 
         const subtitles = res.data.data;
 
-        for (let i = 0; i < subtitles.length; i++) {
-            const subItem = subtitles[i];
-            const {subtitleURL} = subItem;
-            await deleteFileFirebase(subtitleURL);
+        if (subtitles) {
+            for (let i = 0; i < subtitles.length; i++) {
+                const subItem = subtitles[i];
+                const {subtitleURL} = subItem;
+                await deleteFileFirebase(subtitleURL);
+            }
         }
 
-        return res.data.data;
+        return subtitles;
     } catch (error) {
         console.log(error);
         message.error(`${error.message}`, 5);
@@ -53,13 +53,15 @@ export const removeSubtitleByEpisodeID = async (episodeID) => {
 
         const subtitles = res.data.data;
 
-        for (let i = 0; i < subtitles.length; i++) {
-            const subItem = subtitles[i];
-            const {subtitleURL} = subItem;
-            await deleteFileFirebase(subtitleURL);
+        if (subtitles) {
+            for (let i = 0; i < subtitles.length; i++) {
+                const subItem = subtitles[i];
+                const {subtitleURL} = subItem;
+                await deleteFileFirebase(subtitleURL);
+            }
         }
 
-        return res.data.data;
+        return subtitles;
     } catch (error) {
         console.log(error);
         message.error(`${error.message}`, 5);

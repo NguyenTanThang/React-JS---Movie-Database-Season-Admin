@@ -32,12 +32,20 @@ class EditCustomerPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/customers" title="Edit Customer"/>
                 <Container className="section-padding">
                     <EditCustomer customerID={params.customerID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/customers" title="Edit Customer"/>
+                <Container className="section-padding">
+                    <EditCustomer customerID={params.customerID}/>
+                </Container>
+            </>
         )
     }
 }

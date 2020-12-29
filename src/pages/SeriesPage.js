@@ -15,7 +15,7 @@ import {getCurrentLoginStatus} from "../requests/authRequests";
 class SeriesPage extends Component {
     
     state = {
-        currentView: "grid"
+        currentView: "list"
     }
 
     async componentDidMount() {
@@ -95,18 +95,32 @@ class SeriesPage extends Component {
         const {renderChangeViewButtons, renderSeriesView} = this;
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Series"/>
                 <Container className="section-padding">
                     <div className="utils-box">
                         <Space>
                             <Link className="btn btn-primary" to="/series/add">Add Series</Link>
-                            {renderChangeViewButtons()}
+                            {//{renderChangeViewButtons()}//}
                         </Space>
                     </div>
                     {renderSeriesView()}
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/" title="Series"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <Space>
+                            <Link className="btn btn-primary" to="/series/add">Add Series</Link>
+                            {/*{renderChangeViewButtons()}*/}
+                        </Space>
+                    </div>
+                    {renderSeriesView()}
+                </Container>
+            </>
         )
     }
 }

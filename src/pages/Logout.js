@@ -1,9 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {setUserRole} from "../actions/authActions";
+import {connect} from "react-redux";
 
-export default class Logout extends Component {
+class Logout extends Component {
 
     componentDidMount() {
         localStorage.clear();
+        sessionStorage.clear();
+        this.props.setUserRole("");
         this.props.history.push("/login");
     }
 
@@ -14,3 +18,13 @@ export default class Logout extends Component {
         )
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUserRole: (user) => {
+            dispatch(setUserRole(user))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Logout);

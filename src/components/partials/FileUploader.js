@@ -19,7 +19,13 @@ export default class FileUploader extends Component {
             return (
                 <CustomInput type="file" id={inputName} name={inputName} label={fileName} onChange={handleFileChange} accept="image/*"/>
             )
-        } else {
+        } 
+        else if (inputName === "subtitleFile") {
+            return (
+                <CustomInput type="file" id={inputName} name={inputName} label={fileName} onChange={handleFileChange} accept=".vtt"/>
+            )
+        }
+        else {
             return (
                 <CustomInput type="file" id={inputName} name={inputName} label={fileName} onChange={handleFileChange} accept=".mp4"/>
             )

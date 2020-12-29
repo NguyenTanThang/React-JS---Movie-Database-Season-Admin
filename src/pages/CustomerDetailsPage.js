@@ -46,12 +46,20 @@ class CustomerDetailsPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/customers" title="Customer Details"/>
                 <Container className="section-padding">
                     <CustomerDetails customerItem={customerItem} subscriptionList={subscriptionList} subscriptions={subscriptions}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/customers" title="Customer Details"/>
+                <Container className="section-padding">
+                    <CustomerDetails customerItem={customerItem} subscriptionList={subscriptionList} subscriptions={subscriptions}/>
+                </Container>
+            </>
         )
     }
 }

@@ -33,12 +33,20 @@ class EditSubtitlePage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL={returnURL} title="Edit Subtitle"/>
                 <Container className="section-padding">
                     <EditSubtitle subtitleID={subtitleID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL={returnURL} title="Edit Subtitle"/>
+                <Container className="section-padding">
+                    <EditSubtitle subtitleID={subtitleID}/>
+                </Container>
+            </>
         )
     }
 }

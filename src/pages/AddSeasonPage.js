@@ -21,12 +21,20 @@ class AddSeasonPage extends Component {
         const seriesID = this.props.match.params.seriesID;
         
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL={returnURL} title="Add Season"/>
                 <Container className="section-padding">
                     <AddSeason seriesID={seriesID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL={returnURL} title="Add Season"/>
+                <Container className="section-padding">
+                    <AddSeason seriesID={seriesID}/>
+                </Container>
+            </>
         )
     }
 }

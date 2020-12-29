@@ -44,12 +44,20 @@ class SeriesDetailsPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/series" title="Series Details"/>
                 <Container className="section-padding">
                     <SeriesDetails seriesItem={seriesItem} seasons={seasons}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/series" title="Series Details"/>
+                <Container className="section-padding">
+                    <SeriesDetails seriesItem={seriesItem} seasons={seasons}/>
+                </Container>
+            </>
         )
     }
 }

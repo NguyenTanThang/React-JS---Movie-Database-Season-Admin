@@ -45,12 +45,20 @@ class EpisodeDetailsPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL={returnURL} title="Episode Details"/>
                 <Container className="section-padding">
                     <EpisodeDetails subtitles={subtitles} episodeItem={episodeItem}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL={returnURL} title="Episode Details"/>
+                <Container className="section-padding">
+                    <EpisodeDetails subtitles={subtitles} episodeItem={episodeItem}/>
+                </Container>
+            </>
         )
     }
 }

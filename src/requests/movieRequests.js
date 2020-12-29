@@ -7,9 +7,7 @@ const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 
 export const removeMovieRelatedFiles = async (movieID) => {
     try {
-        const res = await getMovieByID(movieID);
-
-        const movieItem = res.data.data;
+        const movieItem = await getMovieByID(movieID);
 
         const {movieURL, trailerURL, posterURL} = movieItem;
 
@@ -17,7 +15,7 @@ export const removeMovieRelatedFiles = async (movieID) => {
         await deleteFileFirebase(trailerURL);
         await deleteFileFirebase(posterURL);
 
-        return res.data.data;
+        return movieItem;
     } catch (error) {
         console.log(error);
         message.error(`${error.message}`, 5);

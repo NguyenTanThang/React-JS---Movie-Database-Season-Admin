@@ -6,7 +6,7 @@ const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
 export const changeUserPassword = async (oldPassword, newPassword) => {
     try {
-        const userID = localStorage.getItem("userID");
+        const userID = sessionStorage.getItem("userID");
         const res = await axios.put(`${MANAGER_URL}/change-password/${userID}`, {
             oldPassword, newPassword
         });
@@ -29,7 +29,7 @@ export const changeUserPassword = async (oldPassword, newPassword) => {
 }
 
 export const getCurrentLoginStatus = async () => {
-    const userID = localStorage.getItem("userID");
+    const userID = sessionStorage.getItem("userID");
     let ans = true;
     if (!userID) {
         ans = false;
@@ -44,7 +44,7 @@ export const getCurrentLoginStatus = async () => {
 }
 
 const setCurrentUser = (user) => {
-    localStorage.setItem("userID", user._id);
+    sessionStorage.setItem("userID", user._id);
 }
 
 export const login = async (username, password) => {

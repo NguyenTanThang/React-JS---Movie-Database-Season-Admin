@@ -17,13 +17,22 @@ class AddPlanPage extends Component {
     }
 
     render() {
+        
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/plans" title="Add Plan"/>
                 <Container className="section-padding">
                     <AddPlan/>
                 </Container>
             </LayoutSide>
+            */}
+                <ComponentHeader returnURL="/plans" title="Add Plan"/>
+                <Container className="section-padding">
+                    <AddPlan/>
+                </Container>
+            </>
         )
     }
 }

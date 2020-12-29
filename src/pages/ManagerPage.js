@@ -24,6 +24,8 @@ class ManagerPage extends Component {
 
     render() {
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Managers"/>
                 <Container className="section-padding">
@@ -37,6 +39,19 @@ class ManagerPage extends Component {
                     </div>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/" title="Managers"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <Space>
+                            <Link className="btn btn-primary" to="/managers/add">Add Manager</Link>
+                        </Space>
+                    </div>
+                    <div className="table-container">
+                        <ManagerList managers={this.props.managers}/>
+                    </div>
+                </Container>
+            </>
         )
     }
 }

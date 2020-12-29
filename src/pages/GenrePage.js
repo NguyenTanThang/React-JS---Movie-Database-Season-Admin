@@ -27,6 +27,8 @@ class GenrePage extends Component {
         const {addGenre} = this.props;
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/" title="Genres"/>
                 <Container className="section-padding">
@@ -38,6 +40,17 @@ class GenrePage extends Component {
                     </div>
                 </Container>
             </LayoutSide>
+            */}
+                <ComponentHeader returnURL="/" title="Genres"/>
+                <Container className="section-padding">
+                    <div className="utils-box">
+                        <AddGenre addGenre={addGenre}/>
+                    </div>
+                    <div className="table-container">
+                        <GenreList genres={this.props.genres}/>
+                    </div>
+                </Container>
+            </>
         )
     }
 }

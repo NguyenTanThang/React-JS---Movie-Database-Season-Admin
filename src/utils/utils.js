@@ -105,3 +105,7 @@ export const isEpisodeNumOccurred = (episodes, episodeNum) => {
     })
     return ans;
 }
+
+export const getFileExtension = (filename) => {
+    return filename.split('.').pop();
+}

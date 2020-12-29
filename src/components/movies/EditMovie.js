@@ -94,7 +94,7 @@ class EditMovie extends Component {
                     [e.target.name]: file
                 })
             }
-            message.warning("Poster can only be PNG, JPEG or JPG file", 5)
+            message.warning("Poster can only be PNG, JPEG or JPG file. Although the file's name is visible it will not be uploaded", 5)
         }
         if (targetName == "trailerFile") {
             if (acceptVideoExt(fileExt)) {
@@ -103,7 +103,7 @@ class EditMovie extends Component {
                     [e.target.name]: file
                 })
             }
-            message.warning("Trailer can only be MP4 file", 5)
+            message.warning("Trailer can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
         if (targetName == "movieFile") {
             if (acceptVideoExt(fileExt)) {
@@ -112,7 +112,7 @@ class EditMovie extends Component {
                     [e.target.name]: file
                 })
             }
-            message.warning("Movie can only be MP4 file", 5)
+            message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
     }
 

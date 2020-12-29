@@ -15,7 +15,8 @@ export const deleteFileFirebase = async (urlString) => {
 
 export const uploadEpisodeFirebase = async (file) => {
     const storageRef = storage.ref();
-    const newID = `${uuidv5()}-${file.name}`;
+    //const newID = `${uuidv5()}-${file.name}`;
+    const newID = `${uuidv5()}`;
     const fileRef = storageRef.child(`episodes/${newID}`)
     await fileRef.put(file)
     const returnedURL = await fileRef.getDownloadURL()
@@ -24,7 +25,8 @@ export const uploadEpisodeFirebase = async (file) => {
 
 export const uploadPosterFirebase = async (file) => {
     const storageRef = storage.ref();
-    const newID = `${uuidv5()}-${file.name}`;
+    //const newID = `${uuidv5()}-${file.name}`;
+    const newID = `${uuidv5()}`;
     const fileRef = storageRef.child(`posters/${newID}`)
     await fileRef.put(file)
     const returnedURL = await fileRef.getDownloadURL()
@@ -33,7 +35,8 @@ export const uploadPosterFirebase = async (file) => {
 
 export const uploadTrailerFirebase = async (file) => {
     const storageRef = storage.ref();
-    const newID = `${uuidv5()}-${file.name}`;
+    //const newID = `${uuidv5()}-${file.name}`;
+    const newID = `${uuidv5()}`;
     const fileRef = storageRef.child(`trailers/${newID}`)
     await fileRef.put(file)
     const returnedURL = await fileRef.getDownloadURL()
@@ -42,7 +45,8 @@ export const uploadTrailerFirebase = async (file) => {
 
 export const uploadMovieFirebase = async (file) => {
     const storageRef = storage.ref();
-    const newID = `${uuidv5()}-${file.name}`;
+    //const newID = `${uuidv5()}-${file.name}`;
+    const newID = `${uuidv5()}`;
     const fileRef = storageRef.child(`movies/${newID}`)
     await fileRef.put(file)
     const returnedURL = await fileRef.getDownloadURL()
@@ -51,7 +55,8 @@ export const uploadMovieFirebase = async (file) => {
 
 export const uploadSubtitleFirebase = async (file) => {
     const storageRef = storage.ref();
-    const newID = `${uuidv5()}-${file.name}`;
+    //const newID = `${uuidv5()}-${file.name}`;
+    const newID = `${uuidv5()}`;
     const fileRef = storageRef.child(`subtitles/${newID}`)
     await fileRef.put(file)
     const returnedURL = await fileRef.getDownloadURL()

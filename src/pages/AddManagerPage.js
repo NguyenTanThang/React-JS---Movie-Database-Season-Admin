@@ -18,12 +18,20 @@ class AddManagerPage extends Component {
 
     render() {
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/managers" title="Add Manager"/>
                 <Container className="section-padding">
                     <AddManager/>
                 </Container>
             </LayoutSide>
+            */}
+                <ComponentHeader returnURL="/managers" title="Add Manager"/>
+                <Container className="section-padding">
+                    <AddManager/>
+                </Container>
+            </>
         )
     }
 }

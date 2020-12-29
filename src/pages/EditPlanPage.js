@@ -32,12 +32,20 @@ class EditPlanPage extends Component {
         }
 
         return (
+            <>
+            {/*
             <LayoutSide>
                 <ComponentHeader returnURL="/plans" title="Edit Manager"/>
                 <Container className="section-padding">
                     <EditPlan planID={params.planID}/>
                 </Container>
             </LayoutSide>
+            */}
+            <ComponentHeader returnURL="/plans" title="Edit Manager"/>
+                <Container className="section-padding">
+                    <EditPlan planID={params.planID}/>
+                </Container>
+            </>
         )
     }
 }
