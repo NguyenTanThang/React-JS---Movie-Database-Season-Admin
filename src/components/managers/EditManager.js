@@ -35,7 +35,7 @@ class EditManager extends Component {
         const {username, roleID} = managerItem;
         this.setState({
             managerRolesList,
-            username, roleID
+            username, roleID: roleID._id
         }, () => {
             console.log(this.state);
         })
@@ -46,7 +46,7 @@ class EditManager extends Component {
 
         return managerRolesList.map(managerRolesItem => {
             return (
-                <MenuItem value={managerRolesItem._id}>{managerRolesItem.role}</MenuItem>
+                <MenuItem key={managerRolesItem._id} value={managerRolesItem._id}>{managerRolesItem.role}</MenuItem>
             )
         })
     }

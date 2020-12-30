@@ -90,8 +90,12 @@ export const getAllManagers = () => {
     return async (dispatch) => {
         try {
             const res = await axios.get(MANAGER_URL);
+            const userID = sessionStorage.getItem("userID");
     
-            const managers = res.data.data;
+            let managers = res.data.data;
+            managers = managers.filter(managerItem => {
+                return managerItem._id !== userID;
+            })
     
             return dispatch({
                 type: GET_ALL_MANAGERS,

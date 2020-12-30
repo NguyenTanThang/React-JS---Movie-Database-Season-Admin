@@ -29,8 +29,8 @@ const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 export const deleteMovie = (movieID) => {
     return async (dispatch) => {
         try {
-            let res = await removeMovieRelatedFiles(movieID);
-            res = await removeSubtitleByMovieID(movieID);
+            let res = await removeSubtitleByMovieID(movieID);
+            res = await removeMovieRelatedFiles(movieID);
             res = await axios.delete(`${MOVIE_URL}/delete/${movieID}`);
             
             if (res.data.success) {

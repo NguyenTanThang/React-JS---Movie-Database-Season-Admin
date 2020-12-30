@@ -3,7 +3,7 @@ import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
 import {deleteFileFirebase} from "./firebaseStorageRequests";
 import {getSeasonsBySeriesID} from "./seasonRequests";
-import {getEpisodesBySeasonID} from "./episodeRequests";
+import {deleteEpisodesBySeasonID} from "./episodeRequests";
 
 const SERIES_URL = `${MAIN_PROXY_URL}/series`;
 
@@ -14,13 +14,7 @@ export const removeEpisodesBySeasonID = async (seriesID) => {
 
         for (let i = 0; i < seasonList.length; i++) {
             const seasonItem = seasonList[i];
-            episodeList = await getEpisodesBySeasonID(seasonItem._id);
-            for (let index = 0; index < episodeList.length; index++) {
-                const episodeItem = episodeList[index];
-                const {episodeURL} = episodeItem;
-    
-                await deleteFileFirebase(episodeURL);
-            }
+            episodeList = await deleteEpisodesBySeasonID(seasonItem._id);
         }
 
         return {

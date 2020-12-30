@@ -222,7 +222,8 @@ export const deleteEpisodesBySeasonID = async (seasonID) => {
             const episodeItem = episodeList[index];
             await deleteFileFirebase(episodeItem.episodeURL);
             await removeSubtitleByEpisodeID(episodeItem._id);
-            await axios.delete(`${EPISODES_URL}/delete/${episodeItem._id}`);
+            const deleteRes = await axios.delete(`${EPISODES_URL}/delete/${episodeItem._id}`);
+            console.log(deleteRes);
         }
 
         return episodeList;
