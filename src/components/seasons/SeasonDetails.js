@@ -3,6 +3,7 @@ import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import EpisodeList from "../episodes/EpisodeList";
+import {Link} from "react-router-dom";
 
 class SeasonDetails extends Component {
 
@@ -72,11 +73,20 @@ class SeasonDetails extends Component {
 
     render() {
         const {renderSeasonDescriptionItems} = this;
+        const {seasonItem} = this.props;
 
         return (
-            <Descriptions title="Season Details" layout="vertical" bordered>
-                {renderSeasonDescriptionItems()}
-            </Descriptions>
+            
+            <div className="details-container season-details-container">
+                <div className="details-actions">
+                    <Link to={`/seasons/edit/${seasonItem._id}`} className="btn btn-warning">
+                        <i className="fas fa-pen"></i>
+                    </Link>
+                </div>
+                <Descriptions title="Season Details" layout="vertical" bordered>
+                    {renderSeasonDescriptionItems()}
+                </Descriptions>
+            </div>
         )
     }
 }

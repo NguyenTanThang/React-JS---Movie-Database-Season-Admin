@@ -41,8 +41,11 @@ class EditSeasonPage extends Component {
                     <EditSeason seasonID={seasonID}/>
                 </Container>
             </LayoutSide>
+            returnURL={returnURL} 
             */}
-            <ComponentHeader returnURL={returnURL} title="Edit Season"/>
+            <ComponentHeader 
+            returnURL={`/seasons/details/${seasonID}`}
+            title="Edit Season"/>
                 <Container className="section-padding">
                     <EditSeason seasonID={seasonID}/>
                 </Container>

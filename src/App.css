@@ -315,3 +315,13 @@ body {
 }
 
 /*******************Login Page************/
+
+.details-container {
+  position: relative;
+}
+
+.details-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+}

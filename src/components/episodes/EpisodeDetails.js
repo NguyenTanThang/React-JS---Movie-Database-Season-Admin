@@ -3,6 +3,7 @@ import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import SubtitleList from "../subtitles/SubtitleList";
+import {Link} from "react-router-dom";
 
 class EpisodeDetails extends Component {
 
@@ -67,11 +68,20 @@ class EpisodeDetails extends Component {
 
     render() {
         const {renderEpisodeDescriptionItems} = this;
+        const {episodeItem} = this.props;
 
         return (
-            <Descriptions title="Episode Details" layout="vertical" bordered>
-                {renderEpisodeDescriptionItems()}
-            </Descriptions>
+            
+            <div className="details-container season-details-container">
+                <div className="details-actions">
+                    <Link to={`/episodes/edit/${episodeItem._id}`} className="btn btn-warning">
+                        <i className="fas fa-pen"></i>
+                    </Link>
+                </div>
+                <Descriptions title="Episode Details" layout="vertical" bordered>
+                    {renderEpisodeDescriptionItems()}
+                </Descriptions>
+            </div>
         )
     }
 }

@@ -17,15 +17,13 @@ const EPISODES_URL = `${MAIN_PROXY_URL}/episodes`;
 
 export const removeEpisodeRelatedFiles = async (episodeID) => {
     try {
-        const res = await getEpisodeByID(episodeID);
-
-        const episodeItem = res.data.data;
+        const episodeItem = await getEpisodeByID(episodeID);
 
         const {episodeURL} = episodeItem;
 
         await deleteFileFirebase(episodeURL);
 
-        return res.data.data;
+        return episodeItem;
     } catch (error) {
         console.log(error);
         message.error(`${error.message}`, 5);

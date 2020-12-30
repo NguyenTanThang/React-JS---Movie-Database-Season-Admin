@@ -12,3 +12,6 @@
 [1209/123115.536:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [1209/123115.536:ERROR:exception_snapshot_win.cc(99)] thread ID 4356 not found in process
 [1229/170453.874:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1229/211014.639:ERROR:process_info.cc(329)] VirtualQueryEx: Access is denied. (0x5)
+[1229/211014.642:ERROR:process_info.cc(556)] ReadMemoryInfo failed
+[1229/211014.642:ERROR:scoped_process_suspend.cc(40)] NtResumeProcess: An attempt was made to access an exiting process. (0xc000010a)

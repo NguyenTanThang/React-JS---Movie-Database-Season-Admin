@@ -114,7 +114,7 @@ class SeriesList extends Component {
         key: 'genres',
         render: (genres) => {
           return genres.map(genre => {
-            return <Tag color="blue">{genre}</Tag>
+            return <Tag key={genre} color="blue">{genre}</Tag>
           })
         }
       },
@@ -156,10 +156,10 @@ class SeriesList extends Component {
                 <Link to={`/series/details/${record._id}`} className="btn btn-primary">
                   <i className="fas fa-eye"></i>
                 </Link>
-                <Link to={`/movies/edit/${record._id}`} className="btn btn-warning">
+                <Link to={`/series/edit/${record._id}`} className="btn btn-warning">
                     <i className="fas fa-pen"></i>
                 </Link>
-                <DeleteSeries movieItem={record}/>
+                <DeleteSeries seriesItem={record}/>
             </Space>
           )
         }

@@ -25,25 +25,25 @@ class UpdateFileModal extends Component {
       };
 
     renderCurrentFile = () => {
-        const {fileURL, movieName, currentFile} = this.props;
+        const {fileURL, movieName, currentFile, inputName} = this.props;
 
         if (!isObjectEmpty(currentFile) || !fileURL) {
             return (<></>);
         }
         
-        if (fileURL.includes(".mp4")) {
+        if (inputName === "posterFile") {
+            return (
+                <div className="current-file-image-container">
+                    <img src={fileURL} alt={movieName} className="img-fluid current-file-image"/>
+                </div>
+            )
+        } else {
             return (
                 <div className="current-file-image-container">
                     <video width="100%" height="300" controls className="current-file-video">
                         <source src={fileURL} type="video/mp4"/>
                         Your browser does not support the video tag.
                     </video>
-                </div>
-            )
-        } else {
-            return (
-                <div className="current-file-image-container">
-                    <img src={fileURL} alt={movieName} className="img-fluid current-file-image"/>
                 </div>
             )
         }

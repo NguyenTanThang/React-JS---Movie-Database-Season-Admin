@@ -3,6 +3,7 @@ import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import SubtitleList from "../subtitles/SubtitleList";
+import {Link} from "react-router-dom";
 
 class MovieDetails extends Component {
 
@@ -102,11 +103,19 @@ class MovieDetails extends Component {
 
     render() {
         const {renderMovieDescriptionItems} = this;
+        const {movieItem} = this.props;
 
         return (
-            <Descriptions title="Movie Details" layout="vertical" bordered>
-                {renderMovieDescriptionItems()}
-            </Descriptions>
+            <div className="details-container movie-details-container">
+                <div className="details-actions">
+                    <Link to={`/movies/edit/${movieItem._id}`} className="btn btn-warning">
+                        <i className="fas fa-pen"></i>
+                    </Link>
+                </div>
+                <Descriptions title="Movie Details" layout="vertical" bordered>
+                    {renderMovieDescriptionItems()}
+                </Descriptions>
+            </div>
         )
     }
 }

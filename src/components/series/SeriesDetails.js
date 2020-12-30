@@ -3,6 +3,7 @@ import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import SeasonList from "../seasons/SeasonList";
+import {Link} from "react-router-dom";
 
 class SeriesDetails extends Component {
 
@@ -97,11 +98,19 @@ class SeriesDetails extends Component {
 
     render() {
         const {renderSeriesDescriptionItems} = this;
+        const {seriesItem} = this.props;
 
         return (
-            <Descriptions title="Series Details" layout="vertical" bordered>
-                {renderSeriesDescriptionItems()}
-            </Descriptions>
+            <div className="details-container series-details-container">
+                <div className="details-actions">
+                    <Link to={`/series/edit/${seriesItem._id}`} className="btn btn-warning">
+                        <i className="fas fa-pen"></i>
+                    </Link>
+                </div>
+                <Descriptions title="Series Details" layout="vertical" bordered>
+                    {renderSeriesDescriptionItems()}
+                </Descriptions>
+            </div>
         )
     }
 }

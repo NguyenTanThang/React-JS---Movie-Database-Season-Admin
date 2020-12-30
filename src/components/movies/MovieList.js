@@ -115,7 +115,7 @@ class MovieList extends Component {
         key: 'genres',
         render: (genres) => {
           return genres.map(genre => {
-            return <Tag color="blue">{genre}</Tag>
+            return <Tag key={genre} color="blue">{genre}</Tag>
           })
         }
       },

@@ -39,7 +39,7 @@ const episodeReducer = (state = initialState, action) => {
             return {
                 ...state,
                 episodes: state.episodes.filter(episodeItem => {
-                    return action.payload.episodes._id !== episodeItem._id;
+                    return action.payload.episode._id !== episodeItem._id;
                 })
             }
             break;

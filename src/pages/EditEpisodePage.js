@@ -41,8 +41,11 @@ class EditEpisodePage extends Component {
                     <EditEpisode episodeID={episodeID}/>
                 </Container>
             </LayoutSide>
+            returnURL={returnURL}
             */}
-            <ComponentHeader returnURL={returnURL} title="Edit Episode"/>
+            <ComponentHeader 
+            returnURL={`/episodes/details/${episodeID}`}
+            title="Edit Episode"/>
                 <Container className="section-padding">
                     <EditEpisode episodeID={episodeID}/>
                 </Container>
