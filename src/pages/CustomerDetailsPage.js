@@ -6,7 +6,7 @@ import ComponentHeader from "../components/partials/ComponentHeader";
 import {getCustomerByID} from "../requests/customerRequests";
 import {getSubByCustomerID} from "../requests/subscriptionRequests";
 import {getCurrentLoginStatus} from "../requests/authRequests";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
 import {getAllSubscriptionsByCustomerID} from "../actions/subscriptionActions";
 
@@ -15,7 +15,8 @@ class CustomerDetailsPage extends Component {
     state = {
         customerItem: "",
         loggedIn: false,
-        subscriptionList: []
+        subscriptionList: [],
+        loading: true
     }
 
     async componentDidMount() {
@@ -33,13 +34,25 @@ class CustomerDetailsPage extends Component {
         this.props.getAllSubscriptionsByCustomerID(customerID);
         this.setState({
             customerItem,
-            subscriptionList
+            subscriptionList,
+            loading: false
         })
     }
 
     render() {
-        const {customerItem, loggedIn, subscriptionList} = this.state;
+        const {customerItem, loggedIn, subscriptionList, loading} = this.state;
         const {subscriptions} = this.props;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         if (!customerItem || !loggedIn) {
             return (<></>)

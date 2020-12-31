@@ -23,16 +23,24 @@ import {
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {
+    setLoading,
+    clearLoading
+} from "./loadingActions";
 
 const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 
 export const deleteMovie = (movieID) => {
     return async (dispatch) => {
         try {
+            message.loading('Action in progress..', 0);
+
             let res = await removeSubtitleByMovieID(movieID);
             res = await removeMovieRelatedFiles(movieID);
             res = await axios.delete(`${MOVIE_URL}/delete/${movieID}`);
             
+            message.destroy();
+
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
@@ -128,7 +136,7 @@ export const addMovie = (newMovie) => {
 
             const res = await axios.post(`${MOVIE_URL}/add`, {name, genres, description, IMDB_ID, movieURL, posterURL, trailerURL});
     
-            message.destroy()
+            message.destroy();
 
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -153,10 +161,13 @@ export const addMovie = (newMovie) => {
 export const getAllMovies = () => {
     return async (dispatch) => {
         try {
+            dispatch(setLoading());
+            
             const res = await axios.get(MOVIE_URL);
     
             const movies = res.data.data;
     
+            dispatch(clearLoading());
             return dispatch({
                 type: GET_ALL_MOVIES,
                 payload: {

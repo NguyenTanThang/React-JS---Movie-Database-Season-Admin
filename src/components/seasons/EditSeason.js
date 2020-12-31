@@ -6,7 +6,8 @@ import {
     editSeason
 } from "../../actions/seasonActions";
 import {
-    getSeasonByID
+    getSeasonByID,
+    editSeasonAsync
 } from "../../requests/seasonRequests";
 import { Button, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
@@ -18,6 +19,9 @@ import {
     acceptVideoExt,
     getFileExtension
 } from "../../utils/validator";
+import {
+    withRouter
+} from "react-router-dom";
 
 class EditSeason extends Component {
 
@@ -108,12 +112,16 @@ class EditSeason extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editSeason, seasonID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
-        editSeason(seasonID, {name, description, posterFile, trailerFile, seasonNum});
+        //editSeason(seasonID, {name, description, posterFile, trailerFile, seasonNum});
+        const res = await editSeasonAsync(seasonID, {name, description, posterFile, trailerFile, seasonNum})
+        if (res.data.success) {
+            this.props.history.push(`/seasons/details/${seasonID}`);
+        }
     }
 
     render() {
@@ -194,4 +202,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditSeason);
+export default connect(null, mapDispatchToProps)(withRouter(EditSeason));

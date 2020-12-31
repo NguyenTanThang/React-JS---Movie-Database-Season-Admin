@@ -23,6 +23,10 @@ import {deleteSeasonsBySeriesID} from "../requests/seasonRequests";
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {
+    setLoading,
+    clearLoading
+} from "./loadingActions";
 
 const SERIES_URL = `${MAIN_PROXY_URL}/series`;
 
@@ -144,10 +148,13 @@ export const addSeries = (newSeries) => {
 export const getAllSeries = () => {
     return async (dispatch) => {
         try {
+            dispatch(setLoading());
+
             const res = await axios.get(SERIES_URL);
     
             const series = res.data.data;
     
+            dispatch(clearLoading());
             return dispatch({
                 type: GET_ALL_SERIES,
                 payload: {

@@ -5,6 +5,9 @@ import {
 import {
     addCustomer
 } from "../../actions/customerActions";
+import {
+    addCustomerAsync
+} from "../../requests/customerRequests";
 import { Button } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Label} from 'reactstrap';
@@ -12,6 +15,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {
+    withRouter
+} from "react-router-dom";
 
 class AddCustomer extends Component {
 
@@ -47,16 +53,18 @@ class AddCustomer extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {addCustomer} = this.props;
         const {email, password, validated} = this.state;
 
-        addCustomer({email, password, validated});
-        this.setState({
-            email: "",
-            password: ""
-        })
+        //addCustomer({email, password, validated});
+        const res = await addCustomerAsync({email, password, validated});
+
+        if (res.data.success) {
+            console.log(res.data);
+            this.props.history.push(`/customers/details/${res.data.data.customerItem._id}`);
+        }
     }
 
     render() {
@@ -111,4 +119,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddCustomer);
+export default connect(null, mapDispatchToProps)(withRouter(AddCustomer));

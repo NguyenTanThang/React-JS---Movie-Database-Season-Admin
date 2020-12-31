@@ -167,7 +167,7 @@ class SeriesList extends Component {
     ];
     
     return (
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} loading={this.props.loading} dataSource={data} />
     )
   }
 }

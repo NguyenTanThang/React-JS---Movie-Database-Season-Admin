@@ -67,11 +67,12 @@ class MoviePage extends Component {
 
     renderMovieView = () => {
         const {currentView} = this.state;
+        const {loading} = this.props;
 
         if (currentView === "list") {
             return (
                 <div className="table-container">
-                    <MovieList movies={this.props.movies}/>
+                    <MovieList loading={loading} movies={this.props.movies}/>
                 </div>
             )
         } else if (currentView === "grid") {
@@ -79,7 +80,7 @@ class MoviePage extends Component {
         } else {
             return (
                 <div className="table-container">
-                    <MovieList movies={this.props.movies}/>
+                    <MovieList loading={loading} movies={this.props.movies}/>
                 </div>
             )
         }
@@ -135,7 +136,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        movies: state.movieReducer.movies
+        movies: state.movieReducer.movies,
+        loading: state.loadingReducer.loading
     }
 }
 

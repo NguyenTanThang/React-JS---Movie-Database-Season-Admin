@@ -12,8 +12,69 @@ import {
 import {
     removeSubtitleByEpisodeID
 } from "./subtitlesRequests";
+import {
+    isObjectEmpty
+} from "../utils/validator";
 
 const EPISODES_URL = `${MAIN_PROXY_URL}/episodes`;
+
+export const addEpisodeAsync = async (newEpisode) => {
+    try {
+        message.loading('Action in progress..', 0);
+        const {name, description, episodeFile, episodeNum, seasonID} = newEpisode;
+
+        const episodeFileFirebaseURL = await uploadEpisodeFirebase(episodeFile);
+
+        const episodeURL = episodeFileFirebaseURL;
+
+        const res = await axios.post(`${EPISODES_URL}/add`, {name, description, episodeFile, episodeNum, episodeURL, seasonID});
+
+        message.destroy()
+
+        if (res.data.success) {
+            message.success(res.data.message, 5);
+        } else {
+            return message.warning(res.data.message, 5);
+        }
+
+        return res
+    } catch (error) {
+        message.error(error.message, 5);
+    }
+}
+
+export const editEpisodeAsync = async (episodeID, updatedEpisode) => {
+    try {
+        message.loading('Action in progress..', 0);
+
+        const response = await getEpisodeByID(episodeID);
+        let {episodeURL} = response;
+        const {name, description, episodeFile, episodeNum} = updatedEpisode;
+        let updateEpisodeObject = {name, description, episodeNum};
+
+        if (!isObjectEmpty(episodeFile)) {
+            await deleteFileFirebase(episodeURL);
+
+            const episodeFileFirebaseURL = await uploadEpisodeFirebase(episodeFile);
+            episodeURL = episodeFileFirebaseURL;
+            updateEpisodeObject.episodeURL = episodeURL;
+        }
+
+        const res = await axios.put(`${EPISODES_URL}/edit/${episodeID}`, updateEpisodeObject);
+
+        message.destroy()
+
+        if (res.data.success) {
+            message.success(res.data.message, 5);
+        } else {
+            return message.warning(res.data.message, 5);
+        }
+
+        return res
+    } catch (error) {
+        message.error(error.message, 5);
+    }
+}
 
 export const removeEpisodeRelatedFiles = async (episodeID) => {
     try {

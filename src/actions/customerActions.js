@@ -6,7 +6,11 @@ import {
     DELETE_CUSTOMER,
     EDIT_CUSTOMER,
     GET_ALL_CUSTOMERS
-} from "./types";   
+} from "./types";  
+import {
+    setLoading,
+    clearLoading
+} from "./loadingActions"; 
 
 const CUSTOMER_URL = `${MAIN_PROXY_URL}/customers`;
 
@@ -88,10 +92,14 @@ export const addCustomer = (newCustomer) => {
 export const getAllCustomers = () => {
     return async (dispatch) => {
         try {
+            dispatch(setLoading());
+
             const res = await axios.get(CUSTOMER_URL);
     
             const customers = res.data.data;
     
+            dispatch(clearLoading());
+
             return dispatch({
                 type: GET_ALL_CUSTOMERS,
                 payload: {

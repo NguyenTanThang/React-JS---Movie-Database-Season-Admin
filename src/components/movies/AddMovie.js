@@ -5,6 +5,9 @@ import {
 import {
     addMovie
 } from "../../actions/movieActions";
+import {
+    addMovieAsync
+} from "../../requests/movieRequests";
 import { Button, Select, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -15,6 +18,9 @@ import {
     acceptVideoExt,
     getFileExtension
 } from "../../utils/validator";
+import {
+    withRouter
+} from "react-router-dom";
 
 const { Option } = Select;
 
@@ -121,12 +127,32 @@ class AddMovie extends Component {
         })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        const {addMovie} = this.props;
-        const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
+    handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
 
-        addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+            message.loading('Action in progress..', 0);
+
+            //const {addMovie} = this.props;
+            const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
+
+            //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+            const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+            const {success, data} = res.data;
+            const resMessage = res.data.message;
+
+            message.destroy();
+
+            if (success) {
+                message.success(resMessage, 5);
+                this.props.history.push(`/movies/details/${data._id}`)
+            } else {
+                return message.warning(resMessage, 5);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     render() {
@@ -213,4 +239,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddMovie);
+export default connect(null, mapDispatchToProps)(withRouter(AddMovie));

@@ -29,7 +29,7 @@ const decryptToken = (token) => {
 }
 
 export const setUserRole = (user) => {
-    return async (dispatch) => {
+    return (dispatch) => {
         try {
             if (!user) {
                 return dispatch({
@@ -56,7 +56,7 @@ export const setUserRole = (user) => {
 }
 
 export const getUserRole = () => {
-    return async (dispatch) => {
+    return (dispatch) => {
         try {
             let token = usedStorage.getItem("token");
             let userRole = "";

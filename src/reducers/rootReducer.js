@@ -9,6 +9,7 @@ import planReducer from "./planReducer";
 import subscriptionReducer from "./subscriptionReducer";
 import subtitleReducer from "./subtitleReducer";
 import authReducer from "./authReducer";
+import loadingReducer from "./loadingReducer";
 import {combineReducers} from "redux";
 
 const rootReducer = combineReducers({
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
     seasonReducer,
     episodeReducer,
     subtitleReducer,
-    authReducer
+    authReducer,
+    loadingReducer
 })
 
 export default rootReducer;

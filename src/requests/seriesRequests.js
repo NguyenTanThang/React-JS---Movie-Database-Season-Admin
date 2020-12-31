@@ -1,11 +1,76 @@
 import axios from "axios";
 import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
-import {deleteFileFirebase} from "./firebaseStorageRequests";
+import {deleteFileFirebase, uploadTrailerFirebase, uploadPosterFirebase} from "./firebaseStorageRequests";
 import {getSeasonsBySeriesID} from "./seasonRequests";
 import {deleteEpisodesBySeasonID} from "./episodeRequests";
+import {
+    isObjectEmpty
+} from "../utils/validator";
 
 const SERIES_URL = `${MAIN_PROXY_URL}/series`;
+
+export const addSeriesAsync = async (newSeries) => {
+    try {
+        message.loading('Action in progress..', 0);
+        const {name, genres, description, IMDB_ID, posterFile, trailerFile} = newSeries;
+
+        const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
+        const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
+
+        const posterURL = posterFileFirebaseURL;
+        const trailerURL = trailerFileFirebaseURL;
+
+        const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL});
+
+        message.destroy()
+
+        if (res.data.success) {
+            message.success(res.data.message, 5);
+        } else {
+            return message.warning(res.data.message, 5);
+        }
+
+        return res;
+    } catch (error) {
+        message.error(error.message, 5);
+    }
+}
+
+export const editSeriesAsync = async (seriesID, updatedSeries) => {
+    try {
+        message.loading('Action in progress..', 0);
+
+        const {name, genres, description, IMDB_ID, posterFile, trailerFile} = updatedSeries;
+        let updateSeriesObject = {name, genres, description, IMDB_ID};
+
+        if (!isObjectEmpty(posterFile)) {
+            const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
+            const posterURL = posterFileFirebaseURL;
+            updateSeriesObject.posterURL = posterURL;
+        }
+
+        if (!isObjectEmpty(trailerFile)) {
+            const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
+            const trailerURL = trailerFileFirebaseURL;
+            updateSeriesObject.trailerURL = trailerURL;
+        }
+
+        const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject);
+
+        message.destroy()
+
+        if (res.data.success) {
+            message.success(res.data.message, 5);
+        } else {
+            return message.warning(res.data.message, 5);
+        }
+
+        return res
+    } catch (error) {
+        message.error(error.message, 5);
+    }
+}
 
 export const removeEpisodesBySeasonID = async (seriesID) => {
     try {

@@ -67,11 +67,12 @@ class SeriesPage extends Component {
 
     renderSeriesView = () => {
         const {currentView} = this.state;
+        const {loading} = this.props;
 
         if (currentView === "list") {
             return (
                 <div className="table-container">
-                    <SeriesList series={this.props.series}/>
+                    <SeriesList loading={loading} series={this.props.series}/>
                 </div>
             )
         } else if (currentView === "grid") {
@@ -79,7 +80,7 @@ class SeriesPage extends Component {
         } else {
             return (
                 <div className="table-container">
-                    <SeriesList series={this.props.series}/>
+                    <SeriesList loading={loading} series={this.props.series}/>
                 </div>
             )
         }
@@ -135,7 +136,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        series: state.seriesReducer.series
+        series: state.seriesReducer.series,
+        loading: state.loadingReducer.loading
     }
 }
 

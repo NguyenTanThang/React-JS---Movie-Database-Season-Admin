@@ -7,6 +7,10 @@ import {
     DELETE_MANAGER,
     EDIT_MANAGER
 } from "./types";   
+import {
+    setLoading,
+    clearLoading
+} from "./loadingActions";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
@@ -47,7 +51,6 @@ export const editManager = (managerID, updatedManager) => {
             }
 
             const manager = res.data.data;
-            const last_modified_date = Date.now();
 
             return dispatch({
                 type: EDIT_MANAGER,
@@ -89,6 +92,8 @@ export const addManager = (newManager) => {
 export const getAllManagers = () => {
     return async (dispatch) => {
         try {
+            dispatch(setLoading());
+
             const res = await axios.get(MANAGER_URL);
             const userID = sessionStorage.getItem("userID");
     
@@ -97,6 +102,7 @@ export const getAllManagers = () => {
                 return managerItem._id !== userID;
             })
     
+            dispatch(clearLoading());
             return dispatch({
                 type: GET_ALL_MANAGERS,
                 payload: {

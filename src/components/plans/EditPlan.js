@@ -6,11 +6,15 @@ import {
     editPlan
 } from "../../actions/planActions";
 import {
-    getPlanByID
+    getPlanByID,
+    editPlanAsync
 } from "../../requests/planRequests";
 import { Button } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Label} from 'reactstrap';
+import {
+    withRouter
+} from "react-router-dom";
 
 class EditPlan extends Component {
 
@@ -38,13 +42,18 @@ class EditPlan extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editPlan} = this.props;
         const {planID} = this.props;
         const {name, price, description, durationInDays} = this.state;
 
-        editPlan(planID, {name, price, description, durationInDays});
+        //editPlan(planID, {name, price, description, durationInDays});
+        const res = await editPlanAsync(planID, {name, price, description, durationInDays})
+        
+        if (res.data.success) {
+            this.props.history.push(`/plans`);
+        }
     }
 
     render() {
@@ -89,4 +98,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditPlan);
+export default connect(null, mapDispatchToProps)(withRouter(EditPlan));

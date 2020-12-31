@@ -6,6 +6,9 @@ import {
     editSeries
 } from "../../actions/seriesActions";
 import {
+    editSeriesAsync
+} from "../../requests/seriesRequests";
+import {
     getSeriesByID
 } from "../../requests/seriesRequests";
 import { Button, Select, message } from 'antd';
@@ -18,6 +21,9 @@ import {
     acceptVideoExt,
     getFileExtension
 } from "../../utils/validator";
+import {
+    withRouter
+} from "react-router-dom";
 
 const { Option } = Select;
 
@@ -148,12 +154,17 @@ class EditSeries extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editSeries, seriesID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
 
-        editSeries(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
+        //editSeries(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
+        const res = await editSeriesAsync(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
+
+        if (res.data.success) {
+            this.props.history.push(`/series/details/${seriesID}`);
+        }
     }
 
     render() {
@@ -243,4 +254,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditSeries);
+export default connect(null, mapDispatchToProps)(withRouter(EditSeries));

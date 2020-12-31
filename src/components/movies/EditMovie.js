@@ -5,6 +5,9 @@ import {
 import {
     editMovie
 } from "../../actions/movieActions";
+import {
+    editMovieAsync
+} from "../../requests/movieRequests";
 import { Button, Select, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -18,6 +21,9 @@ import {
     acceptVideoExt,
     getFileExtension
 } from "../../utils/validator";
+import {
+    withRouter
+} from "react-router-dom";
 
 const { Option } = Select;
 
@@ -151,13 +157,18 @@ class EditMovie extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editMovie} = this.props;
         const {movieID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
 
-        editMovie(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+        //editMovie(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+        const res = await editMovieAsync(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+
+        if (res.data.success) {
+            this.props.history.push(`/movies/details/${movieID}`);
+        }
     }
 
     render() {
@@ -256,4 +267,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditMovie);
+export default connect(null, mapDispatchToProps)(withRouter(EditMovie));

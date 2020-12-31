@@ -24,7 +24,7 @@ class GenrePage extends Component {
     }
 
     render() {
-        const {addGenre} = this.props;
+        const {addGenre, loading} = this.props;
 
         return (
             <>
@@ -47,7 +47,7 @@ class GenrePage extends Component {
                         <AddGenre addGenre={addGenre}/>
                     </div>
                     <div className="table-container">
-                        <GenreList genres={this.props.genres}/>
+                        <GenreList loading={loading} genres={this.props.genres}/>
                     </div>
                 </Container>
             </>
@@ -68,7 +68,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        genres: state.genreReducer.genres
+        genres: state.genreReducer.genres,
+        loading: state.loadingReducer.loading
     }
 }
 

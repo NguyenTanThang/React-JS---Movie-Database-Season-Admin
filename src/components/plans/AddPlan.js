@@ -5,9 +5,15 @@ import {
 import {
     addPlan
 } from "../../actions/planActions";
+import {
+    addPlanAsync
+} from "../../requests/planRequests";
 import { Button } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Label} from 'reactstrap';
+import {
+    withRouter
+} from "react-router-dom";
 
 class AddPlan extends Component {
 
@@ -24,18 +30,17 @@ class AddPlan extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {addPlan} = this.props;
         const {name, price, description, durationInDays} = this.state;
 
-        addPlan({name, price, description, durationInDays});
-        this.setState({
-            name: "",
-            price: "",
-            description: "",
-            durationInDays: ""
-        })
+        //addPlan({name, price, description, durationInDays});
+        const res = await addPlanAsync({name, price, description, durationInDays})
+        
+        if (res.data.success) {
+            this.props.history.push(`/plans`);
+        }
     }
 
     render() {
@@ -81,4 +86,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddPlan);
+export default connect(null, mapDispatchToProps)(withRouter(AddPlan));

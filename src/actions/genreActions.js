@@ -7,6 +7,10 @@ import {
     DELETE_GENRE,
     EDIT_GENRE
 } from "./types";   
+import {
+    setLoading,
+    clearLoading
+} from "./loadingActions";
 
 const GENRE_URL = `${MAIN_PROXY_URL}/genres`;
 
@@ -93,10 +97,14 @@ export const addGenre = (name) => {
 export const getAllGenres = () => {
     return async (dispatch) => {
         try {
+            dispatch(setLoading());
+
             const res = await axios.get(GENRE_URL);
     
             const genres = res.data.data;
     
+            dispatch(clearLoading());
+
             return dispatch({
                 type: GET_ALL_GENRES,
                 payload: {

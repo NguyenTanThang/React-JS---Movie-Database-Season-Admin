@@ -9,6 +9,9 @@ import {
     getAllManagerRoles
 } from "../../requests/managerRoleRequests";
 import {
+    editManagerAsync
+} from "../../requests/managerRequests";
+import {
     getManagerByID
 } from "../../requests/managerRequests";
 import { Button } from 'antd';
@@ -18,6 +21,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {
+    withRouter
+} from "react-router-dom";
 
 class EditManager extends Component {
 
@@ -57,13 +63,18 @@ class EditManager extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editManager} = this.props;
         const {managerID} = this.props;
         const {username, password, roleID} = this.state;
 
-        editManager(managerID, {username, password, roleID});
+        //editManager(managerID, {username, password, roleID});
+        const res = await editManagerAsync(managerID, {username, password, roleID});
+
+        if (res.data.success) {
+            this.props.history.push(`/managers`);
+        }
     }
 
     render() {
@@ -118,4 +129,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditManager);
+export default connect(null, mapDispatchToProps)(withRouter(EditManager));

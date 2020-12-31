@@ -6,6 +6,9 @@ import {
     addManager
 } from "../../actions/managerActions";
 import {
+    addManagerAsync
+} from "../../requests/managerRequests";
+import {
     getAllManagerRoles
 } from "../../requests/managerRoleRequests";
 import { Button } from 'antd';
@@ -15,6 +18,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {
+    withRouter
+} from "react-router-dom";
 
 class AddManager extends Component {
 
@@ -48,16 +54,17 @@ class AddManager extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {addManager} = this.props;
         const {username, password, roleID} = this.state;
 
-        addManager({username, password, roleID});
-        this.setState({
-            username: "",
-            password: ""
-        })
+        //addManager({username, password, roleID});
+        const res = await addManagerAsync({username, password, roleID})
+
+        if (res.data.success) {
+            this.props.history.push(`/managers`);
+        }
     }
 
     render() {
@@ -112,4 +119,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddManager);
+export default connect(null, mapDispatchToProps)(withRouter(AddManager));

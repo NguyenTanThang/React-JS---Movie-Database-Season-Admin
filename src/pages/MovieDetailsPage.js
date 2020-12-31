@@ -5,7 +5,7 @@ import LayoutSide from "../components/partials/LayoutSide";
 import ComponentHeader from "../components/partials/ComponentHeader";
 import {getMovieByID} from "../requests/movieRequests";
 import {getCurrentLoginStatus} from "../requests/authRequests";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 import {getAllSubtitlesByMovieID} from "../actions/subtitleActions";
 import {connect} from "react-redux";
 
@@ -13,7 +13,8 @@ class MovieDetailsPage extends Component {
 
     state = {
         movieItem: "",
-        loggedIn: false
+        loggedIn: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -31,13 +32,25 @@ class MovieDetailsPage extends Component {
         this.props.getAllSubtitlesByMovieID(movieID);
         localStorage.setItem("previousPathSubtitle", this.props.location.pathname);
         this.setState({
-            movieItem
+            movieItem,
+            loading: false
         })
     }
 
     render() {
-        const {movieItem, loggedIn} = this.state;
+        const {movieItem, loggedIn, loading} = this.state;
         const {subtitles} = this.props;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         if (!movieItem || !loggedIn) {
             return (<></>)

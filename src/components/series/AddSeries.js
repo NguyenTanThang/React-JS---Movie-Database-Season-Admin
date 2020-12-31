@@ -5,6 +5,9 @@ import {
 import {
     addSeries
 } from "../../actions/seriesActions";
+import {
+    addSeriesAsync
+} from "../../requests/seriesRequests";
 import { Button, Select, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -15,6 +18,9 @@ import {
     acceptVideoExt,
     getFileExtension
 } from "../../utils/validator";
+import {
+    withRouter
+} from "react-router-dom";
 
 const { Option } = Select;
 
@@ -120,12 +126,22 @@ class AddSeries extends Component {
         })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        const {addSeries} = this.props;
-        const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
+    handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            const {addSeries} = this.props;
+            const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
 
-        addSeries({name, genres, description, IMDB_ID, posterFile, trailerFile});
+            //addSeries({name, genres, description, IMDB_ID, posterFile, trailerFile});
+            const res = await addSeriesAsync({name, genres, description, IMDB_ID, posterFile, trailerFile});
+
+            if (res.data.success) {
+                this.props.history.push(`/series/details/${res.data.data._id}`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
     render() {
@@ -207,4 +223,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddSeries);
+export default connect(null, mapDispatchToProps)(withRouter(AddSeries));

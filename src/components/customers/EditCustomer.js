@@ -6,6 +6,9 @@ import {
     editCustomer
 } from "../../actions/customerActions";
 import {
+    editCustomerAsync
+} from "../../requests/customerRequests";
+import {
     getCustomerByID
 } from "../../requests/customerRequests";
 import { Button } from 'antd';
@@ -15,6 +18,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {
+    withRouter
+} from "react-router-dom";
 
 class EditCustomer extends Component {
 
@@ -61,13 +67,18 @@ class EditCustomer extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editCustomer} = this.props;
         const {customerID} = this.props;
         const {email, password, validated} = this.state;
 
-        editCustomer(customerID, {email, password, validated});
+        //editCustomer(customerID, {email, password, validated});
+        const res = await editCustomerAsync(customerID, {email, password, validated});
+
+        if (res.data.success) {
+            this.props.history.push(`/customers/details/${customerID}`);
+        }
     }
 
     render() {
@@ -122,4 +133,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditCustomer);
+export default connect(null, mapDispatchToProps)(withRouter(EditCustomer));

@@ -7,6 +7,10 @@ import {
     DELETE_PLAN,
     EDIT_PLAN
 } from "./types";   
+import {
+    setLoading,
+    clearLoading
+} from "./loadingActions";
 
 const PLAN_URL = `${MAIN_PROXY_URL}/plans`;
 
@@ -93,9 +97,13 @@ export const addPlan = (newPlan) => {
 export const getAllPlans = () => {
     return async (dispatch) => {
         try {
+            dispatch(setLoading());
+            
             const res = await axios.get(PLAN_URL);
     
             const plans = res.data.data;
+
+            dispatch(clearLoading());
     
             return dispatch({
                 type: GET_ALL_PLANS,

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import SubscriptionList from "../subscriptions/SubscriptionList";
+import {Link} from "react-router-dom";
 
 const restrictedKeys = [
     "__v",
@@ -45,11 +46,21 @@ class CustomerDetails extends Component {
 
     render() {
         const {renderCustomerDescriptionItems} = this;
+        const {customerItem} = this.props;
+        const currentCustomer = customerItem.customerItem;
 
         return (
-            <Descriptions title="Customer Details" layout="vertical" bordered>
+            
+            <div className="details-container season-details-container">
+                <div className="details-actions">
+                    <Link to={`/customers/edit/${currentCustomer._id}`} className="btn btn-warning">
+                        <i className="fas fa-pen"></i>
+                    </Link>
+                </div>
+                <Descriptions title="Customer Details" layout="vertical" bordered>
                 {renderCustomerDescriptionItems()}
             </Descriptions>
+            </div>
         )
     }
 }

@@ -6,13 +6,17 @@ import {
     editEpisode
 } from "../../actions/episodeActions";
 import {
-    getEpisodeByID
+    getEpisodeByID,
+    editEpisodeAsync
 } from "../../requests/episodeRequests";
 import { Button } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import UpdateFileModal from "../partials/UpdateFileModal";
+import {
+    withRouter
+} from "react-router-dom";
 
 class EditEpisode extends Component {
 
@@ -72,12 +76,16 @@ class EditEpisode extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {editEpisode, episodeID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
 
-        editEpisode(episodeID, {name, description, episodeFile, episodeNum});
+        //editEpisode(episodeID, {name, description, episodeFile, episodeNum});
+        const res = await editEpisodeAsync(episodeID, {name, description, episodeFile, episodeNum})
+        if (res.data.success) {
+            this.props.history.push(`/episodes/details/${episodeID}`);
+        }
     }
 
     render() {
@@ -149,4 +157,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditEpisode);
+export default connect(null, mapDispatchToProps)(withRouter(EditEpisode));

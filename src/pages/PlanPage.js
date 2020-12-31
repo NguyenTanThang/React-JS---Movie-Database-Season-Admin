@@ -23,6 +23,8 @@ class PlanPage extends Component {
     }
 
     render() {
+        const {loading} = this.props;
+
         return (
             <>
             {/*
@@ -48,7 +50,7 @@ class PlanPage extends Component {
                         </Space>
                     </div>
                     <div className="table-container">
-                        <PlanList plans={this.props.plans}/>
+                        <PlanList loading={loading} plans={this.props.plans}/>
                     </div>
                 </Container>
             </>
@@ -66,7 +68,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        plans: state.planReducer.plans
+        plans: state.planReducer.plans,
+        loading: state.loadingReducer.loading
     }
 }
 

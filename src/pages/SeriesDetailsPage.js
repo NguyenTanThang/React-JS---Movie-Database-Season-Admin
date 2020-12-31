@@ -6,14 +6,15 @@ import ComponentHeader from "../components/partials/ComponentHeader";
 import {getSeriesByID} from "../requests/seriesRequests";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {getSeasonsBySeriesID} from "../actions/seasonActions";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
 
 class SeriesDetailsPage extends Component {
 
     state = {
         seriesItem: "",
-        loggedIn: false
+        loggedIn: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -30,14 +31,26 @@ class SeriesDetailsPage extends Component {
         this.props.getSeasonsBySeriesID(seriesID);
         const seriesItem = await getSeriesByID(seriesID);
         this.setState({
-            seriesItem
+            seriesItem,
+            loading: false
         })
     }
 
     render() {
-        const {seriesItem, loggedIn} = this.state;
+        const {seriesItem, loggedIn, loading} = this.state;
         const {seasons} = this.props;
         localStorage.setItem("returnURL", this.props.location.pathname)
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         if (!seriesItem || !loggedIn) {
             return (<></>)

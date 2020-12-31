@@ -5,11 +5,17 @@ import {
 import {
     addEpisode
 } from "../../actions/episodeActions";
+import {
+    addEpisodeAsync
+} from "../../requests/episodeRequests";
 import { Button } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import FileUploader from "../partials/FileUploader";
+import {
+    withRouter
+} from "react-router-dom";
 
 class AddEpisode extends Component {
 
@@ -49,12 +55,16 @@ class AddEpisode extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {addEpisode, seasonID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
 
-        addEpisode({name, description, episodeFile, episodeNum, seasonID});
+        //addEpisode({name, description, episodeFile, episodeNum, seasonID});
+        const res = await addEpisodeAsync({name, description, episodeFile, episodeNum})
+        if (res.data.success) {
+            this.props.history.push(`/episodes/details/${res.data.data._id}`);
+        }
     }
 
     render() {
@@ -122,4 +132,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddEpisode);
+export default connect(null, mapDispatchToProps)(withRouter(AddEpisode));

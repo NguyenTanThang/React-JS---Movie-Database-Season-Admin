@@ -24,6 +24,8 @@ class CustomerPage extends Component {
     }
 
     render() {
+        const {loading} = this.props;
+
         return (
             <>
             {/*
@@ -49,7 +51,7 @@ class CustomerPage extends Component {
                         </Space>
                     </div>
                     <div className="table-container">
-                        <CustomerList customers={this.props.customers}/>
+                        <CustomerList loading={loading} customers={this.props.customers}/>
                     </div>
                 </Container>
             </>
@@ -67,7 +69,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        customers: state.customerReducer.customers
+        customers: state.customerReducer.customers,
+        loading: state.loadingReducer.loading
     }
 }
 

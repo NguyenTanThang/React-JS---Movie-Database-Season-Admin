@@ -22,6 +22,8 @@ class SubscriptionPage extends Component {
     }
 
     render() {
+        const {loading} = this.props;
+
         return (
             <>
             {/*
@@ -45,7 +47,7 @@ class SubscriptionPage extends Component {
                         </Space>
                     </div>
                     <div className="table-container">
-                        <SubscriptionList subscriptions={this.props.subscriptions}/>
+                        <SubscriptionList loading={loading} subscriptions={this.props.subscriptions}/>
                     </div>
                 </Container>
             </>
@@ -63,7 +65,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        subscriptions: state.subscriptionReducer.subscriptions
+        subscriptions: state.subscriptionReducer.subscriptions,
+        loading: state.loadingReducer.loading
     }
 }
 

@@ -5,6 +5,9 @@ import {
 import {
     addSeason
 } from "../../actions/seasonActions";
+import {
+    addSeasonAsync
+} from "../../requests/seasonRequests";
 import { Button, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -15,6 +18,9 @@ import {
     acceptVideoExt,
     getFileExtension
 } from "../../utils/validator";
+import {
+    withRouter
+} from "react-router-dom";
 
 class AddSeason extends Component {
 
@@ -82,12 +88,16 @@ class AddSeason extends Component {
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
         const {addSeason, seriesID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
-        addSeason({name, seriesID, description, posterFile, trailerFile, seasonNum});
+        //addSeason({name, seriesID, description, posterFile, trailerFile, seasonNum});
+        const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum})
+        if (res.data.success) {
+            this.props.history.push(`/seasons/details/${res.data.data._id}`);
+        }
     }
 
     render() {
@@ -160,4 +170,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddSeason);
+export default connect(null, mapDispatchToProps)(withRouter(AddSeason));

@@ -23,6 +23,8 @@ class ManagerPage extends Component {
     }
 
     render() {
+        const {loading} = this.props;
+
         return (
             <>
             {/*
@@ -48,7 +50,7 @@ class ManagerPage extends Component {
                         </Space>
                     </div>
                     <div className="table-container">
-                        <ManagerList managers={this.props.managers}/>
+                        <ManagerList loading={loading} managers={this.props.managers}/>
                     </div>
                 </Container>
             </>
@@ -66,7 +68,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        managers: state.managerReducer.managers
+        managers: state.managerReducer.managers,
+        loading: state.loadingReducer.loading
     }
 }
 

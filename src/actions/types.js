@@ -53,3 +53,6 @@ export const DELETE_SUB = "DELETE_SUB";
 
 export const SET_USER_ROLE = "SET_USER_ROLE";
 export const GET_USER_ROLE = "GET_USER_ROLE";
+
+export const SET_LOADING = "SET_LOADING";
+export const CLEAR_LOADING = "CLEAR_LOADING";

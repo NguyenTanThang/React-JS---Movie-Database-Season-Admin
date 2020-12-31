@@ -6,14 +6,15 @@ import ComponentHeader from "../components/partials/ComponentHeader";
 import {getSeasonByID} from "../requests/seasonRequests";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {getEpisodesBySeasonID} from "../actions/episodeActions";
-import {message} from "antd";
+import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
 
 class SeasonDetailsPage extends Component {
 
     state = {
         seasonItem: "",
-        loggedIn: false
+        loggedIn: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -30,15 +31,27 @@ class SeasonDetailsPage extends Component {
         this.props.getEpisodesBySeasonID(seasonID);
         const seasonItem = await getSeasonByID(seasonID);
         this.setState({
-            seasonItem
+            seasonItem,
+            loading: false
         })
     }
 
     render() {
-        const {seasonItem, loggedIn} = this.state;
+        const {seasonItem, loggedIn, loading} = this.state;
         const {episodes} = this.props;
         const returnURL = localStorage.getItem("returnURL");
         localStorage.setItem("previousPathEpisode", this.props.location.pathname)
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         if (!seasonItem || !loggedIn) {
             return (<></>)
