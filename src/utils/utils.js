@@ -109,3 +109,73 @@ export const isEpisodeNumOccurred = (episodes, episodeNum) => {
 export const getFileExtension = (filename) => {
     return filename.split('.').pop();
 }
+
+export function random_rgba() {
+    var o = Math.round, r = Math.random, s = 255;
+    return {
+        bgColor: 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + 0.4 + ')',
+        borderColor: 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + 1 + ')'
+    }
+}
+
+export const calculatePercentage = (num, total) => {
+    return Math.round((num / total) * 100);
+}
+
+export const filterRevenue = (data) => {
+    var keys = Object.keys(data);
+    let labels = "";
+    let datasets = [];
+
+    for (let i = 0; i < keys.length; i++) {
+        let dataset = {};
+        let sum = 0;
+  
+        dataset = {
+            label: "Monthly Revenue",
+            data: [],
+            backgroundColor: 'rgba(67, 50, 133, 0.4)',
+            borderColor: 'rgba(67, 50, 133, 1)',
+            borderWidth: 1,
+            labels: ""
+        }
+
+        const key = keys[i];
+        const yearlyRevenue = data[key];
+        console.log(yearlyRevenue);
+        const yearlyRevenueKeys = Object.keys(yearlyRevenue);
+        labels = yearlyRevenueKeys;
+        console.log(yearlyRevenueKeys);
+        for (let j = 0; j < yearlyRevenueKeys.length; j++) {
+            const yearlyRevenueKey = yearlyRevenueKeys[j];
+            const yearlyRevenueMonthItem = yearlyRevenue[yearlyRevenueKey];
+            console.log(yearlyRevenueMonthItem)
+            const {totalRevenue} = yearlyRevenueMonthItem;
+            sum += totalRevenue;
+            dataset.data = [...dataset.data, totalRevenue];
+            dataset.labels = labels;
+        }
+
+        dataset.total = sum;
+        datasets.push(dataset);
+    }
+
+    console.log(datasets);
+
+    return datasets;
+}
+
+export const filterPercentageOfSubscribedUsers = (data) => {
+    const {totalUser, subscribedUser} = data;
+
+    let dataset = {};
+    dataset = {
+        label: ["Non-Subscribed Users", "Subscribed Users"],
+        data: [calculatePercentage(totalUser - subscribedUser, totalUser), calculatePercentage(subscribedUser, totalUser)],
+        backgroundColor: ['rgba(87, 23, 184, 0.4)', 'rgba(30, 185, 141, 0.4)'],
+        borderColor: ['rgba(87, 23, 184, 1)', 'rgba(30, 185, 141, 1)'],
+        borderWidth: 1
+    }
+        
+    return dataset;
+}

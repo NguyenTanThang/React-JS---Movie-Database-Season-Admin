@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Link, withRouter} from "react-router-dom";
 import {connect} from 'react-redux';
 import {getUserRole} from "../../actions/authActions";
+import {authenticationService} from "../../services";
 
 class SideNav extends Component {
 
@@ -41,10 +42,17 @@ class SideNav extends Component {
 
     displayNavItems = () => {
         const {userRole} = this.props;
-        let userID = sessionStorage.getItem("userID");
-        if (userID && userRole === "admin") {
+        const currentUser = authenticationService.currentUserValue;
+        if (currentUser && userRole === "admin") {
           return (
             <>
+                <li>
+                    <Link to="/">
+                    <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </Link>
+                </li>
+
                 <li>
                     <Link to="/series">
                     <i className="fas fa-video"></i>
@@ -112,9 +120,16 @@ class SideNav extends Component {
             </>
           )
         } 
-        else if (userID && userRole === "staff") {
+        else if (currentUser && userRole === "staff") {
             return (
               <>
+                <li>
+                    <Link to="/">
+                    <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </Link>
+                </li>
+
                   <li>
                       <Link to="/series">
                       <i className="fas fa-video"></i>
@@ -177,13 +192,14 @@ class SideNav extends Component {
 
     render() {
         const {displayNavItems} = this;
+        const {userRole} = this.props;
 
         return (
             <div className="sidebar">
             <div className="sidebar-close">
                 <i className="fas fa-times" aria-hidden="true"></i>
             </div>
-                <h2>Sidebar</h2>
+                <h2>{userRole ? userRole : "Sidebar"}</h2>
                 <ul>
                     {displayNavItems()}
                 </ul> 

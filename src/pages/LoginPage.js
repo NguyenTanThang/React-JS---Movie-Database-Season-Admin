@@ -2,21 +2,25 @@ import React, { Component } from 'react';
 import {FormGroup, Label, Form} from "reactstrap";
 import TextField from '@material-ui/core/TextField';
 import { Button, message } from 'antd';
+/*
 import {login, getCurrentLoginStatus} from "../requests/authRequests";
 import {connect} from 'react-redux';
-import {setUserRole} from "../actions/authActions";
+*/
+import { authenticationService } from '../services';
 
 class LoginPage extends Component {
 
-    state = {
-        username: "",
-        password: ""
-    }
+    constructor(props) {
+        super(props);
 
-    async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        if (loggedIn) {
-            this.props.history.push("/");
+        this.state = {
+            username: "",
+            password: ""
+        }
+
+        // redirect to home if already logged in
+        if (authenticationService.currentUserValue) { 
+            this.props.history.push('/');
             message.error("You have already logged in");
         }
     }
@@ -27,19 +31,25 @@ class LoginPage extends Component {
         })
       }
 
-      handleSubmit = async (e) => {
-          try {
+    handleSubmit = async (e) => {
+        try {
             e.preventDefault();
             const {username, password} = this.state;
-            const resData = await login(username, password);
-            if (resData.success) {
-                this.props.setUserRole(resData.data);
-                this.props.history.push("/");
-            }
-          } catch (error) {
-              console.log(error);
-          }
-      }
+            authenticationService.login(username, password)
+            .then(
+                user => {
+                    console.log(user);
+                    const { from } = this.props.location.state || { from: { pathname: "/" } };
+                    this.props.history.push(from);
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     render() {
         const {handleChange, handleSubmit} = this;
@@ -71,6 +81,7 @@ class LoginPage extends Component {
     }
 }
 
+/*
 const mapDispatchToProps = (dispatch) => {
     return {
         setUserRole: (user) => {
@@ -80,3 +91,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(LoginPage);
+*/
+
+export default LoginPage;
+

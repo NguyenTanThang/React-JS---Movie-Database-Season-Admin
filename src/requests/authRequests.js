@@ -1,12 +1,14 @@
 import axios from "axios";
 import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
+import {authenticationService} from "../services"
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
 export const changeUserPassword = async (oldPassword, newPassword) => {
     try {
-        const userID = sessionStorage.getItem("userID");
+        const currentUser = authenticationService.currentUserValue;
+        const userID = currentUser._id;
         const res = await axios.put(`${MANAGER_URL}/change-password/${userID}`, {
             oldPassword, newPassword
         });
@@ -29,7 +31,8 @@ export const changeUserPassword = async (oldPassword, newPassword) => {
 }
 
 export const getCurrentLoginStatus = async () => {
-    const userID = sessionStorage.getItem("userID");
+    const currentUser = authenticationService.currentUserValue;
+    const userID = currentUser._id;
     let ans = true;
     if (!userID) {
         ans = false;
@@ -41,33 +44,4 @@ export const getCurrentLoginStatus = async () => {
         ans = false;
     } 
     return ans;
-}
-
-const setCurrentUser = (user) => {
-    sessionStorage.setItem("userID", user._id);
-}
-
-export const login = async (username, password) => {
-    try {
-        const res = await axios.post(`${MANAGER_URL}/login`, {
-            username, 
-            password
-        });
-
-        const {success} = res.data;
-        const resMessage = res.data.message;
-        const user = res.data.data;
-
-        if (!success) {
-            message.error(`${resMessage}`, 5);
-        }
-
-        message.success(`${resMessage}`, 5);
-        setCurrentUser(user);
-
-        return res.data;
-    } catch (error) {
-        console.log(error);
-        message.error(`${error.message}`, 5);
-    }
 }

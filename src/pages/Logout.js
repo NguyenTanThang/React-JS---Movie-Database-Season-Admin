@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
+/*
 import {setUserRole} from "../actions/authActions";
 import {connect} from "react-redux";
+*/
+import { authenticationService } from '../services';
 
 class Logout extends Component {
 
     componentDidMount() {
+        /*
         localStorage.clear();
         sessionStorage.clear();
         this.props.setUserRole("");
+        */
+        authenticationService.logout();
         this.props.history.push("/login");
     }
 
@@ -19,6 +25,7 @@ class Logout extends Component {
     }
 }
 
+/*
 const mapDispatchToProps = (dispatch) => {
     return {
         setUserRole: (user) => {
@@ -28,3 +35,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(Logout);
+*/
+export default Logout;

@@ -1,9 +1,11 @@
 import React from 'react';
-import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import 'antd/dist/antd.css';
 import './App.css';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {Role} from "./helpers";
 
+import Dashboard from "./pages/Dashboard";
 import GenrePage from "./pages/GenrePage";
 import LoginPage from "./pages/LoginPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
@@ -36,6 +38,7 @@ import SeriesDetailsPage from "./pages/SeriesDetailsPage";
 import SeasonDetailsPage from "./pages/SeasonDetailsPage";
 import EpisodeDetailsPage from "./pages/EpisodeDetailsPage";
 import LayoutSide from "./components/partials/LayoutSide";
+import PrivateRoute from "./components/partials/PrivateRoute";
 
 function App() {
   return (
@@ -43,38 +46,37 @@ function App() {
       <Router>
         <LayoutSide>
         <Switch>
-          <Route exact path="/" component={LayoutSide}/>
-          <Route exact path="/managers" component={ManagerPage}/>
-          <Route exact path="/movies" component={MoviePage}/>
-          <Route exact path="/series" component={SeriesPage}/>
-          <Route exact path="/customers" component={CustomerPage}/>
-          <Route exact path="/managers/add" component={AddManagerPage}/>
-          <Route exact path="/plans/add" component={AddPlanPage}/>
-          <Route exact path="/customers/add" component={AddCustomerPage}/>
-          <Route exact path="/movies/add" component={AddMoviePage}/>
-          <Route exact path="/series/add" component={AddSeriesPage}/>
-          <Route exact path="/seasons/add/:seriesID" component={AddSeasonPage}/>
-          <Route exact path="/episodes/add/:seasonID" component={AddEpisodePage}/>
-          <Route exact path="/subtitles/add/:videoID" component={AddSubtitlePage}/>
-          <Route path="/managers/edit/:managerID" component={EditManagerPage}/>
-          <Route path="/customers/edit/:customerID" component={EditCustomerPage}/>
-          <Route path="/movies/edit/:movieID" component={EditMoviePage}/>
-          <Route path="/series/edit/:seriesID" component={EditSeriesPage}/>
-          <Route exact path="/seasons/edit/:seasonID" component={EditSeasonPage}/>
-          <Route exact path="/episodes/edit/:episodeID" component={EditEpisodePage}/>
-          <Route exact path="/subtitles/edit/:subtitleID" component={EditSubtitlePage}/>
-          <Route path="/plans/edit/:planID" component={EditPlanPage}/>
-          <Route path="/customers/details/:customerID" component={CustomerDetailsPage}/>
-          <Route path="/movies/details/:movieID" component={MovieDetailsPage}/>
-          <Route path="/series/details/:seriesID" component={SeriesDetailsPage}/>
-          <Route path="/seasons/details/:seasonID" component={SeasonDetailsPage}/>
-          <Route path="/episodes/details/:episodeID" component={EpisodeDetailsPage}/>
-          <Route path="/genres" component={GenrePage}/>
-          <Route path="/plans" component={PlanPage}/>
-          <Route path="/subscriptions" component={SubscriptionPage}/>
+          <PrivateRoute exact path="/" component={Dashboard}/>
+          <PrivateRoute roles={[Role.Admin]} exact path="/managers" component={ManagerPage}/>
+          <PrivateRoute exact path="/movies" component={MoviePage}/>
+          <PrivateRoute exact path="/series" component={SeriesPage}/>
+          <PrivateRoute roles={[Role.Admin]} exact path="/customers" component={CustomerPage}/>
+          <PrivateRoute roles={[Role.Admin]} exact path="/managers/add" component={AddManagerPage}/>
+          <PrivateRoute roles={[Role.Admin]} exact path="/plans/add" component={AddPlanPage}/>
+          <PrivateRoute roles={[Role.Admin]} exact path="/customers/add" component={AddCustomerPage}/>
+          <PrivateRoute exact path="/movies/add" component={AddMoviePage}/>
+          <PrivateRoute exact path="/series/add" component={AddSeriesPage}/>
+          <PrivateRoute exact path="/seasons/add/:seriesID" component={AddSeasonPage}/>
+          <PrivateRoute exact path="/episodes/add/:seasonID" component={AddEpisodePage}/>
+          <PrivateRoute exact path="/subtitles/add/:videoID" component={AddSubtitlePage}/>
+          <PrivateRoute roles={[Role.Admin]} path="/managers/edit/:managerID" component={EditManagerPage}/>
+          <PrivateRoute roles={[Role.Admin]} path="/customers/edit/:customerID" component={EditCustomerPage}/>
+          <PrivateRoute path="/movies/edit/:movieID" component={EditMoviePage}/>
+          <PrivateRoute path="/series/edit/:seriesID" component={EditSeriesPage}/>
+          <PrivateRoute exact path="/seasons/edit/:seasonID" component={EditSeasonPage}/>
+          <PrivateRoute exact path="/episodes/edit/:episodeID" component={EditEpisodePage}/>
+          <PrivateRoute exact path="/subtitles/edit/:subtitleID" component={EditSubtitlePage}/>
+          <PrivateRoute roles={[Role.Admin]} path="/plans/edit/:planID" component={EditPlanPage}/>
+          <PrivateRoute roles={[Role.Admin]} path="/customers/details/:customerID" component={CustomerDetailsPage}/>
+          <PrivateRoute path="/movies/details/:movieID" component={MovieDetailsPage}/>
+          <PrivateRoute path="/series/details/:seriesID" component={SeriesDetailsPage}/>
+          <PrivateRoute path="/seasons/details/:seasonID" component={SeasonDetailsPage}/>
+          <PrivateRoute path="/episodes/details/:episodeID" component={EpisodeDetailsPage}/>
+          <PrivateRoute path="/genres" component={GenrePage}/>
+          <PrivateRoute roles={[Role.Admin]} path="/plans" component={PlanPage}/>
           <Route path="/login" component={LoginPage}/>
-          <Route path="/logout" component={Logout}/>
-          <Route path="/users/change-password" component={ChangePasswordPage}/>
+          <PrivateRoute path="/logout" component={Logout}/>
+          <PrivateRoute path="/users/change-password" component={ChangePasswordPage}/>
         </Switch>
         </LayoutSide>
       </Router>

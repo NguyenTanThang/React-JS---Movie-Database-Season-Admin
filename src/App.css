@@ -325,3 +325,50 @@ body {
   right: 0;
   top: 0;
 }
+
+.anticon {
+  transform: translateY(-5px);
+}
+
+/************** Dashboard Page **********/
+.dashboard-page {
+  padding-bottom: 50px;
+}
+
+.dashboard-list {
+  margin-top: 50px;
+}
+
+.dashboard-box-item {
+  box-shadow: 0px 0px 28px -11px rgba(0,0,0,0.75);
+  border-radius: 20px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  padding-bottom: 5px;
+}
+
+.dashboard-box-item__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dashboard-box-item-header__icon {
+  margin-right: 10px;
+}
+
+.dashboard-box-item-header__icon i {
+  font-size: 1.2rem;
+}
+
+.dashboard-box-item__header h4 {
+  font-size: 0.9rem;
+}
+
+.dashboard-box-item h3 {
+  font-size: 5rem;
+}
+
+.dashboard-box-item:hover {
+  box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+}

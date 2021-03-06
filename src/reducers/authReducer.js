@@ -9,12 +9,6 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SET_USER_ROLE:
-            return {
-                ...state,
-                userRole: action.payload.userRole
-            }
-            break;
         case GET_USER_ROLE:
             return {
                 ...state,
