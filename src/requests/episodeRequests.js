@@ -37,7 +37,7 @@ export const addEpisodeAsync = async (newEpisode) => {
             return message.warning(res.data.message, 5);
         }
 
-        return res
+        return res;
     } catch (error) {
         message.error(error.message, 5);
     }

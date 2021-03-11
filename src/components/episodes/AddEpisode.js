@@ -61,7 +61,7 @@ class AddEpisode extends Component {
         const {name, description, episodeFile, episodeNum} = this.state;
 
         //addEpisode({name, description, episodeFile, episodeNum, seasonID});
-        const res = await addEpisodeAsync({name, description, episodeFile, episodeNum})
+        const res = await addEpisodeAsync({name, description, episodeFile, episodeNum, seasonID})
         if (res.data.success) {
             this.props.history.push(`/episodes/details/${res.data.data._id}`);
         }
