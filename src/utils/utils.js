@@ -145,6 +145,7 @@ export const filterRevenue = (data) => {
         console.log(yearlyRevenue);
         const yearlyRevenueKeys = Object.keys(yearlyRevenue);
         labels = yearlyRevenueKeys;
+        let isGood = false;
         
         for (let j = 0; j < yearlyRevenueKeys.length; j++) {
             const yearlyRevenueKey = yearlyRevenueKeys[j];
@@ -152,14 +153,17 @@ export const filterRevenue = (data) => {
             console.log(yearlyRevenueMonthItem);
             const {totalRevenue} = yearlyRevenueMonthItem;
             if (totalRevenue > 0) {
+                isGood = true;
                 sum += totalRevenue;
                 dataset.data = [...dataset.data, totalRevenue];
                 dataset.labels = labels;
             }
         }
 
-        dataset.total = sum;
-        datasets.push(dataset);
+        if (isGood) {
+            dataset.total = sum;
+            datasets.push(dataset);
+        }
     }
 
     console.log(datasets);
