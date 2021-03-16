@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {dashboardData} from "../helpers";
 import {filterPercentageOfSubscribedUsers, filterRevenue} from "../utils/utils";
+import {
+    getCustomerDashboardData,
+    getRevenueData
+} from "../requests/dashboardRequests";
 import DashboardBoxItem from "../components/dashboard/DashboardBoxItem";
 import PieChart from "../components/dashboard/PieChart";
 import LineChart from "../components/dashboard/LineChart";
@@ -9,15 +13,16 @@ import TabGenerator from "../components/partials/TabGenerator";
 export default class Dashboard extends Component {
 
     state = {
-        filteredPercentageOfSubscribedUsers: [],
-        filteredRevenue: []
+        filteredRevenue: [],
+        customerDashboardData: {}
     }
 
-    componentDidMount() {
-        const {pieChartData, monthlyRevenueChartData} = dashboardData;
+    async componentDidMount() {
+        const customerDashboardData = await getCustomerDashboardData();
+        const monthlyRevenueChartData = await getRevenueData();
         this.setState({
-            filteredPercentageOfSubscribedUsers: filterPercentageOfSubscribedUsers(pieChartData),
-            filteredRevenue: filterRevenue(monthlyRevenueChartData)
+            filteredRevenue: filterRevenue(monthlyRevenueChartData),
+            customerDashboardData
         })
     }
 
@@ -45,7 +50,36 @@ export default class Dashboard extends Component {
     }
 
     renderDashboardBoxItems = () => {
-        const {dashboardBoxItems} = dashboardData;
+        const {customerDashboardData} = this.state;
+        const {
+            totalCustomer,
+            validCustomer,
+            activeCustomer,
+            subscribedCustomer
+        } = customerDashboardData;
+
+        const dashboardBoxItems = [
+            {
+                title: "Total Customers",
+                index: totalCustomer,
+                iconString: `<i class="fas fa-users"></i>`
+            },
+            {
+                title: "Valid Customers",
+                index: validCustomer,
+                iconString: `<i class="fas fa-user-check"></i>`
+            },
+            {
+                title: "Subscribed Customers",
+                index: subscribedCustomer,
+                iconString: `<i class="fas fa-user-tag"></i>`
+            },
+            {
+                title: "Active Customers",
+                index: activeCustomer,
+                iconString: `<i class="fas fa-user-clock"></i>`
+            },
+        ]
 
         return dashboardBoxItems.map(dashboardBoxItem => {
             return (
@@ -58,7 +92,15 @@ export default class Dashboard extends Component {
 
     render() {
         const {renderDashboardBoxItems, renderRevenueTabGen} = this;
-        const {filteredPercentageOfSubscribedUsers} = this.state;
+        const {customerDashboardData} = this.state;
+        const {
+            totalCustomer,
+            subscribedCustomer
+        } = customerDashboardData;
+        const filteredPercentageOfSubscribedUsers = filterPercentageOfSubscribedUsers({
+            totalUser: totalCustomer,
+            subscribedUser: subscribedCustomer
+        });
 
         return (
             <div className="dashboard-page">
