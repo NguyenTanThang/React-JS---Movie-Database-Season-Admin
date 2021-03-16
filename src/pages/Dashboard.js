@@ -14,21 +14,22 @@ export default class Dashboard extends Component {
 
     state = {
         filteredRevenue: [],
-        customerDashboardData: {}
+        customerDashboardData: {},
+        revenueYearList: []
     }
 
     async componentDidMount() {
         const customerDashboardData = await getCustomerDashboardData();
-        const monthlyRevenueChartData = await getRevenueData();
+        const {monthlyRevenueChartData, revenueYearList} = await getRevenueData();
         this.setState({
             filteredRevenue: filterRevenue(monthlyRevenueChartData),
-            customerDashboardData
+            customerDashboardData,
+            revenueYearList
         })
     }
 
     renderRevenueTabGen = () => {
-        const {revenueYearList} = dashboardData;
-        const {filteredRevenue} = this.state;
+        const {filteredRevenue, revenueYearList} = this.state;
 
         const tabContents = filteredRevenue.map((filteredRevenueItem, index) => {
             return (

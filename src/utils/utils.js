@@ -149,7 +149,7 @@ export const filterRevenue = (data) => {
         for (let j = 0; j < yearlyRevenueKeys.length; j++) {
             const yearlyRevenueKey = yearlyRevenueKeys[j];
             const yearlyRevenueMonthItem = yearlyRevenue[yearlyRevenueKey];
-            console.log(yearlyRevenueMonthItem)
+            console.log(yearlyRevenueMonthItem);
             const {totalRevenue} = yearlyRevenueMonthItem;
             if (totalRevenue > 0) {
                 sum += totalRevenue;
