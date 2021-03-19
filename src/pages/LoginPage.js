@@ -41,6 +41,7 @@ class LoginPage extends Component {
                     console.log(user);
                     const { from } = this.props.location.state || { from: { pathname: "/" } };
                     this.props.history.push(from);
+                    window.location.reload();
                 },
                 error => {
                     console.log(error);

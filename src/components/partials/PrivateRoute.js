@@ -12,7 +12,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
         }
 
         // check if route is restricted by role
-        if (roles && roles.indexOf(currentUser.role) === -1) {
+        if (roles && roles.indexOf(currentUser.roleID.role) === -1) {
             // role not authorised so redirect to home page
             return <Redirect to={{ pathname: '/'}} />
         }
