@@ -9,7 +9,8 @@ class ChangePasswordPage extends Component {
 
     state = {
         oldPassword: "",
-        newPassword: ""
+        newPassword: "",
+        confirmNewPassword: ""
     }
 
     async componentDidMount() {
@@ -29,7 +30,10 @@ class ChangePasswordPage extends Component {
       handleSubmit = async (e) => {
           try {
             e.preventDefault();
-            const {oldPassword, newPassword} = this.state;
+            const {oldPassword, newPassword, confirmNewPassword} = this.state;
+            if (newPassword !== confirmNewPassword) {
+                return message.error("The new password and confirm new password must be the same");
+            }
             const resData = await changeUserPassword(oldPassword, newPassword);
             if (resData.success) {
                 this.props.history.push("/");
@@ -41,7 +45,7 @@ class ChangePasswordPage extends Component {
 
     render() {
         const {handleChange, handleSubmit} = this;
-        const {oldPassword, newPassword} = this.state;
+        const {oldPassword, newPassword, confirmNewPassword} = this.state;
 
         return (
             <>
@@ -82,6 +86,10 @@ class ChangePasswordPage extends Component {
                             <FormGroup>
                                 <Label htmlFor="newPassword">New Password:</Label>
                                 <TextField id="newPassword" type="password" label="New Password" variant="outlined" className="material-input" required onChange={handleChange} value={newPassword}/>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="confirmNewPassword">Confirm New Password:</Label>
+                                <TextField id="confirmNewPassword" type="password" label="Confirm New Password" variant="outlined" className="material-input" required onChange={handleChange} value={confirmNewPassword}/>
                             </FormGroup>
                             <FormGroup>
                                 <Button type="primary" htmlType="submit" block>
