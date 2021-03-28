@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import UpdateFileModal from "../partials/UpdateFileModal";
 import {getFileExtension} from "../../utils/utils";
+import {withRouter} from 'react-router-dom';
 
 class EditSubtitle extends Component {
 
@@ -77,6 +78,9 @@ class EditSubtitle extends Component {
         const {languageLabel, subtitleFile} = this.state;
 
         editSubtitle(subtitleID, {languageLabel, subtitleFile});
+        setTimeout(() => {
+            this.props.history.goBack();
+        }, 2500);
     }
 
     render() {
@@ -134,4 +138,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(EditSubtitle);
+export default connect(null, mapDispatchToProps)(withRouter(EditSubtitle));

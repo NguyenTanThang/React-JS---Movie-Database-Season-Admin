@@ -150,10 +150,11 @@ export const filterRevenue = (data) => {
             const yearlyRevenueKey = yearlyRevenueKeys[j];
             const yearlyRevenueMonthItem = yearlyRevenue[yearlyRevenueKey];
             console.log(yearlyRevenueMonthItem);
-            const {totalRevenue} = yearlyRevenueMonthItem;
-                sum += totalRevenue;
-                dataset.data = [...dataset.data, totalRevenue];
-                dataset.labels = labels;
+            let {totalRevenue} = yearlyRevenueMonthItem;
+            totalRevenue = Math.ceil(totalRevenue);
+            sum += totalRevenue;
+            dataset.data = [...dataset.data, totalRevenue];
+            dataset.labels = labels;
         }
 
             dataset.total = sum;

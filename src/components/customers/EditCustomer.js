@@ -25,6 +25,7 @@ import {
 class EditCustomer extends Component {
 
     state = {
+        username: "",
         email: "",
         password: "",
         validated: "",
@@ -43,9 +44,9 @@ class EditCustomer extends Component {
     async componentDidMount() {
         const {customerID} = this.props;
         const customer = await getCustomerByID(customerID);
-        const {email, validated} = customer.customerItem;
+        const {email, validated, username} = customer.customerItem;
         this.setState({
-            email, validated
+            email, validated, username
         }, () => {
             console.log(this.state);
         })
@@ -71,10 +72,10 @@ class EditCustomer extends Component {
         e.preventDefault();
         const {editCustomer} = this.props;
         const {customerID} = this.props;
-        const {email, password, validated} = this.state;
+        const {email, password, validated, username} = this.state;
 
         //editCustomer(customerID, {email, password, validated});
-        const res = await editCustomerAsync(customerID, {email, password, validated});
+        const res = await editCustomerAsync(customerID, {username, email, password, validated});
 
         if (res.data.success) {
             this.props.history.push(`/customers/details/${customerID}`);
@@ -83,14 +84,18 @@ class EditCustomer extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderCustomerStatusOptions} = this;
-        const {email, password, validated} = this.state;
+        const {email, password, validated, username} = this.state;
 
         return (
             <div>
                 <Form onSubmit={handleSubmit}>
                     <FormGroup>
+                        <Label>Username</Label>
+                        <TextField type="text" id="username" name="username" label="Username" variant="outlined" className="material-input" required onChange={handleChange} value={username}/>
+                    </FormGroup>
+                    <FormGroup>
                         <Label>Email</Label>
-                        <TextField id="email" name="email" label="Email" variant="outlined" className="material-input" required onChange={handleChange} value={email}/>
+                        <TextField type="email" id="email" name="email" label="Email" variant="outlined" className="material-input" required onChange={handleChange} value={email}/>
                     </FormGroup>
                     <FormGroup>
                         <Label>Password</Label>

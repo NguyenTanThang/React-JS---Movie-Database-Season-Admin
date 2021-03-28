@@ -22,6 +22,7 @@ import {
 class AddCustomer extends Component {
 
     state = {
+        username: "",
         email: "",
         password: "",
         validated: "",
@@ -56,10 +57,10 @@ class AddCustomer extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
         const {addCustomer} = this.props;
-        const {email, password, validated} = this.state;
+        const {username, email, password, validated} = this.state;
 
         //addCustomer({email, password, validated});
-        const res = await addCustomerAsync({email, password, validated});
+        const res = await addCustomerAsync({username, email, password, validated});
 
         if (res.data.success) {
             console.log(res.data);
@@ -69,14 +70,18 @@ class AddCustomer extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderCustomerStatusOptions} = this;
-        const {email, password, validated} = this.state;
+        const {username, email, password, validated} = this.state;
 
         return (
             <div>
                 <Form onSubmit={handleSubmit}>
                     <FormGroup>
+                        <Label>Username</Label>
+                        <TextField type="text" id="username" name="username" label="Username" variant="outlined" className="material-input" required onChange={handleChange} value={username}/>
+                    </FormGroup>
+                    <FormGroup>
                         <Label>Email</Label>
-                        <TextField id="email" name="email" label="Email" variant="outlined" className="material-input" required onChange={handleChange} value={email}/>
+                        <TextField type="email" id="email" name="email" label="Email" variant="outlined" className="material-input" required onChange={handleChange} value={email}/>
                     </FormGroup>
                     <FormGroup>
                         <Label>Password</Label>

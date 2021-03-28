@@ -326,10 +326,6 @@ body {
   top: 0;
 }
 
-.anticon {
-  transform: translateY(-5px);
-}
-
 /************** Dashboard Page **********/
 .dashboard-page {
   padding-bottom: 50px;

@@ -7,6 +7,7 @@ import {
 } from "../../actions/subtitleActions";
 import { Button, message } from 'antd';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
+import {withRouter} from 'react-router-dom';
 import FileUploader from "../partials/FileUploader";
 import languageCodes from "../../data/languageCodes";
 import {getFileExtension} from "../../utils/utils";
@@ -54,6 +55,9 @@ class AddSubtitle extends Component {
         const {languageLabel, subtitleFile} = this.state;
 
         addSubtitle({languageLabel, subtitleFile, videoID});
+        setTimeout(() => {
+            this.props.history.goBack();
+        }, 2000);
     }
 
     renderLanguageCodes = () => {
@@ -118,4 +122,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
   
-export default connect(null, mapDispatchToProps)(AddSubtitle);
+export default connect(null, mapDispatchToProps)(withRouter(AddSubtitle));

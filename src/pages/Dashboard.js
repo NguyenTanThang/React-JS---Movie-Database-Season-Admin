@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {dashboardData} from "../helpers";
+import { CSVLink, CSVDownload } from "react-csv";
 import {filterPercentageOfSubscribedUsers, filterRevenue} from "../utils/utils";
 import {
     getCustomerDashboardData,
@@ -32,9 +33,28 @@ export default class Dashboard extends Component {
         const {filteredRevenue, revenueYearList} = this.state;
 
         const tabContents = filteredRevenue.map((filteredRevenueItem, index) => {
+
+            console.log(filteredRevenueItem);
+            let csvData = [["Month", "Revenue", "Currency"]];
+
+            for (let i = 0; i < filteredRevenueItem.labels.length; i++) {
+                const revenue = filteredRevenueItem.data[i];
+                const monthLabel = filteredRevenueItem.labels[i];
+                
+                csvData.push([monthLabel, revenue, "$"]);
+            }
+
+            csvData.push(["Total", filteredRevenueItem.total, "$"]);
+
             return (
             <>
                 <h5>Total: {filteredRevenueItem.total}$</h5>
+                <CSVLink 
+                    filename={`Monthly Revenue of ${revenueYearList[index]}.csv`}
+                    data={csvData}
+                    target="_blank"
+                    className="btn btn-success"
+                >Download Excel</CSVLink>
                 <LineChart data={[filteredRevenueItem]}
                 labels={filteredRevenueItem.labels}
                 title={`Monthly Revenue of ${revenueYearList[index]}`}

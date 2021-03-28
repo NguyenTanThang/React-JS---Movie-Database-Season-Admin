@@ -37,7 +37,11 @@ class UpdateFileModal extends Component {
                     <img src={fileURL} alt={movieName} className="img-fluid current-file-image"/>
                 </div>
             )
-        } else {
+        } 
+        else if (inputName === "subtitleFile") {
+            <div className="current-file-image-container"></div>
+        }
+        else {
             return (
                 <div className="current-file-image-container">
                     <video width="100%" height="300" controls className="current-file-video">
