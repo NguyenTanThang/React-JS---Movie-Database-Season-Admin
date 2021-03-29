@@ -7,6 +7,8 @@ const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
 export const changeUserPassword = async (oldPassword, newPassword) => {
     try {
+        message.loading("Updating...", 0);
+        
         const currentUser = authenticationService.currentUserValue;
         const userID = currentUser._id;
         const res = await axios.put(`${MANAGER_URL}/change-password/${userID}`, {
@@ -17,10 +19,12 @@ export const changeUserPassword = async (oldPassword, newPassword) => {
         const resMessage = res.data.message;
 
         if (!success) {
+            message.destroy();
             message.error(`${resMessage}`, 5);
             return res.data;
         }
 
+        message.destroy();
         message.success(`${resMessage}`, 5);
 
         return res.data;
