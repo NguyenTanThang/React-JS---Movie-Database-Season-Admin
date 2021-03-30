@@ -6,17 +6,13 @@ import {
     DELETE_SUB,
     GET_SUBS_BY_CUSTOMER_ID
 } from "./types";   
-import {
-    removeSubtitleRelatedFiles
-} from "../requests/subtitlesRequests";
 
 const SUB_URL = `${MAIN_PROXY_URL}/subscriptions`;
 
 export const deleteSubscription = (subID) => {
     return async (dispatch) => {
         try {
-            let res = await removeSubtitleRelatedFiles(subID)
-            res = await axios.delete(`${SUB_URL}/delete/${subID}`);
+            const res = await axios.delete(`${SUB_URL}/delete/${subID}`);
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
