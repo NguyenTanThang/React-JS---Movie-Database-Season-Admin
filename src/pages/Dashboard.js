@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {dashboardData} from "../helpers";
-import { CSVLink, CSVDownload } from "react-csv";
+import {Skeleton} from "antd";
+import {Container} from "reactstrap";
+import { CSVLink } from "react-csv";
 import {filterPercentageOfSubscribedUsers, filterRevenue} from "../utils/utils";
 import {
     getCustomerDashboardData,
@@ -16,7 +17,8 @@ export default class Dashboard extends Component {
     state = {
         filteredRevenue: [],
         customerDashboardData: {},
-        revenueYearList: []
+        revenueYearList: [],
+        loading: true
     }
 
     async componentDidMount() {
@@ -25,7 +27,8 @@ export default class Dashboard extends Component {
         this.setState({
             filteredRevenue: filterRevenue(monthlyRevenueChartData),
             customerDashboardData,
-            revenueYearList
+            revenueYearList,
+            loading: false
         })
     }
 
@@ -113,7 +116,19 @@ export default class Dashboard extends Component {
 
     render() {
         const {renderDashboardBoxItems, renderRevenueTabGen} = this;
-        const {customerDashboardData} = this.state;
+        const {customerDashboardData, loading} = this.state;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
+
         const {
             totalCustomer,
             subscribedCustomer
