@@ -21,7 +21,8 @@ import {
 class AddPhoto extends Component {
   state = { 
     visible: false,
-    photoFile: {}
+    photoFile: {},
+    loadingCreate: false
    };
 
   showModal = () => {
@@ -38,6 +39,9 @@ class AddPhoto extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({
+      loadingCreate: true
+    })
     const {addPhoto, recordID} = this.props;
     const {photoFile} = this.state;
 
@@ -47,10 +51,13 @@ class AddPhoto extends Component {
 
     addPhoto({recordID, photoFile});
 
-    this.setState({
-      visible: false,
-      photoFile: {}
-    })
+    setTimeout(() => {
+      this.setState({
+        visible: false,
+        photoFile: {},
+        loadingCreate: false
+      })
+    }, 2000);
   }
 
   handleCancel = e => {
@@ -76,7 +83,7 @@ class AddPhoto extends Component {
 
   render() {
     const {handleSubmit, handleFileChange} = this;
-    const {photoFile} = this.state;
+    const {photoFile, loadingCreate} = this.state;
 
     return (
       <>
@@ -95,7 +102,7 @@ class AddPhoto extends Component {
                 <FileUploader labelTitle="Photo" inputName="photoFile" currentFile={photoFile} handleFileChange={handleFileChange}/>
             </FormGroup>
             <FormGroup>
-                <Button type="primary" htmlType="submit" block>
+                <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                     Add
                 </Button>
             </FormGroup>

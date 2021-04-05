@@ -35,7 +35,8 @@ class AddCustomer extends Component {
                 value: false,
                 text: "Not valid"
             }
-        ]
+        ],
+        loadingCreate: false
     }
 
     renderCustomerStatusOptions = () => {
@@ -56,21 +57,26 @@ class AddCustomer extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
-        const {addCustomer} = this.props;
+        this.setState({
+            loadingCreate: true
+        })
         const {username, email, password, validated} = this.state;
 
         //addCustomer({email, password, validated});
         const res = await addCustomerAsync({username, email, password, validated});
 
+        this.setState({
+            loadingCreate: false
+        })
+
         if (res.data.success) {
-            console.log(res.data);
             this.props.history.push(`/customers/details/${res.data.data.customerItem._id}`);
         }
     }
 
     render() {
         const {handleChange, handleSubmit, renderCustomerStatusOptions} = this;
-        const {username, email, password, validated} = this.state;
+        const {username, email, password, validated, loadingCreate} = this.state;
 
         return (
             <div>
@@ -105,7 +111,7 @@ class AddCustomer extends Component {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                             Create
                         </Button>
                     </FormGroup>

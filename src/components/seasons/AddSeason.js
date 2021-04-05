@@ -29,11 +29,12 @@ class AddSeason extends Component {
         description: "",
         posterFile: {},
         trailerFile: {},
-        seasonNum: ""
+        seasonNum: "",
+        loadingCreate: false
     }
 
     onClear = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         this.setState({
             name: "",
             description: "",
@@ -90,11 +91,21 @@ class AddSeason extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingCreate: true
+        })
+
         const {addSeason, seriesID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
         //addSeason({name, seriesID, description, posterFile, trailerFile, seasonNum});
-        const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum})
+        const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum});
+
+        this.setState({
+            loadingCreate: false
+        })
+
         if (res.data.success) {
             this.props.history.push(`/seasons/details/${res.data.data._id}`);
         }
@@ -102,7 +113,7 @@ class AddSeason extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, description, posterFile, trailerFile, seasonNum} = this.state;
+        const {name, description, posterFile, trailerFile, seasonNum, loadingCreate} = this.state;
 
         return (
             <div>
@@ -149,7 +160,7 @@ class AddSeason extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

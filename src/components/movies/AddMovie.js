@@ -33,7 +33,8 @@ class AddMovie extends Component {
         IMDB_ID: "",
         posterFile: {},
         trailerFile: {},
-        movieFile: {}
+        movieFile: {},
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -131,6 +132,10 @@ class AddMovie extends Component {
         try {
             e.preventDefault();
 
+            this.setState({
+                loadingCreate: true
+            })
+
             message.loading('Action in progress..', 0);
 
             //const {addMovie} = this.props;
@@ -142,6 +147,10 @@ class AddMovie extends Component {
             const resMessage = res.data.message;
 
             message.destroy();
+
+            this.setState({
+                loadingCreate: false
+            })
 
             if (success) {
                 message.success(resMessage, 5);
@@ -157,7 +166,7 @@ class AddMovie extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, loadingCreate} = this.state;
 
         return (
             <div>
@@ -218,7 +227,7 @@ class AddMovie extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block  loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

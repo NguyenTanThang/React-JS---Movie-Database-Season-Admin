@@ -23,7 +23,8 @@ class AddEpisode extends Component {
         name: "",
         description: "",
         episodeFile: {},
-        episodeNum: ""
+        episodeNum: "",
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -57,11 +58,21 @@ class AddEpisode extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingCreate: true
+        })
+
         const {addEpisode, seasonID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
 
         //addEpisode({name, description, episodeFile, episodeNum, seasonID});
         const res = await addEpisodeAsync({name, description, episodeFile, episodeNum, seasonID})
+
+        this.setState({
+            loadingCreate: false
+        })
+
         if (res.data.success) {
             this.props.history.push(`/episodes/details/${res.data.data._id}`);
         }
@@ -69,7 +80,7 @@ class AddEpisode extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, description, episodeFile, episodeNum} = this.state;
+        const {name, description, episodeFile, episodeNum, loadingCreate} = this.state;
 
         return (
             <div>
@@ -111,7 +122,7 @@ class AddEpisode extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

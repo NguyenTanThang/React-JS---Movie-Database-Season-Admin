@@ -16,7 +16,8 @@ class AddSubtitle extends Component {
 
     state = {
         languageLabel: "",
-        subtitleFile: {}
+        subtitleFile: {},
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -51,10 +52,20 @@ class AddSubtitle extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingCreate: true
+        })
+
         const {addSubtitle, videoID} = this.props;
         const {languageLabel, subtitleFile} = this.state;
 
         addSubtitle({languageLabel, subtitleFile, videoID});
+        
+        this.setState({
+            loadingCreate: false
+        })
+        
         setTimeout(() => {
             this.props.history.goBack();
         }, 2000);
@@ -70,7 +81,7 @@ class AddSubtitle extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleFileChange, onClear, renderLanguageCodes} = this;
-        const {languageLabel, subtitleFile} = this.state;
+        const {languageLabel, subtitleFile, loadingCreate} = this.state;
 
         return (
             <div>
@@ -101,7 +112,7 @@ class AddSubtitle extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block  loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

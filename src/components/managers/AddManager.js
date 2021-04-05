@@ -28,7 +28,8 @@ class AddManager extends Component {
         username: "",
         password: "",
         roleID: "",
-        managerRolesList: []
+        managerRolesList: [],
+        loadingCreate: false
     }
 
     async componentDidMount() {
@@ -56,11 +57,20 @@ class AddManager extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingCreate: true
+        })
+
         const {addManager} = this.props;
         const {username, password, roleID} = this.state;
 
         //addManager({username, password, roleID});
         const res = await addManagerAsync({username, password, roleID})
+
+        this.setState({
+            loadingCreate: false
+        })
 
         if (res.data.success) {
             this.props.history.push(`/managers`);
@@ -68,7 +78,7 @@ class AddManager extends Component {
     }
 
     render() {
-        const {handleChange, handleSubmit, renderManagerRoleOptions} = this;
+        const {handleChange, handleSubmit, renderManagerRoleOptions, loadingCreate} = this;
         const {username, password, roleID} = this.state;
 
         return (
@@ -100,7 +110,7 @@ class AddManager extends Component {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                             Create
                         </Button>
                     </FormGroup>
