@@ -38,7 +38,8 @@ class EditCustomer extends Component {
                 value: false,
                 text: "Not valid"
             }
-        ]
+        ],
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -70,12 +71,21 @@ class EditCustomer extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editCustomer} = this.props;
         const {customerID} = this.props;
         const {email, password, validated, username} = this.state;
 
         //editCustomer(customerID, {email, password, validated});
         const res = await editCustomerAsync(customerID, {username, email, password, validated});
+
+        this.setState({
+            loadingUpdate: false
+        })
 
         if (res.data.success) {
             this.props.history.push(`/customers/details/${customerID}`);
@@ -84,7 +94,7 @@ class EditCustomer extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderCustomerStatusOptions} = this;
-        const {email, password, validated, username} = this.state;
+        const {email, password, validated, username, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -120,7 +130,7 @@ class EditCustomer extends Component {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                             Save
                         </Button>
                     </FormGroup>

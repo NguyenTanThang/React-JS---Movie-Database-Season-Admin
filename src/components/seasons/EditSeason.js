@@ -32,7 +32,8 @@ class EditSeason extends Component {
         trailerFile: {},
         posterURL: "",
         trailerURL: "",
-        seasonNum: ""
+        seasonNum: "",
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -114,11 +115,21 @@ class EditSeason extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editSeason, seasonID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
         //editSeason(seasonID, {name, description, posterFile, trailerFile, seasonNum});
-        const res = await editSeasonAsync(seasonID, {name, description, posterFile, trailerFile, seasonNum})
+        const res = await editSeasonAsync(seasonID, {name, description, posterFile, trailerFile, seasonNum});
+
+        this.setState({
+            loadingUpdate: false
+        })
+
         if (res.data.success) {
             this.props.history.push(`/seasons/details/${seasonID}`);
         }
@@ -126,7 +137,7 @@ class EditSeason extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, description, posterFile, trailerFile, posterURL, trailerURL, seasonNum} = this.state;
+        const {name, description, posterFile, trailerFile, posterURL, trailerURL, seasonNum, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -181,7 +192,7 @@ class EditSeason extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

@@ -40,6 +40,7 @@ class EditMovie extends Component {
         posterURL: "",
         trailerURL: "",
         movieURL: "",
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -159,12 +160,21 @@ class EditMovie extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editMovie} = this.props;
         const {movieID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
 
         //editMovie(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
         const res = await editMovieAsync(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+
+        this.setState({
+            loadingUpdate: false
+        })
 
         if (res.data.success) {
             this.props.history.push(`/movies/details/${movieID}`);
@@ -173,7 +183,7 @@ class EditMovie extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, posterURL, trailerURL, movieURL} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, posterURL, trailerURL, movieURL, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -246,7 +256,7 @@ class EditMovie extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

@@ -21,7 +21,8 @@ class EditSubtitle extends Component {
         languageLabel: "",
         subtitleFile: {},
         subtitleURL: "",
-        subtitleItem: {}
+        subtitleItem: {},
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -74,10 +75,20 @@ class EditSubtitle extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editSubtitle, subtitleID} = this.props;
         const {languageLabel, subtitleFile} = this.state;
 
         editSubtitle(subtitleID, {languageLabel, subtitleFile});
+
+        this.setState({
+            loadingUpdate: false
+        })
+
         setTimeout(() => {
             this.props.history.goBack();
         }, 2500);
@@ -85,7 +96,7 @@ class EditSubtitle extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleFileChange, onClear} = this;
-        const {languageLabel, subtitleFile, subtitleURL} = this.state;
+        const {languageLabel, subtitleFile, subtitleURL, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -117,7 +128,7 @@ class EditSubtitle extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

@@ -38,6 +38,7 @@ class EditSeries extends Component {
         trailerFile: {},
         posterURL: "",
         trailerURL: "",
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -156,11 +157,20 @@ class EditSeries extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editSeries, seriesID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
 
         //editSeries(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
         const res = await editSeriesAsync(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
+
+        this.setState({
+            loadingUpdate: false
+        })
 
         if (res.data.success) {
             this.props.history.push(`/series/details/${seriesID}`);
@@ -169,7 +179,7 @@ class EditSeries extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, posterURL, trailerURL} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, posterURL, trailerURL, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -233,7 +243,7 @@ class EditSeries extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

@@ -32,6 +32,7 @@ class EditManager extends Component {
         password: "",
         roleID: "",
         managerRolesList: [],
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -65,12 +66,21 @@ class EditManager extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editManager} = this.props;
         const {managerID} = this.props;
         const {username, password, roleID} = this.state;
 
         //editManager(managerID, {username, password, roleID});
         const res = await editManagerAsync(managerID, {username, password, roleID});
+
+        this.setState({
+            loadingUpdate: false
+        })
 
         if (res.data.success) {
             this.props.history.push(`/managers`);
@@ -79,7 +89,7 @@ class EditManager extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderManagerRoleOptions} = this;
-        const {username, password, roleID} = this.state;
+        const {username, password, roleID, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -111,7 +121,7 @@ class EditManager extends Component {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                             Save
                         </Button>
                     </FormGroup>
