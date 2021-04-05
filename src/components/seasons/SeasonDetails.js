@@ -3,6 +3,7 @@ import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import EpisodeList from "../episodes/EpisodeList";
+import PhotoList from "../photos/PhotoList";
 import {Link} from "react-router-dom";
 
 class SeasonDetails extends Component {
@@ -11,6 +12,11 @@ class SeasonDetails extends Component {
         const {episodes, seasonItem} = this.props;
         
         return <EpisodeList episodes={episodes} currentSeasonID={seasonItem._id}/>
+    }
+
+    renderPhotoList = () => {
+        const {photos, seasonItem, addPhoto} = this.props;
+        return <PhotoList recordID={seasonItem._id} addPhoto={addPhoto} photos={photos}/>
     }
 
     renderSeasonDescriptionItems = () => {
@@ -65,7 +71,11 @@ class SeasonDetails extends Component {
         })
 
         descriptionItems.push(
-            <Descriptions.Item key={"episode-list"} label={"Episodes"}>{this.renderEpisodeList()}</Descriptions.Item>
+            <Descriptions.Item key={"episode-list"} span={3} label={"Episodes"}>{this.renderEpisodeList()}</Descriptions.Item>
+        )
+
+        descriptionItems.push(
+            <Descriptions.Item key={"photo-list"} span={3} label={"Photo"}>{this.renderPhotoList()}</Descriptions.Item>
         )
 
         return descriptionItems;

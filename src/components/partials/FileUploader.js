@@ -15,7 +15,7 @@ export default class FileUploader extends Component {
             fileName = currentFile.name
         }
 
-        if (inputName === "posterFile") {
+        if (inputName === "posterFile" || inputName === "photoFile") {
             return (
                 <CustomInput type="file" id={inputName} name={inputName} label={fileName} onChange={handleFileChange} accept="image/*"/>
             )

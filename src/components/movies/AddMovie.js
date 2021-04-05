@@ -230,7 +230,6 @@ class AddMovie extends Component {
     }
 }
 
-
 const mapDispatchToProps = (dispatch) => {
     return {
         addMovie: (newMovie) => {
