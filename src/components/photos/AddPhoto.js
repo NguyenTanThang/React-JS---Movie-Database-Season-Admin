@@ -45,7 +45,7 @@ class AddPhoto extends Component {
     const {addPhoto, recordID} = this.props;
     const {photoFile} = this.state;
 
-    if (isObjectEmpty(photoFile)) {
+    if (!photoFile || isObjectEmpty(photoFile)) {
       return message.warning("Please select a file");
     }
 
@@ -72,7 +72,7 @@ class AddPhoto extends Component {
     if (file) {
         const fileExt = getFileExtension(file.name);
         if (!acceptImageExt(fileExt)) {
-            message.warning("Poster can only be PNG, JPEG or JPG file. Although the file's name is visible it will not be uploaded", 5)
+            message.warning("Poster can only be PNG, JPEG or JPG file. Although the file's name is visible it will not be uploaded", 5);
         } else {
             this.setState({
                 [e.target.name]: file
