@@ -11,6 +11,9 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {
+    authenticationService
+} from "../services";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
@@ -95,7 +98,7 @@ export const getAllManagers = () => {
             dispatch(setLoading());
 
             const res = await axios.get(MANAGER_URL);
-            const userID = sessionStorage.getItem("userID");
+            const userID = authenticationService.currentUserValue._id;
     
             let managers = res.data.data;
             managers = managers.filter(managerItem => {

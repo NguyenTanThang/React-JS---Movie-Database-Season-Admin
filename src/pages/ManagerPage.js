@@ -5,7 +5,6 @@ import {
 } from "../actions/managerActions";
 import {connect} from "react-redux";
 import ManagerList from "../components/managers/ManagerList";
-import LayoutSide from "../components/partials/LayoutSide";
 import ComponentHeader from "../components/partials/ComponentHeader";
 import {Link} from "react-router-dom";
 import {getCurrentLoginStatus} from "../requests/authRequests";
