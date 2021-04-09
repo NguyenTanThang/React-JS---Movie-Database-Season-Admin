@@ -1,7 +1,7 @@
 import axios from "axios";
 import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
-import {authenticationService} from "../services"
+import {authenticationService} from "../services";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 

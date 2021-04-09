@@ -7,6 +7,7 @@ import {deleteEpisodesBySeasonID} from "./episodeRequests";
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const SERIES_URL = `${MAIN_PROXY_URL}/series`;
 
@@ -21,7 +22,11 @@ export const addSeriesAsync = async (newSeries) => {
         const posterURL = posterFileFirebaseURL;
         const trailerURL = trailerFileFirebaseURL;
 
-        const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL});
+        const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL}, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -56,7 +61,11 @@ export const editSeriesAsync = async (seriesID, updatedSeries) => {
             updateSeriesObject.trailerURL = trailerURL;
         }
 
-        const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject);
+        const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 

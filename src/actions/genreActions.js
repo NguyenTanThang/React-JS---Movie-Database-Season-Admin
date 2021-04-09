@@ -11,13 +11,18 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {authHeader} from "../helpers";
 
 const GENRE_URL = `${MAIN_PROXY_URL}/genres`;
 
 export const deleteGenre = (genreID) => {
     return async (dispatch) => {
         try {
-            const res = await axios.delete(`${GENRE_URL}/delete/${genreID}`);
+            const res = await axios.delete(`${GENRE_URL}/delete/${genreID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -43,7 +48,11 @@ export const editGenre = (genreItem, updatedGenre) => {
     return async (dispatch) => {
         try {
             const genreID = genreItem._id;
-            const res = await axios.put(`${GENRE_URL}/edit/${genreID}`, updatedGenre);
+            const res = await axios.put(`${GENRE_URL}/edit/${genreID}`, updatedGenre, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -72,6 +81,10 @@ export const addGenre = (name) => {
         try {
             const res = await axios.post(`${GENRE_URL}/add`, {
                 name
+            }, {
+                headers: {
+                    ...authHeader()
+                }
             });
     
             if (res.data.success) {

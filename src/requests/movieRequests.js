@@ -14,6 +14,7 @@ import {
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 
@@ -45,6 +46,10 @@ export const addMovieAsync = async (newMovie) => {
             movieURL,
             posterURL,
             trailerURL
+        }, {
+            headers: {
+                ...authHeader()
+            }
         });
 
         return res;
@@ -101,7 +106,11 @@ export const editMovieAsync = async (movieID, updatedMovie) => {
             updateMovieObject.movieURL = movieURL;
         }
 
-        const res = await axios.put(`${MOVIE_URL}/edit/${movieID}`, updateMovieObject);
+        const res = await axios.put(`${MOVIE_URL}/edit/${movieID}`, updateMovieObject, {
+            headers: {
+                ...authHeader()
+            }
+        });
     
         if (res.data.success) {
             if (!isObjectEmpty(posterFile)) {

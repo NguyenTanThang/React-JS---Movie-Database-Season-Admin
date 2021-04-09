@@ -27,6 +27,7 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {authHeader} from "../helpers";
 
 const SERIES_URL = `${MAIN_PROXY_URL}/series`;
 
@@ -35,7 +36,11 @@ export const deleteSeries = (seriesID) => {
         try {
             let res = await removeSeriesRelatedFiles(seriesID);
             res = await deleteSeasonsBySeriesID(seriesID);
-            res = await axios.delete(`${SERIES_URL}/delete/${seriesID}`);
+            res = await axios.delete(`${SERIES_URL}/delete/${seriesID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -78,7 +83,11 @@ export const editSeries = (seriesID, updatedSeries) => {
                 updateSeriesObject.trailerURL = trailerURL;
             }
 
-            const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject);
+            const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 const series = res.data.data;
@@ -119,7 +128,11 @@ export const addSeries = (newSeries) => {
             const posterURL = posterFileFirebaseURL;
             const trailerURL = trailerFileFirebaseURL;
 
-            const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL, total_episodes});
+            const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL, total_episodes}, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 const series = res.data.data;

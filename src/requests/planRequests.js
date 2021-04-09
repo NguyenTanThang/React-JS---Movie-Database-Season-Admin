@@ -1,6 +1,7 @@
 import axios from "axios";
 import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
+import {authHeader} from "../helpers";
 
 const PLAN_URL = `${MAIN_PROXY_URL}/plans`;
 
@@ -10,6 +11,10 @@ export const addPlanAsync = async (newPlan) => {
         const {name, price, description, durationInDays} = newPlan;
         const res = await axios.post(`${PLAN_URL}/add`, {
             name, price, description, durationInDays
+        }, {
+            headers: {
+                ...authHeader()
+            }
         });
 
         message.destroy()
@@ -30,7 +35,11 @@ export const editPlanAsync = async (planID, updatedPlan) => {
     try {
         message.loading('Action in progress..', 0);
 
-        const res = await axios.put(`${PLAN_URL}/edit/${planID}`, updatedPlan);
+        const res = await axios.put(`${PLAN_URL}/edit/${planID}`, updatedPlan, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 

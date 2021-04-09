@@ -28,9 +28,16 @@ function login(username, password) {
             message.destroy();
             if (data.success) {
                 const user = data.data;
+                const token = data.token;
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                currentUserSubject.next(user);
+                localStorage.setItem('currentUser', JSON.stringify({
+                    ...user,
+                    token
+                }));
+                currentUserSubject.next({
+                    ...user,
+                    token
+                });
 
                 createNotification("success", {
                     message: "Login",

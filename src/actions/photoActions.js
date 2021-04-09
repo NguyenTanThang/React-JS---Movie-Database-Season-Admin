@@ -13,6 +13,7 @@ import {
     uploadPhotoFirebase,
     deleteFileFirebase
 } from "../requests/firebaseStorageRequests"; 
+import {authHeader} from "../helpers";
 
 const PHOTO_URL = `${MAIN_PROXY_URL}/photos`;
 
@@ -20,7 +21,11 @@ export const deletePhoto = (photoID) => {
     return async (dispatch) => {
         try {
             message.loading('Action in progress..', 0);
-            const res = await axios.delete(`${PHOTO_URL}/delete/${photoID}`);
+            const res = await axios.delete(`${PHOTO_URL}/delete/${photoID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             const photo = res.data.data;
             await deleteFileFirebase(photo.photoURL);
 
@@ -54,6 +59,10 @@ export const addPhoto = (newPhoto) => {
             const photoURL = await uploadPhotoFirebase(photoFile)
             const res = await axios.post(`${PHOTO_URL}/add`, {
                 recordID, photoURL
+            }, {
+                headers: {
+                    ...authHeader()
+                }
             });
 
             if (res.data.success) {

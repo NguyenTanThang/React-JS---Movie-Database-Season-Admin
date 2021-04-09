@@ -22,6 +22,7 @@ import {
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const EPISODE_URL = `${MAIN_PROXY_URL}/episodes`;
 
@@ -30,7 +31,11 @@ export const deleteEpisode = (episodeID) => {
         try {
             let res = await removeEpisodeRelatedFiles(episodeID);
             res = await removeSubtitleByEpisodeID(episodeID);
-            res = await axios.delete(`${EPISODE_URL}/delete/${episodeID}`);
+            res = await axios.delete(`${EPISODE_URL}/delete/${episodeID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -71,7 +76,11 @@ export const editEpisode = (episodeID, updatedEpisode) => {
                 updateEpisodeObject.episodeURL = episodeURL;
             }
 
-            const res = await axios.put(`${EPISODE_URL}/edit/${episodeID}`, updateEpisodeObject);
+            const res = await axios.put(`${EPISODE_URL}/edit/${episodeID}`, updateEpisodeObject, {
+                headers: {
+                    ...authHeader()
+                }
+            });
 
             message.destroy()
     
@@ -105,7 +114,11 @@ export const addEpisode = (newEpisode) => {
 
             const episodeURL = episodeFileFirebaseURL;
 
-            const res = await axios.post(`${EPISODE_URL}/add`, {name, description, episodeFile, episodeNum, episodeURL, seasonID});
+            const res = await axios.post(`${EPISODE_URL}/add`, {name, description, episodeFile, episodeNum, episodeURL, seasonID}, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             message.destroy()
 

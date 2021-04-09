@@ -8,6 +8,7 @@ import {
 import {
     deleteFileFirebase
 } from "./firebaseStorageRequests";
+import {authHeader} from "../helpers";
 
 const SUB_URL = `${MAIN_PROXY_URL}/subtitles`;
 
@@ -28,7 +29,11 @@ export const removeSubtitleRelatedFiles = async (subID) => {
 
 export const removeSubtitleByMovieID = async (movieID) => {
     try {
-        const res = await axios.delete(`${SUB_URL}/delete/movieID/${movieID}`);
+        const res = await axios.delete(`${SUB_URL}/delete/movieID/${movieID}`, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         const subtitles = res.data.data;
 
@@ -49,7 +54,11 @@ export const removeSubtitleByMovieID = async (movieID) => {
 
 export const removeSubtitleByEpisodeID = async (episodeID) => {
     try {
-        const res = await axios.delete(`${SUB_URL}/delete/episodeID/${episodeID}`);
+        const res = await axios.delete(`${SUB_URL}/delete/episodeID/${episodeID}`, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         const subtitles = res.data.data;
 

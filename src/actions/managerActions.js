@@ -14,13 +14,18 @@ import {
 import {
     authenticationService
 } from "../services";
+import {authHeader} from "../helpers";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
 export const deleteManager = (managerID) => {
     return async (dispatch) => {
         try {
-            const res = await axios.delete(`${MANAGER_URL}/delete/${managerID}`);
+            const res = await axios.delete(`${MANAGER_URL}/delete/${managerID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -45,7 +50,11 @@ export const deleteManager = (managerID) => {
 export const editManager = (managerID, updatedManager) => {
     return async (dispatch) => {
         try {
-            const res = await axios.put(`${MANAGER_URL}/edit/${managerID}`, updatedManager);
+            const res = await axios.put(`${MANAGER_URL}/edit/${managerID}`, updatedManager, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -70,7 +79,11 @@ export const editManager = (managerID, updatedManager) => {
 export const addManager = (newManager) => {
     return async (dispatch) => {
         try {
-            const res = await axios.post(`${MANAGER_URL}/add`, newManager);
+            const res = await axios.post(`${MANAGER_URL}/add`, newManager, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
