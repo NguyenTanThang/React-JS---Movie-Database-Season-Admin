@@ -46,6 +46,10 @@ class AddPhoto extends Component {
     const {photoFile} = this.state;
 
     if (!photoFile || isObjectEmpty(photoFile)) {
+      this.setState({
+        photoFile: {},
+        loadingCreate: false
+      })
       return message.warning("Please select a file");
     }
 
