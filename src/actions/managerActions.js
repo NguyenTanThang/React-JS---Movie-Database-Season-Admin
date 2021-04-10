@@ -21,12 +21,16 @@ const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 export const deleteManager = (managerID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
+            message.loading("Deleting...", 0);
+
             const res = await axios.delete(`${MANAGER_URL}/delete/${managerID}`, {
                 headers: {
                     ...authHeader()
                 }
             });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {

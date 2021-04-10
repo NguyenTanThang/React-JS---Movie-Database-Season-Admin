@@ -34,6 +34,7 @@ const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 export const deleteMovie = (movieID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
             message.loading('Action in progress..', 0);
 
             let res = await removeSubtitleByMovieID(movieID);

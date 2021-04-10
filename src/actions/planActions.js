@@ -18,12 +18,16 @@ const PLAN_URL = `${MAIN_PROXY_URL}/plans`;
 export const deletePlan = (planID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
+            message.loading("Deleting...", 0);
+
             const res = await axios.delete(`${PLAN_URL}/delete/${planID}`, {
                 headers: {
                     ...authHeader()
                 }
             });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {

@@ -24,7 +24,9 @@ const SUB_URL = `${MAIN_PROXY_URL}/subtitles`;
 export const deleteSubtitle = (subtitleID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
             message.loading('Action in progress..', 0);
+
             const res = await axios.delete(`${SUB_URL}/delete/${subtitleID}`, {
                 headers: {
                     ...authHeader()

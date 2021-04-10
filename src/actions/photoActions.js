@@ -20,7 +20,9 @@ const PHOTO_URL = `${MAIN_PROXY_URL}/photos`;
 export const deletePhoto = (photoID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
             message.loading('Action in progress..', 0);
+            
             const res = await axios.delete(`${PHOTO_URL}/delete/${photoID}`, {
                 headers: {
                     ...authHeader()

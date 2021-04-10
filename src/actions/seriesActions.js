@@ -34,6 +34,9 @@ const SERIES_URL = `${MAIN_PROXY_URL}/series`;
 export const deleteSeries = (seriesID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
+            message.loading("Deleting...", 0);
+
             let res = await removeSeriesRelatedFiles(seriesID);
             res = await deleteSeasonsBySeriesID(seriesID);
             res = await axios.delete(`${SERIES_URL}/delete/${seriesID}`, {
@@ -42,6 +45,7 @@ export const deleteSeries = (seriesID) => {
                 }
             });
             
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
