@@ -368,3 +368,8 @@ body {
 .dashboard-box-item:hover {
   box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
 }
+
+/*Ant Design*/
+.ant-descriptions-item-label {
+  font-weight: bold;
+}

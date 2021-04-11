@@ -29,6 +29,7 @@ class EditCustomer extends Component {
         email: "",
         password: "",
         validated: "",
+        avatar: "",
         customerStatusList: [
             {
                 value: true,
@@ -45,9 +46,9 @@ class EditCustomer extends Component {
     async componentDidMount() {
         const {customerID} = this.props;
         const customer = await getCustomerByID(customerID);
-        const {email, validated, username} = customer.customerItem;
+        const {email, validated, username, avatar} = customer.customerItem;
         this.setState({
-            email, validated, username
+            email, validated, username, avatar
         }, () => {
             console.log(this.state);
         })
@@ -78,10 +79,10 @@ class EditCustomer extends Component {
 
         const {editCustomer} = this.props;
         const {customerID} = this.props;
-        const {email, password, validated, username} = this.state;
+        const {email, password, validated, username, avatar} = this.state;
 
         //editCustomer(customerID, {email, password, validated});
-        const res = await editCustomerAsync(customerID, {username, email, password, validated});
+        const res = await editCustomerAsync(customerID, {username, email, password, validated, avatar});
 
         this.setState({
             loadingUpdate: false
