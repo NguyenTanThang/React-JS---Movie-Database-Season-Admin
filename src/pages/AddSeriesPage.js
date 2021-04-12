@@ -11,15 +11,14 @@ import {
 } from "react-redux";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message} from "antd";
+import {validateManagerRole} from "../requests/authRequests";
+
 
 class AddSeriesPage extends Component {
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        if (!loggedIn) {
-            message.error("You need to login first");
-            this.props.history.push("/login");
-        }
+        await validateManagerRole();
+
         this.props.getAllGenres();
     }
 

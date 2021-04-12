@@ -11,32 +11,17 @@ import {
 } from "react-redux";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message} from "antd";
+import {validateManagerRole} from "../requests/authRequests";
 
 class EditMoviePage extends Component {
 
-    state = {
-        loggedIn: false
-    }
-    
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            this.props.history.push("/login");
-        }
+        await validateManagerRole();
         this.props.getAllGenres();
     }
 
     render() {
         const { match: { params }, genres } = this.props;
-        const {loggedIn} = this.state;
-
-        if (!loggedIn) {
-            return (<></>)
-        }
 
         return (
             <>

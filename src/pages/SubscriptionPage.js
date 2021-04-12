@@ -9,15 +9,13 @@ import LayoutSide from "../components/partials/LayoutSide";
 import ComponentHeader from "../components/partials/ComponentHeader";
 import {Space, message} from "antd";
 import {getCurrentLoginStatus} from "../requests/authRequests";
+import {validateManagerRole} from "../requests/authRequests";
 
 class SubscriptionPage extends Component {
     
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        if (!loggedIn) {
-            message.error("You need to login first");
-            this.props.history.push("/login");
-        }
+        await validateManagerRole();
+
         this.props.getAllSubscriptions();
     }
 

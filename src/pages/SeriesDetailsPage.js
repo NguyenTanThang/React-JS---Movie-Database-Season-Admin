@@ -8,24 +8,17 @@ import {getSeasonsBySeriesID} from "../actions/seasonActions";
 import {getAllPhotosBySeriesID} from "../actions/photoActions";
 import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
+import {validateManagerRole} from "../requests/authRequests";
 
 class SeriesDetailsPage extends Component {
 
     state = {
         seriesItem: "",
-        loggedIn: false,
         loading: true
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            return this.props.history.push("/login");
-        }
+        await validateManagerRole();
 
         const {seriesID} = this.props.match.params;
         this.props.getSeasonsBySeriesID(seriesID);
@@ -38,7 +31,7 @@ class SeriesDetailsPage extends Component {
     }
 
     render() {
-        const {seriesItem, loggedIn, loading} = this.state;
+        const {seriesItem, loading} = this.state;
         const {seasons, photos} = this.props;
         localStorage.setItem("returnURL", this.props.location.pathname)
 
@@ -53,7 +46,7 @@ class SeriesDetailsPage extends Component {
             )
         }
 
-        if (!seriesItem || !loggedIn) {
+        if (!seriesItem) {
             return (<></>)
         }
 

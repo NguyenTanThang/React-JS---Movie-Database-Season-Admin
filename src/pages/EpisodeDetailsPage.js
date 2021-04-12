@@ -8,24 +8,17 @@ import {getAllSubtitlesByEpisodeID} from "../actions/subtitleActions";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
+import {validateManagerRole} from "../requests/authRequests";
 
 class EpisodeDetailsPage extends Component {
 
     state = {
         episodeItem: "",
-        loggedIn: false,
         loading: true
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            return this.props.history.push("/login");
-        }
+        await validateManagerRole();
 
         const {episodeID} = this.props.match.params;
         const episodeItem = await getEpisodeByID(episodeID);
@@ -38,7 +31,7 @@ class EpisodeDetailsPage extends Component {
     }
 
     render() {
-        const {episodeItem, loggedIn, loading} = this.state;
+        const {episodeItem, loading} = this.state;
         const {subtitles} = this.props;
         const returnURL = localStorage.getItem("previousPathEpisode");
 
@@ -53,7 +46,7 @@ class EpisodeDetailsPage extends Component {
             )
         }
 
-        if (!episodeItem || !loggedIn) {
+        if (!episodeItem) {
             return (<></>)
         }
 

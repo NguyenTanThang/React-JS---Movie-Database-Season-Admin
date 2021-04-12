@@ -8,24 +8,17 @@ import {getEpisodesBySeasonID} from "../actions/episodeActions";
 import {getAllPhotosBySeasonID} from "../actions/photoActions";
 import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
+import {validateManagerRole} from "../requests/authRequests";
 
 class SeasonDetailsPage extends Component {
 
     state = {
         seasonItem: "",
-        loggedIn: false,
         loading: true
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            return this.props.history.push("/login");
-        }
+        await validateManagerRole();
 
         const {seasonID} = this.props.match.params;
         this.props.getEpisodesBySeasonID(seasonID);
@@ -38,7 +31,7 @@ class SeasonDetailsPage extends Component {
     }
 
     render() {
-        const {seasonItem, loggedIn, loading} = this.state;
+        const {seasonItem, loading} = this.state;
         const {episodes, photos} = this.props;
         const returnURL = localStorage.getItem("returnURL");
         localStorage.setItem("previousPathEpisode", this.props.location.pathname)
@@ -54,7 +47,7 @@ class SeasonDetailsPage extends Component {
             )
         }
 
-        if (!seasonItem || !loggedIn) {
+        if (!seasonItem) {
             return (<></>)
         }
 

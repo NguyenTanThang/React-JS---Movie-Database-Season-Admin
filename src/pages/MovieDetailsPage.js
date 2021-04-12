@@ -8,24 +8,17 @@ import {message, Skeleton} from "antd";
 import {getAllSubtitlesByMovieID} from "../actions/subtitleActions";
 import {getAllPhotosByMovieID} from "../actions/photoActions";
 import {connect} from "react-redux";
+import {validateManagerRole} from "../requests/authRequests";
 
 class MovieDetailsPage extends Component {
 
     state = {
         movieItem: "",
-        loggedIn: false,
         loading: true
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            return this.props.history.push("/login");
-        }
+        await validateManagerRole();
 
         const {movieID} = this.props.match.params;
         const movieItem = await getMovieByID(movieID);
@@ -39,7 +32,7 @@ class MovieDetailsPage extends Component {
     }
 
     render() {
-        const {movieItem, loggedIn, loading} = this.state;
+        const {movieItem, loading} = this.state;
         const {subtitles, photos} = this.props;
 
         if (loading) {
@@ -53,7 +46,7 @@ class MovieDetailsPage extends Component {
             )
         }
 
-        if (!movieItem || !loggedIn) {
+        if (!movieItem) {
             return (<></>)
         }
 

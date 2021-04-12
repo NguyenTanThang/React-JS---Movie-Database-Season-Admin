@@ -9,15 +9,13 @@ import ComponentHeader from "../components/partials/ComponentHeader";
 import {Link} from "react-router-dom";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {Space, message} from "antd";
+import {validateManagerRole} from "../requests/authRequests";
 
 class ManagerPage extends Component {
     
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        if (!loggedIn) {
-            message.error("You need to login first");
-            this.props.history.push("/login");
-        }
+        await validateManagerRole();
+
         this.props.getAllManagers();
     }
 

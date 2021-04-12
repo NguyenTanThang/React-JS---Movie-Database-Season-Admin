@@ -9,25 +9,18 @@ import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
 import {getAllSubscriptionsByCustomerID} from "../actions/subscriptionActions";
+import {validateManagerRole} from "../requests/authRequests";
 
 class CustomerDetailsPage extends Component {
 
     state = {
         customerItem: "",
-        loggedIn: false,
         subscriptionList: [],
         loading: true
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            this.props.history.push("/login");
-        }
+        await validateManagerRole();
         const {customerID} = this.props.match.params;
         const customerItem = await getCustomerByID(customerID);
         const subscriptionList = await getSubByCustomerID(customerID);
@@ -40,7 +33,7 @@ class CustomerDetailsPage extends Component {
     }
 
     render() {
-        const {customerItem, loggedIn, subscriptionList, loading} = this.state;
+        const {customerItem, subscriptionList, loading} = this.state;
         const {subscriptions} = this.props;
 
         if (loading) {
@@ -54,7 +47,7 @@ class CustomerDetailsPage extends Component {
             )
         }
 
-        if (!customerItem || !loggedIn) {
+        if (!customerItem) {
             return (<></>)
         }
 

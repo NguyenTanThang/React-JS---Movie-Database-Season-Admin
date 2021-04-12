@@ -5,31 +5,16 @@ import LayoutSide from "../components/partials/LayoutSide";
 import ComponentHeader from "../components/partials/ComponentHeader";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message} from "antd";
+import {validateManagerRole} from "../requests/authRequests";
 
 class EditPlanPage extends Component {
 
-    state = {
-        loggedIn: false
-    }
-
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            return this.props.history.push("/login");
-        }
+        await validateManagerRole();
     }
 
     render() {
         const { match: { params } } = this.props;
-        const {loggedIn} = this.state;
-
-        if (!loggedIn) {
-            return (<></>)
-        }
 
         return (
             <>

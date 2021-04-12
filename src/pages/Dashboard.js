@@ -11,6 +11,7 @@ import DashboardBoxItem from "../components/dashboard/DashboardBoxItem";
 import PieChart from "../components/dashboard/PieChart";
 import LineChart from "../components/dashboard/LineChart";
 import TabGenerator from "../components/partials/TabGenerator";
+import {validateManagerRole} from "../requests/authRequests";
 
 export default class Dashboard extends Component {
 
@@ -24,6 +25,7 @@ export default class Dashboard extends Component {
     async componentDidMount() {
         const customerDashboardData = await getCustomerDashboardData();
         const {monthlyRevenueChartData, revenueYearList} = await getRevenueData();
+        await validateManagerRole();
         this.setState({
             filteredRevenue: filterRevenue(monthlyRevenueChartData),
             customerDashboardData,
