@@ -21,6 +21,12 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils/utils";
 
 const { Option } = Select;
 
@@ -137,6 +143,20 @@ class AddSeries extends Component {
 
             const {addSeries} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
+
+            if (!posterFile || isObjectEmpty(posterFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the poster file input. You might have leave some empty."
+                });
+            }
+    
+            if (!trailerFile || isObjectEmpty(trailerFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the trailer file input. You might have leave some empty."
+                });
+            }
 
             //addSeries({name, genres, description, IMDB_ID, posterFile, trailerFile});
             const res = await addSeriesAsync({name, genres, description, IMDB_ID, posterFile, trailerFile});

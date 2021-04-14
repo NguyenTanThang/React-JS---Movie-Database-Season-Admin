@@ -21,6 +21,12 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils/utils";
 
 class AddSeason extends Component {
 
@@ -98,6 +104,20 @@ class AddSeason extends Component {
 
         const {addSeason, seriesID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
+
+        if (!posterFile || isObjectEmpty(posterFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the poster file input. You might have leave some empty."
+            });
+        }
+
+        if (!trailerFile || isObjectEmpty(trailerFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the trailer file input. You might have leave some empty."
+            });
+        }
 
         //addSeason({name, seriesID, description, posterFile, trailerFile, seasonNum});
         const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum});

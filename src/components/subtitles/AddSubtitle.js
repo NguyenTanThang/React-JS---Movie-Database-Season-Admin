@@ -10,7 +10,13 @@ import {Form, FormGroup, Row, Label} from 'reactstrap';
 import {withRouter} from 'react-router-dom';
 import FileUploader from "../partials/FileUploader";
 import languageCodes from "../../data/languageCodes";
-import {getFileExtension} from "../../utils/utils";
+import {
+    getFileExtension, 
+    createNotification
+} from "../../utils/utils";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
 
 class AddSubtitle extends Component {
 
@@ -59,6 +65,13 @@ class AddSubtitle extends Component {
 
         const {addSubtitle, videoID} = this.props;
         const {languageLabel, subtitleFile} = this.state;
+
+        if (!subtitleFile || isObjectEmpty(subtitleFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the subtitle file input. You might have leave some empty."
+            });
+        }
 
         addSubtitle({languageLabel, subtitleFile, videoID});
         

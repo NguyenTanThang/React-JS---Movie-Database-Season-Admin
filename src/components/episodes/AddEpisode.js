@@ -16,6 +16,12 @@ import FileUploader from "../partials/FileUploader";
 import {
     withRouter
 } from "react-router-dom";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils/utils";
 
 class AddEpisode extends Component {
 
@@ -65,6 +71,13 @@ class AddEpisode extends Component {
 
         const {addEpisode, seasonID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
+
+        if (!episodeFile || isObjectEmpty(episodeFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the episode file input. You might have leave some empty."
+            });
+        }
 
         //addEpisode({name, description, episodeFile, episodeNum, seasonID});
         const res = await addEpisodeAsync({name, description, episodeFile, episodeNum, seasonID})

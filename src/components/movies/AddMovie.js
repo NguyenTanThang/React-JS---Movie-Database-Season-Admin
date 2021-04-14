@@ -8,6 +8,12 @@ import {
 import {
     addMovieAsync
 } from "../../requests/movieRequests";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils/utils";
 import { Button, Select, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -140,6 +146,27 @@ class AddMovie extends Component {
 
             //const {addMovie} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
+
+            if (!posterFile || isObjectEmpty(posterFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the poster file input. You might have leave some empty."
+                });
+            }
+
+            if (!trailerFile || isObjectEmpty(trailerFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the trailer file input. You might have leave some empty."
+                });
+            }
+
+            if (!movieFile || isObjectEmpty(movieFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the movie file input. You might have leave some empty."
+                });
+            }
 
             //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
             const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});

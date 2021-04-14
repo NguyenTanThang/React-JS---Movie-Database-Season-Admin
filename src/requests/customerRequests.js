@@ -17,8 +17,7 @@ export const addCustomerAsync = async (newCustomer) => {
                 ...authHeader()
             }
         });
-
-        message.destroy()
+        message.destroy();
 
         if (res.data.success) {
             message.success(res.data.message, 5);
