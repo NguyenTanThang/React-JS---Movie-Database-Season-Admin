@@ -114,7 +114,11 @@ export const getAllManagers = () => {
         try {
             dispatch(setLoading());
 
-            const res = await axios.get(MANAGER_URL);
+            const res = await axios.get(MANAGER_URL, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             const userID = authenticationService.currentUserValue._id;
     
             let managers = res.data.data;

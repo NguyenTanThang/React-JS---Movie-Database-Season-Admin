@@ -13,7 +13,7 @@ import {
 } from "../../utils/validator";
 import {
     createNotification
-} from "../../utils/utils";
+} from "../../utils";
 import { Button, Select, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -68,6 +68,11 @@ class AddMovie extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -97,6 +102,10 @@ class AddMovie extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -138,12 +147,6 @@ class AddMovie extends Component {
         try {
             e.preventDefault();
 
-            this.setState({
-                loadingCreate: true
-            })
-
-            message.loading('Action in progress..', 0);
-
             //const {addMovie} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
 
@@ -167,6 +170,12 @@ class AddMovie extends Component {
                     description: "Please check the movie file input. You might have leave some empty."
                 });
             }
+
+            this.setState({
+                loadingCreate: true
+            })
+
+            message.loading('Action in progress..', 0);
 
             //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
             const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});

@@ -92,6 +92,11 @@ class EditMovie extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -121,6 +126,10 @@ class EditMovie extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {

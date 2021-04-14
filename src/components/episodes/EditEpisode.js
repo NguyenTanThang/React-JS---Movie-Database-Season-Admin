@@ -9,7 +9,7 @@ import {
     getEpisodeByID,
     editEpisodeAsync
 } from "../../requests/episodeRequests";
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
@@ -17,6 +17,14 @@ import UpdateFileModal from "../partials/UpdateFileModal";
 import {
     withRouter
 } from "react-router-dom";
+import {
+    acceptVideoExt,
+    getFileExtension,
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils";
 
 class EditEpisode extends Component {
 
@@ -59,9 +67,25 @@ class EditEpisode extends Component {
     }
 
     handleFileChange = (e) => {
+        const targetName = e.target.name;
         const file = e.target.files[0];
-        this.setState({
-            [e.target.name]: file
+        if (!file) {
+            return;
+        }
+        const fileExt = getFileExtension(file.name);
+
+        if (targetName == "episodeFile") {
+            if (acceptVideoExt(fileExt)) {
+                return this.setState({
+                    episodeURL: "",
+                    [e.target.name]: file
+                })
+            }
+            message.warning("Trailer can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
+        }
+
+        return this.setState({
+            [e.target.name]: {}
         })
     }
 
@@ -80,12 +104,19 @@ class EditEpisode extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
+        const {editEpisode, episodeID} = this.props;
+        const {name, description, episodeFile, episodeNum} = this.state;
+
+        if (!episodeFile || isObjectEmpty(episodeFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the episode file input. You might have leave some empty."
+            });
+        }
+
         this.setState({
             loadingUpdate: true
         })
-
-        const {editEpisode, episodeID} = this.props;
-        const {name, description, episodeFile, episodeNum} = this.state;
 
         //editEpisode(episodeID, {name, description, episodeFile, episodeNum});
         const res = await editEpisodeAsync(episodeID, {name, description, episodeFile, episodeNum});

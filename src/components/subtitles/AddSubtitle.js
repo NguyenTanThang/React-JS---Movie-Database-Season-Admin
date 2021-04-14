@@ -11,9 +11,11 @@ import {withRouter} from 'react-router-dom';
 import FileUploader from "../partials/FileUploader";
 import languageCodes from "../../data/languageCodes";
 import {
-    getFileExtension, 
-    createNotification
+    getFileExtension
 } from "../../utils/utils";
+import {
+    createNotification
+} from "../../utils";
 import {
     isObjectEmpty
 } from "../../utils/validator";
@@ -38,10 +40,18 @@ class AddSubtitle extends Component {
 
     handleFileChange = (e) => {
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         if (file) {
             const fileExt = getFileExtension(file.name);
             if (fileExt !== "vtt") {
                 message.error("Please upload a .vtt file. Although the file's name is visible it will not be uploaded", 5);
+                return this.setState({
+                    [e.target.name]: {}
+                })
             } else {
                 this.setState({
                     [e.target.name]: file
@@ -59,10 +69,6 @@ class AddSubtitle extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        this.setState({
-            loadingCreate: true
-        })
-
         const {addSubtitle, videoID} = this.props;
         const {languageLabel, subtitleFile} = this.state;
 
@@ -72,6 +78,10 @@ class AddSubtitle extends Component {
                 description: "Please check the subtitle file input. You might have leave some empty."
             });
         }
+
+        this.setState({
+            loadingCreate: true
+        })
 
         addSubtitle({languageLabel, subtitleFile, videoID});
         

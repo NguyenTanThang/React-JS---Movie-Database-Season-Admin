@@ -26,7 +26,7 @@ import {
 } from "../../utils/validator";
 import {
     createNotification
-} from "../../utils/utils";
+} from "../../utils";
 
 class AddSeason extends Component {
 
@@ -52,6 +52,11 @@ class AddSeason extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -81,6 +86,10 @@ class AddSeason extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -97,11 +106,7 @@ class AddSeason extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
-
-        this.setState({
-            loadingCreate: true
-        })
-
+        
         const {addSeason, seriesID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
@@ -118,6 +123,10 @@ class AddSeason extends Component {
                 description: "Please check the trailer file input. You might have leave some empty."
             });
         }
+
+        this.setState({
+            loadingCreate: true
+        })
 
         //addSeason({name, seriesID, description, posterFile, trailerFile, seasonNum});
         const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum});

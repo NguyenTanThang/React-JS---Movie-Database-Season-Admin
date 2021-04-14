@@ -55,10 +55,18 @@ class EditSubtitle extends Component {
 
     handleFileChange = (e) => {
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         if (file) {
             const fileExt = getFileExtension(file.name);
             if (fileExt !== "vtt") {
                 message.error("Please upload a .vtt file. Although the file's name is visible it will not be uploaded", 5);
+                return this.setState({
+                    [e.target.name]: {}
+                })
             } else {
                 this.setState({
                     [e.target.name]: file

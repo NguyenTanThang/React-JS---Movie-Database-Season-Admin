@@ -111,7 +111,11 @@ export const getAllCustomers = () => {
         try {
             dispatch(setLoading());
 
-            const res = await axios.get(CUSTOMER_URL);
+            const res = await axios.get(CUSTOMER_URL, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             const customers = res.data.data;
     
