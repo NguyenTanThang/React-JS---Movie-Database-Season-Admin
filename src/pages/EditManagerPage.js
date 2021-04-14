@@ -14,11 +14,6 @@ class EditManagerPage extends Component {
 
     render() {
         const { match: { params } } = this.props;
-        const {loggedIn} = this.state;
-
-        if (!loggedIn) {
-            return (<></>)
-        }
 
         return (
             <>

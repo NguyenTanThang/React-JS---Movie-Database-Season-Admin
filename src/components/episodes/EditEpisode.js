@@ -109,13 +109,6 @@ class EditEpisode extends Component {
         const {editEpisode, episodeID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
 
-        if (!episodeFile || isObjectEmpty(episodeFile)) {
-            return createNotification("error", {
-                message: "File Input",
-                description: "Please check the episode file input. You might have leave some empty."
-            });
-        }
-
         this.setState({
             loadingUpdate: true
         })
