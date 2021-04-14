@@ -11,9 +11,9 @@ import {
 import {
     getSeriesByID
 } from "../../requests/seriesRequests";
-import { Button, Select, message } from 'antd';
+import { Button, Select, message, Skeleton } from 'antd';
 import TextField from '@material-ui/core/TextField';
-import {Form, FormGroup, Row, Label} from 'reactstrap';
+import {Form, FormGroup, Row, Label, Container} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import UpdateFileModal from "../partials/UpdateFileModal";
 import {
@@ -38,7 +38,8 @@ class EditSeries extends Component {
         trailerFile: {},
         posterURL: "",
         trailerURL: "",
-        loadingUpdate: false
+        loadingUpdate: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -61,6 +62,7 @@ class EditSeries extends Component {
             IMDB_ID,
             posterURL,
             trailerURL,
+            loading: false
         })
     }
 
@@ -188,7 +190,18 @@ class EditSeries extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, posterURL, trailerURL, loadingUpdate} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, posterURL, trailerURL, loadingUpdate, loading} = this.state;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         return (
             <div>
@@ -238,7 +251,7 @@ class EditSeries extends Component {
                         <div className="col-lg-12 col-md-12 col-sm-12">
                             <FormGroup>
                                 <Label>Description</Label>
-                                <TinyEditor description={description} handleEditorChange={handleEditorChange} />
+                                {description ? (<TinyEditor description={description} handleEditorChange={handleEditorChange} />) : <></>}
                             </FormGroup>
                         </div>
 

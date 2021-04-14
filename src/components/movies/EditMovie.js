@@ -8,9 +8,9 @@ import {
 import {
     editMovieAsync
 } from "../../requests/movieRequests";
-import { Button, Select, message } from 'antd';
+import { Button, Select, message, Skeleton } from 'antd';
 import TextField from '@material-ui/core/TextField';
-import {Form, FormGroup, Row, Label} from 'reactstrap';
+import {Form, FormGroup, Row, Label, Container} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import {
     getMovieByID
@@ -40,7 +40,8 @@ class EditMovie extends Component {
         posterURL: "",
         trailerURL: "",
         movieURL: "",
-        loadingUpdate: false
+        loadingUpdate: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -63,7 +64,8 @@ class EditMovie extends Component {
             IMDB_ID,
             posterURL,
             trailerURL,
-            movieURL
+            movieURL,
+            loading: false
         })
     }
 
@@ -192,7 +194,18 @@ class EditMovie extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, posterURL, trailerURL, movieURL, loadingUpdate} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, posterURL, trailerURL, movieURL, loadingUpdate, loading} = this.state;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         return (
             <div>
@@ -251,7 +264,7 @@ class EditMovie extends Component {
                         <div className="col-lg-12 col-md-12 col-sm-12">
                             <FormGroup>
                                 <Label>Description</Label>
-                                <TinyEditor description={description} handleEditorChange={handleEditorChange} />
+                                {description ? (<TinyEditor description={description} handleEditorChange={handleEditorChange} />) : <></>}
                             </FormGroup>
                         </div>
 
