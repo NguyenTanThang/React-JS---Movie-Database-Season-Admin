@@ -72,8 +72,10 @@ class AddManager extends Component {
             loadingCreate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/managers`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/managers`);
+            }
         }
     }
 

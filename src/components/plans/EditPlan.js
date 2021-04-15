@@ -61,8 +61,10 @@ class EditPlan extends Component {
             loadingUpdate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/plans`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/plans`);
+            }
         }
     }
 

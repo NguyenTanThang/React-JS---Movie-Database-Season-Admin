@@ -142,8 +142,10 @@ class AddSeason extends Component {
             loadingCreate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/seasons/details/${res.data.data._id}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/seasons/details/${res.data.data._id}`);
+            }
         }
     }
 

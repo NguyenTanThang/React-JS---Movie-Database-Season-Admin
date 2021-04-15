@@ -30,6 +30,13 @@ export const addMovieAsync = async (newMovie) => {
             movieFile
         } = newMovie;
 
+        const imdbRes = await axios.get(`${MOVIE_URL}/IMDB_ID/${IMDB_ID}`);
+        
+        if (imdbRes.data.data) {
+            message.destroy()
+            return message.warning("This IMDB ID has already been used");
+        }
+
         const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
         const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
         const movieFileFirebaseURL = await uploadMovieFirebase(movieFile);
@@ -87,6 +94,13 @@ export const editMovieAsync = async (movieID, updatedMovie) => {
             description,
             IMDB_ID
         };
+
+        const imdbRes = await axios.get(`${MOVIE_URL}/IMDB_ID/${IMDB_ID}`);
+        
+        if (imdbRes.data.data && imdbRes.data.data._id !== movieID) {
+            message.destroy()
+            return message.warning("This IMDB ID has already been used");
+        }
 
         if (!isObjectEmpty(posterFile)) {
             const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);

@@ -48,8 +48,10 @@ class AddPlan extends Component {
             loadingCreate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/plans`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/plans`);
+            }
         }
     }
 

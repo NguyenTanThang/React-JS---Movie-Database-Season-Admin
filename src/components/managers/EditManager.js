@@ -82,8 +82,10 @@ class EditManager extends Component {
             loadingUpdate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/managers`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/managers`);
+            }
         }
     }
 

@@ -186,8 +186,6 @@ class AddMovie extends Component {
 
             //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
             const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
-            const {success, data} = res.data;
-            const resMessage = res.data.message;
 
             message.destroy();
 
@@ -195,13 +193,16 @@ class AddMovie extends Component {
                 loadingCreate: false
             })
 
-            if (success) {
-                message.success(resMessage, 5);
-                this.props.history.push(`/movies/details/${data._id}`)
-            } else {
-                return message.warning(resMessage, 5);
+            if (res.data) {
+                const {success, data} = res.data;
+                const resMessage = res.data.message;
+                if (success) {
+                    message.success(resMessage, 5);
+                    this.props.history.push(`/movies/details/${data._id}`)
+                } else {
+                    return message.warning(resMessage, 5);
+                }
             }
-
         } catch (error) {
             console.log(error);
         }

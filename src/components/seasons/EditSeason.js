@@ -151,8 +151,10 @@ class EditSeason extends Component {
             loadingUpdate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/seasons/details/${seasonID}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/seasons/details/${seasonID}`);
+            }
         }
     }
 

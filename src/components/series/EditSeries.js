@@ -193,8 +193,10 @@ class EditSeries extends Component {
             loadingUpdate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/series/details/${seriesID}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/series/details/${seriesID}`);
+            }
         }
     }
 

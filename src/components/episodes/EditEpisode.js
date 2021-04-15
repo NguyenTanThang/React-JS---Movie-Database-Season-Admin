@@ -127,8 +127,10 @@ class EditEpisode extends Component {
             loadingUpdate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/episodes/details/${episodeID}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/episodes/details/${episodeID}`);
+            }
         }
     }
 

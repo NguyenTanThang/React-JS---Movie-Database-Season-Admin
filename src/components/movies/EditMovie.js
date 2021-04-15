@@ -197,8 +197,10 @@ class EditMovie extends Component {
             loadingUpdate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/movies/details/${movieID}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/movies/details/${movieID}`);
+            }
         }
     }
 

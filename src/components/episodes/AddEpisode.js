@@ -111,8 +111,10 @@ class AddEpisode extends Component {
             loadingCreate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/episodes/details/${res.data.data._id}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/episodes/details/${res.data.data._id}`);
+            }
         }
     }
 

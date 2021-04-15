@@ -69,8 +69,10 @@ class AddCustomer extends Component {
             loadingCreate: false
         })
 
-        if (res.data.success) {
-            this.props.history.push(`/customers/details/${res.data.data.customerItem._id}`);
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/customers/details/${res.data.data.customerItem._id}`);
+            }
         }
     }
 
