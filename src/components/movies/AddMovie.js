@@ -150,13 +150,6 @@ class AddMovie extends Component {
             //const {addMovie} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
 
-            if (!description) {
-                return createNotification("error", {
-                    message: "Description",
-                    description: "Please check the description. You might have leave it empty."
-                });
-            }
-
             if (!posterFile || isObjectEmpty(posterFile)) {
                 return createNotification("error", {
                     message: "File Input",
@@ -175,6 +168,13 @@ class AddMovie extends Component {
                 return createNotification("error", {
                     message: "File Input",
                     description: "Please check the movie file input. You might have leave some empty."
+                });
+            }
+
+            if (!description) {
+                return createNotification("error", {
+                    message: "Description",
+                    description: "Please check the description. You might have leave it empty."
                 });
             }
 

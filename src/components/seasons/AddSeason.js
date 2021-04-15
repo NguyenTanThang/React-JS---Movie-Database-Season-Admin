@@ -110,13 +110,6 @@ class AddSeason extends Component {
         const {addSeason, seriesID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
-        if (!description) {
-            return createNotification("error", {
-                message: "Description",
-                description: "Please check the description. You might have leave it empty."
-            });
-        }
-
         if (!posterFile || isObjectEmpty(posterFile)) {
             return createNotification("error", {
                 message: "File Input",
@@ -128,6 +121,13 @@ class AddSeason extends Component {
             return createNotification("error", {
                 message: "File Input",
                 description: "Please check the trailer file input. You might have leave some empty."
+            });
+        }
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
             });
         }
 
