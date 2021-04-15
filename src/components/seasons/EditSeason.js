@@ -22,6 +22,9 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    createNotification
+} from "../../utils";
 
 class EditSeason extends Component {
 
@@ -127,12 +130,19 @@ class EditSeason extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
+        const {editSeason, seasonID} = this.props;
+        const {name, description, posterFile, trailerFile, seasonNum} = this.state;
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
         this.setState({
             loadingUpdate: true
         })
-
-        const {editSeason, seasonID} = this.props;
-        const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
         //editSeason(seasonID, {name, description, posterFile, trailerFile, seasonNum});
         const res = await editSeasonAsync(seasonID, {name, description, posterFile, trailerFile, seasonNum});

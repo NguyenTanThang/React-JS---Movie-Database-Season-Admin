@@ -24,6 +24,9 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    createNotification
+} from "../../utils";
 
 const { Option } = Select;
 
@@ -169,12 +172,19 @@ class EditSeries extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
+        const {editSeries, seriesID} = this.props;
+        const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
         this.setState({
             loadingUpdate: true
         })
-
-        const {editSeries, seriesID} = this.props;
-        const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
 
         //editSeries(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
         const res = await editSeriesAsync(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});

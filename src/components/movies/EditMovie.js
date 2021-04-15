@@ -24,6 +24,9 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    createNotification
+} from "../../utils";
 
 const { Option } = Select;
 
@@ -172,13 +175,20 @@ class EditMovie extends Component {
     handleSubmit = async (e) => {
         e.preventDefault();
 
-        this.setState({
-            loadingUpdate: true
-        })
-
         const {editMovie} = this.props;
         const {movieID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+        
+        this.setState({
+            loadingUpdate: true
+        })
 
         //editMovie(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
         const res = await editMovieAsync(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});

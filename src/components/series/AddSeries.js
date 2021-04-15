@@ -149,6 +149,13 @@ class AddSeries extends Component {
             const {addSeries} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
 
+            if (!description) {
+                return createNotification("error", {
+                    message: "Description",
+                    description: "Please check the description. You might have leave it empty."
+                });
+            }
+
             if (!posterFile || isObjectEmpty(posterFile)) {
                 return createNotification("error", {
                     message: "File Input",

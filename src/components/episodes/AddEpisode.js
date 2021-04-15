@@ -86,6 +86,13 @@ class AddEpisode extends Component {
         const {addEpisode, seasonID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
 
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
         if (!episodeFile || isObjectEmpty(episodeFile)) {
             return createNotification("error", {
                 message: "File Input",
