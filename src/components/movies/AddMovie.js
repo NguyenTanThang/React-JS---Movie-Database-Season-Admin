@@ -187,8 +187,6 @@ class AddMovie extends Component {
             //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
             const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
 
-            message.destroy();
-
             this.setState({
                 loadingCreate: false
             })

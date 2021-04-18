@@ -15,6 +15,17 @@ export const addSeasonAsync = async (newSeason) => {
         message.loading('Action in progress..', 0);
         const {name, description, posterFile, trailerFile, seriesID, seasonNum} = newSeason;
 
+        const validationRes = await axios.post(`${SEASON_URL}/validation/add`, {
+            seriesID,
+            seasonNum
+        });
+
+        if (validationRes.data.data.existedSeasonNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This season number has already been used");
+        }
+
         const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
         const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
 
@@ -47,8 +58,19 @@ export const editSeasonAsync = async (seasonID, updatedSeason) => {
 
         const response = await getSeasonByID(seasonID);
         let {trailerURL, posterURL} = response;
-        const {name, description, posterFile, trailerFile, seasonNum} = updatedSeason;
+        const {name, description, posterFile, trailerFile, seasonNum, seriesID} = updatedSeason;
         let updateSeasonObject = {name, description, seasonNum};
+
+        const validationRes = await axios.put(`${SEASON_URL}/validation/edit/${seasonID}`, {
+            seriesID,
+            seasonNum
+        });
+
+        if (validationRes.data.data.existedSeasonNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This season number has already been used");
+        }
 
         if (!isObjectEmpty(posterFile)) {
             console.log(posterFile);

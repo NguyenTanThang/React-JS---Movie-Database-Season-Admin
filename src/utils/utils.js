@@ -166,6 +166,50 @@ export const filterRevenue = (data) => {
     return datasets;
 }
 
+export const filterNewCustomer = (data) => {
+    var keys = Object.keys(data);
+    let labels = "";
+    let datasets = [];
+
+    for (let i = 0; i < keys.length; i++) {
+        let dataset = {};
+        let sum = 0;
+  
+        dataset = {
+            label: "Monthly New Customer",
+            data: [],
+            backgroundColor: 'rgba(67, 50, 133, 0.4)',
+            borderColor: 'rgba(67, 50, 133, 1)',
+            borderWidth: 1,
+            labels: ""
+        }
+
+        const key = keys[i];
+        const yearlyNewCustomer = data[key];
+        console.log(yearlyNewCustomer);
+        const yearlyNewCustomerKeys = Object.keys(yearlyNewCustomer);
+        labels = yearlyNewCustomerKeys;
+        
+        for (let j = 0; j < yearlyNewCustomerKeys.length; j++) {
+            const yearlyNewCustomerKey = yearlyNewCustomerKeys[j];
+            const yearlyCustomerMonthItem = yearlyNewCustomer[yearlyNewCustomerKey];
+            console.log(yearlyCustomerMonthItem);
+            let {totalCustomer} = yearlyCustomerMonthItem;
+            totalCustomer = Math.ceil(totalCustomer);
+            sum += totalCustomer;
+            dataset.data = [...dataset.data, totalCustomer];
+            dataset.labels = labels;
+        }
+
+            dataset.total = sum;
+            datasets.push(dataset);
+    }
+
+    console.log(datasets);
+
+    return datasets;
+}
+
 export const filterPercentageOfSubscribedUsers = (data) => {
     const {totalUser, subscribedUser} = data;
 

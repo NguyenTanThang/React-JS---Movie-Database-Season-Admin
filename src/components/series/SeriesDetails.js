@@ -69,7 +69,7 @@ class SeriesDetails extends Component {
             if (seriesKey === "rating") {
                 return descriptionItems.push(
                     <Descriptions.Item key={privateKey} label={privateLabel}>
-                        {seriesItem[seriesKey]}/10
+                        {seriesItem[seriesKey]}/5
                     </Descriptions.Item>
                 )
             }

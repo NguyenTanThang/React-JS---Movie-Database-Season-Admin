@@ -35,7 +35,8 @@ class EditEpisode extends Component {
         episodeURL: "",
         episodeNum: "",
         loadingUpdate: false,
-        loading: true
+        loading: true,
+        seasonID: ""
     }
 
     async componentDidMount() {
@@ -46,7 +47,8 @@ class EditEpisode extends Component {
                 name,
                 description,
                 episodeURL,
-                episodeNum
+                episodeNum,
+                seasonID
             } = episodeItem;
 
         this.setState({
@@ -54,6 +56,7 @@ class EditEpisode extends Component {
             description,
             episodeURL,
             episodeNum,
+            seasonID,
             loading: false
         })
     }
@@ -107,7 +110,7 @@ class EditEpisode extends Component {
         e.preventDefault();
 
         const {editEpisode, episodeID} = this.props;
-        const {name, description, episodeFile, episodeNum} = this.state;
+        const {name, description, episodeFile, episodeNum, seasonID} = this.state;
 
         if (!description) {
             return createNotification("error", {
@@ -121,7 +124,7 @@ class EditEpisode extends Component {
         })
 
         //editEpisode(episodeID, {name, description, episodeFile, episodeNum});
-        const res = await editEpisodeAsync(episodeID, {name, description, episodeFile, episodeNum});
+        const res = await editEpisodeAsync(episodeID, {name, description, episodeFile, episodeNum, seasonID});
 
         this.setState({
             loadingUpdate: false

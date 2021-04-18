@@ -79,7 +79,7 @@ class MovieDetails extends Component {
             if (movieKey === "rating") {
                 return descriptionItems.push(
                     <Descriptions.Item key={privateKey} label={privateLabel}>
-                        {movieItem[movieKey]}/10
+                        {movieItem[movieKey]}/5
                     </Descriptions.Item>
                 )
             }

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Tag } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import {parseDateMoment} from "../../utils/dateParser";
@@ -105,7 +105,7 @@ class ManagerList extends Component {
               if(a.username > b.username) { return 1; }
               return 0;
             },
-            multiple: 3,
+            multiple: 5,
         },
       },
       {
@@ -119,10 +119,29 @@ class ManagerList extends Component {
               if(a.roleID.role > b.roleID.role) { return 1; }
               return 0;
             },
-            multiple: 2,
+            multiple: 4,
         },
         render: (text) => {
             return text.role
+        }
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        sorter: {
+            compare: (a, b) => {
+              if(a.status < b.status) { return -1; }
+              if(a.status > b.status) { return 1; }
+              return 0;
+            },
+            multiple: 3,
+        },
+        render: (text) => {
+            if (text) {
+                return <Tag color="green">Valid</Tag>
+            }
+            return <Tag color="red">Not valid</Tag>
         }
       },
       {
@@ -150,7 +169,7 @@ class ManagerList extends Component {
             multiple: 1,
         },
         render: (text) => {
-          return parseDateMoment(text)
+          return parseDateMoment(text);
         }
       },
       {

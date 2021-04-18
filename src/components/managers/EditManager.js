@@ -31,6 +31,17 @@ class EditManager extends Component {
         username: "",
         password: "",
         roleID: "",
+        status: "",
+        managerStatusList: [
+            {
+                value: true,
+                text: "Valid"
+            },
+            {
+                value: false,
+                text: "Not valid"
+            }
+        ],
         managerRolesList: [],
         loadingUpdate: false
     }
@@ -39,10 +50,10 @@ class EditManager extends Component {
         const managerRolesList = await getAllManagerRoles();
         const {managerID} = this.props;
         const managerItem = await getManagerByID(managerID);
-        const {username, roleID} = managerItem;
+        const {username, roleID, status} = managerItem;
         this.setState({
             managerRolesList,
-            username, roleID: roleID._id
+            username, roleID: roleID._id, status
         }, () => {
             console.log(this.state);
         })
@@ -54,6 +65,16 @@ class EditManager extends Component {
         return managerRolesList.map(managerRolesItem => {
             return (
                 <MenuItem key={managerRolesItem._id} value={managerRolesItem._id}>{managerRolesItem.role}</MenuItem>
+            )
+        })
+    }
+
+    renderManagerStatusOptions = () => {
+        const {managerStatusList} = this.state;
+
+        return managerStatusList.map(managerStatusItem => {
+            return (
+                <MenuItem value={managerStatusItem.value}>{managerStatusItem.text}</MenuItem>
             )
         })
     }
@@ -73,10 +94,10 @@ class EditManager extends Component {
 
         const {editManager} = this.props;
         const {managerID} = this.props;
-        const {username, password, roleID} = this.state;
+        const {username, password, roleID, status} = this.state;
 
         //editManager(managerID, {username, password, roleID});
-        const res = await editManagerAsync(managerID, {username, password, roleID});
+        const res = await editManagerAsync(managerID, {username, password, roleID, status});
 
         this.setState({
             loadingUpdate: false
@@ -90,8 +111,8 @@ class EditManager extends Component {
     }
 
     render() {
-        const {handleChange, handleSubmit, renderManagerRoleOptions} = this;
-        const {username, password, roleID, loadingUpdate} = this.state;
+        const {handleChange, handleSubmit, renderManagerRoleOptions, renderManagerStatusOptions} = this;
+        const {username, password, roleID, loadingUpdate, status} = this.state;
 
         return (
             <div>
@@ -119,6 +140,24 @@ class EditManager extends Component {
                             required
                             >
                                 {renderManagerRoleOptions()}
+                            </Select>
+                        </FormControl>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Status</Label>
+                        <FormControl variant="outlined" className="material-input">
+                            <InputLabel id="validated">Status</InputLabel>
+                            <Select
+                            defaultValue={status}
+                            labelId="status"
+                            id="status"
+                            name="status"
+                            value={status}
+                            onChange={handleChange}
+                            label="Status"
+                            required
+                            >
+                                {renderManagerStatusOptions()}
                             </Select>
                         </FormControl>
                     </FormGroup>

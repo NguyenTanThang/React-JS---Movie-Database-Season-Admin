@@ -115,7 +115,7 @@ class AddEpisode extends Component {
             if (res.data.success) {
                 this.props.history.push(`/episodes/details/${res.data.data._id}`);
             }
-        }
+        } 
     }
 
     render() {

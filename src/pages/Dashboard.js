@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import {Skeleton} from "antd";
 import {Container} from "reactstrap";
 import { CSVLink } from "react-csv";
-import {filterPercentageOfSubscribedUsers, filterRevenue} from "../utils/utils";
+import {filterPercentageOfSubscribedUsers, filterRevenue, filterNewCustomer} from "../utils/utils";
 import {
     getCustomerDashboardData,
-    getRevenueData
+    getRevenueData,
+    getNewCustomerData
 } from "../requests/dashboardRequests";
 import DashboardBoxItem from "../components/dashboard/DashboardBoxItem";
 import PieChart from "../components/dashboard/PieChart";
@@ -17,19 +18,31 @@ export default class Dashboard extends Component {
 
     state = {
         filteredRevenue: [],
+        filteredNewCustomer: [],
         customerDashboardData: {},
         revenueYearList: [],
+        newUserYearList: [],
         loading: true
     }
 
-    async componentDidMount() {
-        const customerDashboardData = await getCustomerDashboardData();
-        const {monthlyRevenueChartData, revenueYearList} = await getRevenueData();
+    async componentWillMount() {
         await validateManagerRole();
+
+        const customerDashboardData = await getCustomerDashboardData();
+        const {
+            monthlyRevenueChartData, 
+            revenueYearList
+        } = await getRevenueData();
+        const {
+            monthlyNewUserChartData,
+            newUserYearList
+        } = await getNewCustomerData();
         this.setState({
             filteredRevenue: filterRevenue(monthlyRevenueChartData),
             customerDashboardData,
             revenueYearList,
+            filteredNewCustomer: filterNewCustomer(monthlyNewUserChartData),
+            newUserYearList,
             loading: false
         })
     }
@@ -71,6 +84,47 @@ export default class Dashboard extends Component {
         })
 
         const tabHeaders = revenueYearList;
+
+        return <TabGenerator tabContents={tabContents} tabHeaders={tabHeaders}/>
+    }
+
+    renderNewCustomerTabGen = () => {
+        const {filteredNewCustomer, newUserYearList} = this.state;
+
+        const tabContents = filteredNewCustomer.map((filteredNewCustomerItem, index) => {
+
+            console.log(filteredNewCustomerItem);
+            let csvData = [["Month", "New Customer"]];
+
+            for (let i = 0; i < filteredNewCustomerItem.labels.length; i++) {
+                const newCustomers = filteredNewCustomerItem.data[i];
+                const monthLabel = filteredNewCustomerItem.labels[i];
+                
+                csvData.push([monthLabel, newCustomers]);
+            }
+
+            csvData.push(["Total", filteredNewCustomerItem.total]);
+
+            return (
+            <>
+                <h5>Total: {filteredNewCustomerItem.total} customers</h5>
+                <CSVLink 
+                    filename={`Monthly New Customers of ${newUserYearList[index]}.csv`}
+                    data={csvData}
+                    target="_blank"
+                    className="btn btn-success"
+                >Download Excel</CSVLink>
+                <LineChart data={[filteredNewCustomerItem]}
+                labels={filteredNewCustomerItem.labels}
+                title={`Monthly New Customers of ${newUserYearList[index]}`}
+                />
+            </>
+            )
+            
+            
+        })
+
+        const tabHeaders = newUserYearList;
 
         return <TabGenerator tabContents={tabContents} tabHeaders={tabHeaders}/>
     }
@@ -117,7 +171,7 @@ export default class Dashboard extends Component {
     }
 
     render() {
-        const {renderDashboardBoxItems, renderRevenueTabGen} = this;
+        const {renderDashboardBoxItems, renderRevenueTabGen, renderNewCustomerTabGen} = this;
         const {customerDashboardData, loading} = this.state;
 
         if (loading) {
@@ -151,6 +205,9 @@ export default class Dashboard extends Component {
                     </div>
                     <div className="dashboard-list">
                         {renderRevenueTabGen()}
+                    </div>
+                    <div className="dashboard-list">
+                        {renderNewCustomerTabGen()}
                     </div>
                     <div className="dashboard-list">
                         <PieChart labels={filteredPercentageOfSubscribedUsers.label} data={[filteredPercentageOfSubscribedUsers]} title={`Percentage of Subscribed Users`}/>

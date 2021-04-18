@@ -16,10 +16,20 @@ export const addSeriesAsync = async (newSeries) => {
         message.loading('Action in progress..', 0);
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = newSeries;
 
-        const imdbRes = await axios.get(`${SERIES_URL}/IMDB_ID/${IMDB_ID}`);
-        
-        if (imdbRes.data.data) {
+        const validationRes = await axios.post(`${SERIES_URL}/validation/add`, {
+            name,
+            IMDB_ID
+        });
+
+        if (validationRes.data.data.existedSeriesName.length > 0) {
             message.destroy()
+
+            return message.warning("This name has already been used");
+        }
+
+        if (validationRes.data.data.existedSeriesIMDB.length > 0) {
+            message.destroy()
+
             return message.warning("This IMDB ID has already been used");
         }
 
@@ -56,10 +66,20 @@ export const editSeriesAsync = async (seriesID, updatedSeries) => {
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = updatedSeries;
         let updateSeriesObject = {name, genres, description, IMDB_ID};
 
-        const imdbRes = await axios.get(`${SERIES_URL}/IMDB_ID/${IMDB_ID}`);
-        
-        if (imdbRes.data.data && imdbRes.data.data._id !== seriesID) {
-            message.destroy()
+        const validationRes = await axios.put(`${SERIES_URL}/validation/edit/${seriesID}`, {
+            name,
+            IMDB_ID
+        });
+
+        if (validationRes.data.data.existedSeriesName.length > 0) {
+            message.destroy();
+
+            return message.warning("This name has already been used");
+        }
+
+        if (validationRes.data.data.existedSeriesIMDB.length > 0) {
+            message.destroy();
+
             return message.warning("This IMDB ID has already been used");
         }
 

@@ -24,6 +24,17 @@ export const addEpisodeAsync = async (newEpisode) => {
         message.loading('Action in progress..', 0);
         const {name, description, episodeFile, episodeNum, seasonID} = newEpisode;
 
+        const validationRes = await axios.post(`${EPISODES_URL}/validation/add`, {
+            seasonID,
+            episodeNum
+        });
+
+        if (validationRes.data.data.existedEpisodeNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This episode number has already been used");
+        }
+
         const episodeFileFirebaseURL = await uploadEpisodeFirebase(episodeFile);
 
         const episodeURL = episodeFileFirebaseURL;
@@ -54,8 +65,19 @@ export const editEpisodeAsync = async (episodeID, updatedEpisode) => {
 
         const response = await getEpisodeByID(episodeID);
         let {episodeURL} = response;
-        const {name, description, episodeFile, episodeNum} = updatedEpisode;
+        const {name, description, episodeFile, episodeNum, seasonID} = updatedEpisode;
         let updateEpisodeObject = {name, description, episodeNum};
+
+        const validationRes = await axios.post(`${EPISODES_URL}/validation/add`, {
+            seasonID,
+            episodeNum
+        });
+
+        if (validationRes.data.data.existedEpisodeNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This episode number has already been used");
+        }
 
         if (!isObjectEmpty(episodeFile)) {
             await deleteFileFirebase(episodeURL);
