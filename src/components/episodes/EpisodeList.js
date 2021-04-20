@@ -59,7 +59,6 @@ class EpisodeList extends Component {
     },
     render: (text, record) => {
         if (dataIndex === "roleID") {
-            console.log(record);
         }
         return this.state.searchedColumn === dataIndex ? (
             <Highlighter

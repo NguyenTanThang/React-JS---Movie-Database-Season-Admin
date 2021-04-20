@@ -29,8 +29,6 @@ class EditSubtitle extends Component {
         const {subtitleID} = this.props;
         const subtitleItem = await getSubtitleByID(subtitleID);
         
-        console.log(subtitleItem)
-   
         const {
             languageLabel,
             subtitleURL
@@ -48,8 +46,6 @@ class EditSubtitle extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 

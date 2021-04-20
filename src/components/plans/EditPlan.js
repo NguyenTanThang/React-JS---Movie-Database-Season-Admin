@@ -32,8 +32,6 @@ class EditPlan extends Component {
         const {name, price, description, durationInDays} = planItem;
         this.setState({
             name, price, description, durationInDays
-        }, () => {
-            console.log(this.state);
         })
     }
 

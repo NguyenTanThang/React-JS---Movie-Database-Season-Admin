@@ -78,8 +78,6 @@ class PhotoList extends Component {
   };
 
   render() {
-    console.log("this.props.photos");
-    console.log(this.props.photos);
     const data = this.props.photos.map((photo, index) => {
       photo.key = photo._id;
       photo.name = `Photo ${index + 1}`

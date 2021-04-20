@@ -44,8 +44,6 @@ class AddSeason extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 

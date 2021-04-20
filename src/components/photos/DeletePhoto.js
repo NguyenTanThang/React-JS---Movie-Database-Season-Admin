@@ -15,14 +15,12 @@ class DeletePhoto extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const photoID = this.props.photoItem._id;
     this.props.deletePhoto(photoID);
     this.setState({

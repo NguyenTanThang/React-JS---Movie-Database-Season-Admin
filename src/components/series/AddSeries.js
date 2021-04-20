@@ -49,8 +49,6 @@ class AddSeries extends Component {
             genres: [],
             description: "",
             IMDB_ID: ""
-        }, () => {
-            console.log(this.state);
         })
     }
 

@@ -52,7 +52,6 @@ export default class Dashboard extends Component {
 
         const tabContents = filteredRevenue.map((filteredRevenueItem, index) => {
 
-            console.log(filteredRevenueItem);
             let csvData = [["Month", "Revenue", "Currency"]];
 
             for (let i = 0; i < filteredRevenueItem.labels.length; i++) {
@@ -93,7 +92,6 @@ export default class Dashboard extends Component {
 
         const tabContents = filteredNewCustomer.map((filteredNewCustomerItem, index) => {
 
-            console.log(filteredNewCustomerItem);
             let csvData = [["Month", "New Customer"]];
 
             for (let i = 0; i < filteredNewCustomerItem.labels.length; i++) {

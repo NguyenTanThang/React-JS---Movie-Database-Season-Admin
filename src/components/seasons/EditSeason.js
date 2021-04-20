@@ -70,8 +70,6 @@ class EditSeason extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 

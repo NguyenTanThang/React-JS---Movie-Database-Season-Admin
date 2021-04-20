@@ -15,14 +15,12 @@ class DeletePlan extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const planID = this.props.planItem._id;
     this.props.deletePlan(planID);
     this.setState({

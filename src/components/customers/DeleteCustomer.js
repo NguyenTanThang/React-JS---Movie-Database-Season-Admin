@@ -15,14 +15,12 @@ class DeleteCustomer extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const customerID = this.props.customerItem._id;
     this.props.deleteCustomer(customerID);
     this.setState({

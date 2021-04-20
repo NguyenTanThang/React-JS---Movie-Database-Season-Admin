@@ -54,8 +54,6 @@ class EditManager extends Component {
         this.setState({
             managerRolesList,
             username, roleID: roleID._id, status
-        }, () => {
-            console.log(this.state);
         })
     }
 

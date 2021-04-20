@@ -65,7 +65,6 @@ class AddPhoto extends Component {
   }
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });

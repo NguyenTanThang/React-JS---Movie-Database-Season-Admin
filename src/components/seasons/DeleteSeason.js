@@ -15,14 +15,12 @@ class DeleteSeason extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const seasonID = this.props.seasonItem._id;
     this.props.deleteSeason(seasonID);
     this.setState({

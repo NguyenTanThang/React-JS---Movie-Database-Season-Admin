@@ -11,7 +11,6 @@ export default class FileUploader extends Component {
         fileName = labelTitle;
 
         if (currentFile && !isObjectEmpty(currentFile)) {
-            console.log(currentFile);
             fileName = currentFile.name
         }
 

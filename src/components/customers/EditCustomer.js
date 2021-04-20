@@ -49,8 +49,6 @@ class EditCustomer extends Component {
         const {email, validated, username, avatar} = customer.customerItem;
         this.setState({
             email, validated, username, avatar
-        }, () => {
-            console.log(this.state);
         })
     }
 

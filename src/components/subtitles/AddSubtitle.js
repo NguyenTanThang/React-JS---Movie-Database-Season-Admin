@@ -33,8 +33,6 @@ class AddSubtitle extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 
