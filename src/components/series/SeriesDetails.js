@@ -5,8 +5,14 @@ import parse from 'html-react-parser';
 import SeasonList from "../seasons/SeasonList";
 import PhotoList from "../photos/PhotoList";
 import {Link} from "react-router-dom";
+import CommentList from "../comments/CommentList";
 
 class SeriesDetails extends Component {
+
+    renderCommentList = () => {
+        const {comments} = this.props;
+        return <CommentList comments={comments}/>
+    }
 
     renderSeasonList = () => {
         const {seasons, seriesItem} = this.props;
@@ -20,6 +26,7 @@ class SeriesDetails extends Component {
     }
 
     renderSeriesDescriptionItems = () => {
+        const {renderCommentList} = this;
         const {seriesItem} = this.props;
         const {imdbSeries} = seriesItem;
         let descriptionItems = [];
@@ -93,6 +100,12 @@ class SeriesDetails extends Component {
 
         descriptionItems.push(
             <Descriptions.Item key={"photo-list"} span={3} label={"Photo"}>{this.renderPhotoList()}</Descriptions.Item>
+        )
+
+        descriptionItems.push(
+            <Descriptions.Item key={"Comments"} span={3} label={"Comments"}>
+                {renderCommentList()}
+            </Descriptions.Item>
         )
 
         /*
