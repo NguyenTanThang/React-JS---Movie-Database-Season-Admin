@@ -11,6 +11,7 @@ import subtitleReducer from "./subtitleReducer";
 import authReducer from "./authReducer";
 import loadingReducer from "./loadingReducer";
 import photoReducer from "./photoReducer";
+import commentReducer from "./commentReducer";
 import {combineReducers} from "redux";
 
 const rootReducer = combineReducers({
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
     subtitleReducer,
     authReducer,
     loadingReducer,
-    photoReducer
+    photoReducer,
+    commentReducer
 })
 
 export default rootReducer;

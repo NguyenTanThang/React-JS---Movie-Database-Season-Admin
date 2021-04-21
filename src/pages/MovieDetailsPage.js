@@ -7,6 +7,7 @@ import {getCurrentLoginStatus} from "../requests/authRequests";
 import {message, Skeleton} from "antd";
 import {getAllSubtitlesByMovieID} from "../actions/subtitleActions";
 import {getAllPhotosByMovieID} from "../actions/photoActions";
+import {getAllCommentsByMovieID} from "../actions/commentActions";
 import {connect} from "react-redux";
 import {validateManagerRole} from "../requests/authRequests";
 
@@ -24,6 +25,7 @@ class MovieDetailsPage extends Component {
         const movieItem = await getMovieByID(movieID);
         this.props.getAllSubtitlesByMovieID(movieID);
         this.props.getAllPhotosByMovieID(movieID);
+        this.props.getAllCommentsByMovieID(movieID);
         localStorage.setItem("previousPathSubtitle", this.props.location.pathname);
         this.setState({
             movieItem,
@@ -33,7 +35,7 @@ class MovieDetailsPage extends Component {
 
     render() {
         const {movieItem, loading} = this.state;
-        const {subtitles, photos} = this.props;
+        const {subtitles, photos, comments} = this.props;
 
         if (loading) {
             return (
@@ -62,7 +64,7 @@ class MovieDetailsPage extends Component {
             */}
             <ComponentHeader returnURL="/movies" title="Movie Details"/>
                 <Container className="section-padding">
-                    <MovieDetails movieItem={movieItem} subtitles={subtitles} photos={photos} />
+                    <MovieDetails movieItem={movieItem} subtitles={subtitles} photos={photos} comments={comments}/>
                 </Container>
             </>
         )
@@ -76,6 +78,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getAllPhotosByMovieID: (movieID) => {
             dispatch(getAllPhotosByMovieID(movieID))
+        },
+        getAllCommentsByMovieID: (movieID) => {
+            dispatch(getAllCommentsByMovieID(movieID))
         }
     }
 }
@@ -83,7 +88,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
     return {
         subtitles: state.subtitleReducer.subtitles,
-        photos: state.photoReducer.photos
+        photos: state.photoReducer.photos,
+        comments: state.commentReducer.comments
     }
 }
 

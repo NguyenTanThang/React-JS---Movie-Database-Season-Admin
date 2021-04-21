@@ -4,6 +4,7 @@ import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import SubtitleList from "../subtitles/SubtitleList";
 import PhotoList from "../photos/PhotoList";
+import CommentList from "../comments/CommentList";
 import {Link} from "react-router-dom";
 
 class MovieDetails extends Component {
@@ -18,8 +19,13 @@ class MovieDetails extends Component {
         return <PhotoList recordID={movieItem._id} addPhoto={addPhoto} photos={photos}/>
     }
 
+    renderCommentList = () => {
+        const {comments} = this.props;
+        return <CommentList comments={comments}/>
+    }
+
     renderMovieDescriptionItems = () => {
-        const {renderSubtitleList} = this;
+        const {renderSubtitleList, renderCommentList} = this;
         const {movieItem} = this.props;
         const {imdbMovie} = movieItem;
         let descriptionItems = [];
@@ -107,6 +113,12 @@ class MovieDetails extends Component {
         descriptionItems.push(
             <Descriptions.Item key={"Subtitles"} span={3} label={"Subtitles"}>
                 {renderSubtitleList()}
+            </Descriptions.Item>
+        )
+
+        descriptionItems.push(
+            <Descriptions.Item key={"Comments"} span={3} label={"Comments"}>
+                {renderCommentList()}
             </Descriptions.Item>
         )
 
