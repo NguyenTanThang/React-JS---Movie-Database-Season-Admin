@@ -61,6 +61,9 @@ class EditManager extends Component {
         const {managerRolesList} = this.state;
 
         return managerRolesList.map(managerRolesItem => {
+            if (managerRolesItem.role === "Admin") {
+                return (<></>);
+            }
             return (
                 <MenuItem key={managerRolesItem._id} value={managerRolesItem._id}>{managerRolesItem.role}</MenuItem>
             )
