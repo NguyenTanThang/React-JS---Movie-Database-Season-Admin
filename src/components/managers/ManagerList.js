@@ -90,7 +90,7 @@ class ManagerList extends Component {
   render() {
     const data = this.props.managers.map(manager => {
       manager.key = manager._id;
-      if (manager.roleID.name != "admin") {
+      if (manager.roleID.role != "admin") {
         return manager;
       }
     });
