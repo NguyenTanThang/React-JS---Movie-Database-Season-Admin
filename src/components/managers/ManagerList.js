@@ -90,6 +90,7 @@ class ManagerList extends Component {
   render() {
     const data = this.props.managers.map(manager => {
       manager.key = manager._id;
+      return manager;
     });
     const columns = [
       {
