@@ -21,15 +21,14 @@ class EditSubtitle extends Component {
         languageLabel: "",
         subtitleFile: {},
         subtitleURL: "",
-        subtitleItem: {}
+        subtitleItem: {},
+        loadingUpdate: false
     }
 
     async componentDidMount() {
         const {subtitleID} = this.props;
         const subtitleItem = await getSubtitleByID(subtitleID);
         
-        console.log(subtitleItem)
-   
         const {
             languageLabel,
             subtitleURL
@@ -47,17 +46,23 @@ class EditSubtitle extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 
     handleFileChange = (e) => {
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         if (file) {
             const fileExt = getFileExtension(file.name);
             if (fileExt !== "vtt") {
                 message.error("Please upload a .vtt file. Although the file's name is visible it will not be uploaded", 5);
+                return this.setState({
+                    [e.target.name]: {}
+                })
             } else {
                 this.setState({
                     [e.target.name]: file
@@ -74,10 +79,20 @@ class EditSubtitle extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editSubtitle, subtitleID} = this.props;
         const {languageLabel, subtitleFile} = this.state;
 
         editSubtitle(subtitleID, {languageLabel, subtitleFile});
+
+        this.setState({
+            loadingUpdate: false
+        })
+
         setTimeout(() => {
             this.props.history.goBack();
         }, 2500);
@@ -85,7 +100,7 @@ class EditSubtitle extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleFileChange, onClear} = this;
-        const {languageLabel, subtitleFile, subtitleURL} = this.state;
+        const {languageLabel, subtitleFile, subtitleURL, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -117,7 +132,7 @@ class EditSubtitle extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

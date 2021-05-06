@@ -7,19 +7,13 @@ import {
 import {connect} from "react-redux";
 import GenreList from "../components/genres/GenreList";
 import AddGenre from "../components/genres/AddGenre";
-import LayoutSide from "../components/partials/LayoutSide";
 import ComponentHeader from "../components/partials/ComponentHeader";
-import {getCurrentLoginStatus} from "../requests/authRequests";
-import {message} from "antd";
+import {validateManagerRole} from "../requests/authRequests";
 
 class GenrePage extends Component {
     
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        if (!loggedIn) {
-            message.error("You need to login first");
-            this.props.history.push("/login");
-        }
+        await validateManagerRole();
         this.props.getAllGenres();
     }
 

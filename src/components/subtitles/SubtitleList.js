@@ -59,7 +59,6 @@ class SubtitleList extends Component {
     },
     render: (text, record) => {
         if (dataIndex === "roleID") {
-            console.log(record);
         }
         return this.state.searchedColumn === dataIndex ? (
             <Highlighter
@@ -114,7 +113,7 @@ class SubtitleList extends Component {
         key: 'created_date',
         sorter: {
             compare: (a, b) => {
-              return new Date(b.created_date) - new Date(a.created_date);
+              return new Date(a.created_date) - new Date(b.created_date);
             },
             multiple: 2,
         },
@@ -128,7 +127,7 @@ class SubtitleList extends Component {
         key: 'last_modified_date',
         sorter: {
             compare: (a, b) => {
-              return new Date(b.last_modified_date) - new Date(a.last_modified_date);
+              return new Date(a.last_modified_date) - new Date(b.last_modified_date);
             },
             multiple: 1,
         },

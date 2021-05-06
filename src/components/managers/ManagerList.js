@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Tag } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import {parseDateMoment} from "../../utils/dateParser";
@@ -59,7 +59,6 @@ class ManagerList extends Component {
     },
     render: (text, record) => {
         if (dataIndex === "roleID") {
-            console.log(record);
         }
         return this.state.searchedColumn === dataIndex ? (
             <Highlighter
@@ -90,7 +89,7 @@ class ManagerList extends Component {
 
   render() {
     const data = this.props.managers.map(manager => {
-        manager.key = manager._id;
+      manager.key = manager._id;
       return manager;
     });
     const columns = [
@@ -105,7 +104,7 @@ class ManagerList extends Component {
               if(a.username > b.username) { return 1; }
               return 0;
             },
-            multiple: 3,
+            multiple: 5,
         },
       },
       {
@@ -119,10 +118,29 @@ class ManagerList extends Component {
               if(a.roleID.role > b.roleID.role) { return 1; }
               return 0;
             },
-            multiple: 2,
+            multiple: 4,
         },
         render: (text) => {
             return text.role
+        }
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        sorter: {
+            compare: (a, b) => {
+              if(a.status < b.status) { return -1; }
+              if(a.status > b.status) { return 1; }
+              return 0;
+            },
+            multiple: 3,
+        },
+        render: (text) => {
+            if (text) {
+                return <Tag color="green">Valid</Tag>
+            }
+            return <Tag color="red">Not valid</Tag>
         }
       },
       {
@@ -131,7 +149,7 @@ class ManagerList extends Component {
         key: 'created_date',
         sorter: {
             compare: (a, b) => {
-              return new Date(b.created_date) - new Date(a.created_date);
+              return new Date(a.created_date) - new Date(b.created_date);
             },
             multiple: 2,
         },
@@ -145,12 +163,12 @@ class ManagerList extends Component {
         key: 'last_modified_date',
         sorter: {
             compare: (a, b) => {
-              return new Date(b.last_modified_date) - new Date(a.last_modified_date);
+              return new Date(a.last_modified_date) - new Date(b.last_modified_date);
             },
             multiple: 1,
         },
         render: (text) => {
-          return parseDateMoment(text)
+          return parseDateMoment(text);
         }
       },
       {

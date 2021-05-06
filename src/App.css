@@ -45,6 +45,22 @@ body {
   z-index: 9999;
 }
 
+/*
+.wrapper .sidebar{
+  width: 100%;
+  flex: 20%;
+  max-width: 20%;
+  height: auto;
+  background: #4b4276;
+  padding: 30px 0px;
+  position: static;
+  transition: all 0.3s ease;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+}
+*/
+
 .wrapper .sidebar h2{
   color: #fff;
   text-transform: uppercase;
@@ -79,6 +95,15 @@ body {
   color: #fff;
 }
  
+/*
+.wrapper .main_content{
+  max-width: 80%;
+  width: 100%;
+  margin-left: 0%;
+  flex: 80%;
+}
+*/
+
 .wrapper .main_content{
   max-width: 80%;
   width: 80%;
@@ -367,4 +392,9 @@ body {
 
 .dashboard-box-item:hover {
   box-shadow: 0px 0px 28px 0px rgba(0,0,0,0.75);
+}
+
+/*Ant Design*/
+.ant-descriptions-item-label {
+  font-weight: bold;
 }

@@ -10,13 +10,22 @@ import {Form, FormGroup, Row, Label} from 'reactstrap';
 import {withRouter} from 'react-router-dom';
 import FileUploader from "../partials/FileUploader";
 import languageCodes from "../../data/languageCodes";
-import {getFileExtension} from "../../utils/utils";
+import {
+    getFileExtension
+} from "../../utils/utils";
+import {
+    createNotification
+} from "../../utils";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
 
 class AddSubtitle extends Component {
 
     state = {
         languageLabel: "",
-        subtitleFile: {}
+        subtitleFile: {},
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -24,17 +33,23 @@ class AddSubtitle extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 
     handleFileChange = (e) => {
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         if (file) {
             const fileExt = getFileExtension(file.name);
             if (fileExt !== "vtt") {
                 message.error("Please upload a .vtt file. Although the file's name is visible it will not be uploaded", 5);
+                return this.setState({
+                    [e.target.name]: {}
+                })
             } else {
                 this.setState({
                     [e.target.name]: file
@@ -51,10 +66,27 @@ class AddSubtitle extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
         const {addSubtitle, videoID} = this.props;
         const {languageLabel, subtitleFile} = this.state;
 
+        if (!subtitleFile || isObjectEmpty(subtitleFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the subtitle file input. You might have leave some empty."
+            });
+        }
+
+        this.setState({
+            loadingCreate: true
+        })
+
         addSubtitle({languageLabel, subtitleFile, videoID});
+        
+        this.setState({
+            loadingCreate: false
+        })
+        
         setTimeout(() => {
             this.props.history.goBack();
         }, 2000);
@@ -70,7 +102,7 @@ class AddSubtitle extends Component {
 
     render() {
         const {handleChange, handleSubmit, handleFileChange, onClear, renderLanguageCodes} = this;
-        const {languageLabel, subtitleFile} = this.state;
+        const {languageLabel, subtitleFile, loadingCreate} = this.state;
 
         return (
             <div>
@@ -101,7 +133,7 @@ class AddSubtitle extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block  loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

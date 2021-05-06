@@ -11,9 +11,9 @@ import {
 import {
     getSeriesByID
 } from "../../requests/seriesRequests";
-import { Button, Select, message } from 'antd';
+import { Button, Select, message, Skeleton } from 'antd';
 import TextField from '@material-ui/core/TextField';
-import {Form, FormGroup, Row, Label} from 'reactstrap';
+import {Form, FormGroup, Row, Label, Container} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import UpdateFileModal from "../partials/UpdateFileModal";
 import {
@@ -24,6 +24,9 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    createNotification
+} from "../../utils";
 
 const { Option } = Select;
 
@@ -38,6 +41,8 @@ class EditSeries extends Component {
         trailerFile: {},
         posterURL: "",
         trailerURL: "",
+        loadingUpdate: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -60,6 +65,7 @@ class EditSeries extends Component {
             IMDB_ID,
             posterURL,
             trailerURL,
+            loading: false
         })
     }
 
@@ -70,8 +76,6 @@ class EditSeries extends Component {
             genres: [],
             description: "",
             IMDB_ID: ""
-        }, () => {
-            console.log(this.state);
         })
     }
 
@@ -88,6 +92,11 @@ class EditSeries extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -117,6 +126,10 @@ class EditSeries extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -156,20 +169,49 @@ class EditSeries extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
         const {editSeries, seriesID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
+        this.setState({
+            loadingUpdate: true
+        })
 
         //editSeries(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
         const res = await editSeriesAsync(seriesID, {name, genres, description, IMDB_ID, posterFile, trailerFile});
 
-        if (res.data.success) {
-            this.props.history.push(`/series/details/${seriesID}`);
+        this.setState({
+            loadingUpdate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/series/details/${seriesID}`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, posterURL, trailerURL} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, posterURL, trailerURL, loadingUpdate, loading} = this.state;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         return (
             <div>
@@ -219,7 +261,7 @@ class EditSeries extends Component {
                         <div className="col-lg-12 col-md-12 col-sm-12">
                             <FormGroup>
                                 <Label>Description</Label>
-                                <TinyEditor description={description} handleEditorChange={handleEditorChange} />
+                                {description ? (<TinyEditor description={description} handleEditorChange={handleEditorChange} />) : <></>}
                             </FormGroup>
                         </div>
 
@@ -233,7 +275,7 @@ class EditSeries extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

@@ -21,7 +21,8 @@ class AddPlan extends Component {
         name: "",
         price: "",
         description: "",
-        durationInDays: ""
+        durationInDays: "",
+        loadingCreate: false
     }
 
     handleChange = (e) => {
@@ -32,20 +33,31 @@ class AddPlan extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingCreate: true
+        })
+
         const {addPlan} = this.props;
         const {name, price, description, durationInDays} = this.state;
 
         //addPlan({name, price, description, durationInDays});
         const res = await addPlanAsync({name, price, description, durationInDays})
         
-        if (res.data.success) {
-            this.props.history.push(`/plans`);
+        this.setState({
+            loadingCreate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/plans`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit} = this;
-        const {name, price, description, durationInDays} = this.state;
+        const {name, price, description, durationInDays, loadingCreate} = this.state;
 
         return (
             <div>
@@ -67,7 +79,7 @@ class AddPlan extends Component {
                         <TextField id="description" name="description" label="Description" variant="outlined" className="material-input" required onChange={handleChange} value={description}/>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                             Create
                         </Button>
                     </FormGroup>

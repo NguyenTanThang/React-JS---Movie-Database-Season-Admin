@@ -9,14 +9,22 @@ import {
     getEpisodeByID,
     editEpisodeAsync
 } from "../../requests/episodeRequests";
-import { Button } from 'antd';
+import { Button, message, Skeleton } from 'antd';
 import TextField from '@material-ui/core/TextField';
-import {Form, FormGroup, Row, Label} from 'reactstrap';
+import {Form, FormGroup, Row, Label, Container} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import UpdateFileModal from "../partials/UpdateFileModal";
 import {
     withRouter
 } from "react-router-dom";
+import {
+    acceptVideoExt,
+    getFileExtension,
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils";
 
 class EditEpisode extends Component {
 
@@ -25,7 +33,10 @@ class EditEpisode extends Component {
         description: "",
         episodeFile: {},
         episodeURL: "",
-        episodeNum: ""
+        episodeNum: "",
+        loadingUpdate: false,
+        loading: true,
+        seasonID: ""
     }
 
     async componentDidMount() {
@@ -36,14 +47,17 @@ class EditEpisode extends Component {
                 name,
                 description,
                 episodeURL,
-                episodeNum
+                episodeNum,
+                seasonID
             } = episodeItem;
 
         this.setState({
             name,
             description,
             episodeURL,
-            episodeNum
+            episodeNum,
+            seasonID,
+            loading: false
         })
     }
 
@@ -52,15 +66,29 @@ class EditEpisode extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 
     handleFileChange = (e) => {
+        const targetName = e.target.name;
         const file = e.target.files[0];
-        this.setState({
-            [e.target.name]: file
+        if (!file) {
+            return;
+        }
+        const fileExt = getFileExtension(file.name);
+
+        if (targetName == "episodeFile") {
+            if (acceptVideoExt(fileExt)) {
+                return this.setState({
+                    episodeURL: "",
+                    [e.target.name]: file
+                })
+            }
+            message.warning("Trailer can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
+        }
+
+        return this.setState({
+            [e.target.name]: {}
         })
     }
 
@@ -78,19 +106,49 @@ class EditEpisode extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
         const {editEpisode, episodeID} = this.props;
-        const {name, description, episodeFile, episodeNum} = this.state;
+        const {name, description, episodeFile, episodeNum, seasonID} = this.state;
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
+        this.setState({
+            loadingUpdate: true
+        })
 
         //editEpisode(episodeID, {name, description, episodeFile, episodeNum});
-        const res = await editEpisodeAsync(episodeID, {name, description, episodeFile, episodeNum})
-        if (res.data.success) {
-            this.props.history.push(`/episodes/details/${episodeID}`);
+        const res = await editEpisodeAsync(episodeID, {name, description, episodeFile, episodeNum, seasonID});
+
+        this.setState({
+            loadingUpdate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/episodes/details/${episodeID}`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, description, episodeURL, episodeNum, episodeFile} = this.state;
+        const {name, description, episodeURL, episodeNum, episodeFile, loadingUpdate, loading} = this.state;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         return (
             <div>
@@ -122,7 +180,7 @@ class EditEpisode extends Component {
                         <div className="col-lg-12 col-md-12 col-sm-12">
                             <FormGroup>
                                 <Label>Description</Label>
-                                <TinyEditor description={description} handleEditorChange={handleEditorChange} />
+                                {description ? (<TinyEditor description={description} handleEditorChange={handleEditorChange} />) : <></>}
                             </FormGroup>
                         </div>
 
@@ -136,7 +194,7 @@ class EditEpisode extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

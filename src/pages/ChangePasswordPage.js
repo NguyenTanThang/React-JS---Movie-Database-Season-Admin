@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { Button, message } from 'antd';
 import {changeUserPassword, getCurrentLoginStatus} from "../requests/authRequests";
 import LayoutSide from "../components/partials/LayoutSide";
+import {validateManagerRole} from "../requests/authRequests";
 
 class ChangePasswordPage extends Component {
 
@@ -14,11 +15,8 @@ class ChangePasswordPage extends Component {
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        if (!loggedIn) {
-            this.props.history.push("/login");
-            message.error("You need to login first");
-        }
+        await validateManagerRole();
+
     }
 
     handleChange = (e) => {

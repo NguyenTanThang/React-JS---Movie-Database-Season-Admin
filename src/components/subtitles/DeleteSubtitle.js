@@ -15,14 +15,12 @@ class DeleteSubtitle extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const subtitleID = this.props.subtitleItem._id;
     this.props.deleteSubtitle(subtitleID);
     this.setState({

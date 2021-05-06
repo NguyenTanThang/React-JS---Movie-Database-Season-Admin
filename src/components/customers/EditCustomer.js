@@ -29,6 +29,7 @@ class EditCustomer extends Component {
         email: "",
         password: "",
         validated: "",
+        avatar: "",
         customerStatusList: [
             {
                 value: true,
@@ -38,17 +39,16 @@ class EditCustomer extends Component {
                 value: false,
                 text: "Not valid"
             }
-        ]
+        ],
+        loadingUpdate: false
     }
 
     async componentDidMount() {
         const {customerID} = this.props;
         const customer = await getCustomerByID(customerID);
-        const {email, validated, username} = customer.customerItem;
+        const {email, validated, username, avatar} = customer.customerItem;
         this.setState({
-            email, validated, username
-        }, () => {
-            console.log(this.state);
+            email, validated, username, avatar
         })
     }
 
@@ -70,21 +70,32 @@ class EditCustomer extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editCustomer} = this.props;
         const {customerID} = this.props;
-        const {email, password, validated, username} = this.state;
+        const {email, password, validated, username, avatar} = this.state;
 
         //editCustomer(customerID, {email, password, validated});
-        const res = await editCustomerAsync(customerID, {username, email, password, validated});
+        const res = await editCustomerAsync(customerID, {username, email, password, validated, avatar});
 
-        if (res.data.success) {
-            this.props.history.push(`/customers/details/${customerID}`);
+        this.setState({
+            loadingUpdate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/customers/details/${customerID}`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit, renderCustomerStatusOptions} = this;
-        const {email, password, validated, username} = this.state;
+        const {email, password, validated, username, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -120,7 +131,7 @@ class EditCustomer extends Component {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                             Save
                         </Button>
                     </FormGroup>

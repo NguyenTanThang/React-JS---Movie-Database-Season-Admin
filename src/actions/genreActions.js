@@ -11,14 +11,23 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {authHeader} from "../helpers";
 
 const GENRE_URL = `${MAIN_PROXY_URL}/genres`;
 
 export const deleteGenre = (genreID) => {
     return async (dispatch) => {
         try {
-            const res = await axios.delete(`${GENRE_URL}/delete/${genreID}`);
+            message.destroy();
+            message.loading("Deleting...", 0);
+
+            const res = await axios.delete(`${GENRE_URL}/delete/${genreID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
@@ -42,9 +51,17 @@ export const deleteGenre = (genreID) => {
 export const editGenre = (genreItem, updatedGenre) => {
     return async (dispatch) => {
         try {
+            message.destroy();
+            message.loading("Updating...", 0);
+
             const genreID = genreItem._id;
-            const res = await axios.put(`${GENRE_URL}/edit/${genreID}`, updatedGenre);
+            const res = await axios.put(`${GENRE_URL}/edit/${genreID}`, updatedGenre, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
@@ -70,10 +87,18 @@ export const editGenre = (genreItem, updatedGenre) => {
 export const addGenre = (name) => {
     return async (dispatch) => {
         try {
+            message.destroy();
+            message.loading("Creating...", 0);
+
             const res = await axios.post(`${GENRE_URL}/add`, {
                 name
+            }, {
+                headers: {
+                    ...authHeader()
+                }
             });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {

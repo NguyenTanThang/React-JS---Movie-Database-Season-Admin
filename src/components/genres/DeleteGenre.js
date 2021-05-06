@@ -15,14 +15,12 @@ class DeleteGenre extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const genreID = this.props.genreItem._id;
     this.props.deleteGenre(genreID);
     this.setState({

@@ -31,19 +31,29 @@ class EditManager extends Component {
         username: "",
         password: "",
         roleID: "",
+        status: "",
+        managerStatusList: [
+            {
+                value: true,
+                text: "Valid"
+            },
+            {
+                value: false,
+                text: "Not valid"
+            }
+        ],
         managerRolesList: [],
+        loadingUpdate: false
     }
 
     async componentDidMount() {
         const managerRolesList = await getAllManagerRoles();
         const {managerID} = this.props;
         const managerItem = await getManagerByID(managerID);
-        const {username, roleID} = managerItem;
+        const {username, roleID, status} = managerItem;
         this.setState({
             managerRolesList,
-            username, roleID: roleID._id
-        }, () => {
-            console.log(this.state);
+            username, roleID: roleID._id, status
         })
     }
 
@@ -51,8 +61,21 @@ class EditManager extends Component {
         const {managerRolesList} = this.state;
 
         return managerRolesList.map(managerRolesItem => {
+            if (managerRolesItem.role === "admin") {
+                return (<></>);
+            }
             return (
                 <MenuItem key={managerRolesItem._id} value={managerRolesItem._id}>{managerRolesItem.role}</MenuItem>
+            )
+        })
+    }
+
+    renderManagerStatusOptions = () => {
+        const {managerStatusList} = this.state;
+
+        return managerStatusList.map(managerStatusItem => {
+            return (
+                <MenuItem value={managerStatusItem.value}>{managerStatusItem.text}</MenuItem>
             )
         })
     }
@@ -65,21 +88,32 @@ class EditManager extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editManager} = this.props;
         const {managerID} = this.props;
-        const {username, password, roleID} = this.state;
+        const {username, password, roleID, status} = this.state;
 
         //editManager(managerID, {username, password, roleID});
-        const res = await editManagerAsync(managerID, {username, password, roleID});
+        const res = await editManagerAsync(managerID, {username, password, roleID, status});
 
-        if (res.data.success) {
-            this.props.history.push(`/managers`);
+        this.setState({
+            loadingUpdate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/managers`);
+            }
         }
     }
 
     render() {
-        const {handleChange, handleSubmit, renderManagerRoleOptions} = this;
-        const {username, password, roleID} = this.state;
+        const {handleChange, handleSubmit, renderManagerRoleOptions, renderManagerStatusOptions} = this;
+        const {username, password, roleID, loadingUpdate, status} = this.state;
 
         return (
             <div>
@@ -111,7 +145,25 @@ class EditManager extends Component {
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Label>Status</Label>
+                        <FormControl variant="outlined" className="material-input">
+                            <InputLabel id="validated">Status</InputLabel>
+                            <Select
+                            defaultValue={status}
+                            labelId="status"
+                            id="status"
+                            name="status"
+                            value={status}
+                            onChange={handleChange}
+                            label="Status"
+                            required
+                            >
+                                {renderManagerStatusOptions()}
+                            </Select>
+                        </FormControl>
+                    </FormGroup>
+                    <FormGroup>
+                        <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                             Save
                         </Button>
                     </FormGroup>

@@ -11,14 +11,23 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {authHeader} from "../helpers";
 
 const PLAN_URL = `${MAIN_PROXY_URL}/plans`;
 
 export const deletePlan = (planID) => {
     return async (dispatch) => {
         try {
-            const res = await axios.delete(`${PLAN_URL}/delete/${planID}`);
+            message.destroy();
+            message.loading("Deleting...", 0);
+
+            const res = await axios.delete(`${PLAN_URL}/delete/${planID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
@@ -42,7 +51,11 @@ export const deletePlan = (planID) => {
 export const editPlan = (planID, updatedPlan) => {
     return async (dispatch) => {
         try {
-            const res = await axios.put(`${PLAN_URL}/edit/${planID}`, updatedPlan);
+            const res = await axios.put(`${PLAN_URL}/edit/${planID}`, updatedPlan, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -72,6 +85,10 @@ export const addPlan = (newPlan) => {
             const {name, price, description, durationInDays} = newPlan;
             const res = await axios.post(`${PLAN_URL}/add`, {
                 name, price, description, durationInDays
+            }, {
+                headers: {
+                    ...authHeader()
+                }
             });
     
             if (res.data.success) {

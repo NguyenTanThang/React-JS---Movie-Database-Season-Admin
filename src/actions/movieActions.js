@@ -27,17 +27,23 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {authHeader} from "../helpers";
 
 const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 
 export const deleteMovie = (movieID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
             message.loading('Action in progress..', 0);
 
             let res = await removeSubtitleByMovieID(movieID);
             res = await removeMovieRelatedFiles(movieID);
-            res = await axios.delete(`${MOVIE_URL}/delete/${movieID}`);
+            res = await axios.delete(`${MOVIE_URL}/delete/${movieID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             
             message.destroy();
 
@@ -96,7 +102,11 @@ export const editMovie = (movieID, updatedMovie) => {
                 updateMovieObject.movieURL = movieURL;
             }
 
-            const res = await axios.put(`${MOVIE_URL}/edit/${movieID}`, updateMovieObject);
+            const res = await axios.put(`${MOVIE_URL}/edit/${movieID}`, updateMovieObject, {
+                headers: {
+                    ...authHeader()
+                }
+            });
 
             message.destroy()
     
@@ -134,7 +144,11 @@ export const addMovie = (newMovie) => {
             const trailerURL = trailerFileFirebaseURL;
             const movieURL = movieFileFirebaseURL;
 
-            const res = await axios.post(`${MOVIE_URL}/add`, {name, genres, description, IMDB_ID, movieURL, posterURL, trailerURL});
+            const res = await axios.post(`${MOVIE_URL}/add`, {name, genres, description, IMDB_ID, movieURL, posterURL, trailerURL}, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             message.destroy();
 

@@ -8,9 +8,9 @@ import {
 import {
     editMovieAsync
 } from "../../requests/movieRequests";
-import { Button, Select, message } from 'antd';
+import { Button, Select, message, Skeleton } from 'antd';
 import TextField from '@material-ui/core/TextField';
-import {Form, FormGroup, Row, Label} from 'reactstrap';
+import {Form, FormGroup, Row, Label, Container} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
 import {
     getMovieByID
@@ -24,6 +24,9 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    createNotification
+} from "../../utils";
 
 const { Option } = Select;
 
@@ -40,6 +43,8 @@ class EditMovie extends Component {
         posterURL: "",
         trailerURL: "",
         movieURL: "",
+        loadingUpdate: false,
+        loading: true
     }
 
     async componentDidMount() {
@@ -62,7 +67,8 @@ class EditMovie extends Component {
             IMDB_ID,
             posterURL,
             trailerURL,
-            movieURL
+            movieURL,
+            loading: false
         })
     }
 
@@ -73,8 +79,6 @@ class EditMovie extends Component {
             genres: [],
             description: "",
             IMDB_ID: ""
-        }, () => {
-            console.log(this.state);
         })
     }
 
@@ -91,6 +95,11 @@ class EditMovie extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -120,6 +129,10 @@ class EditMovie extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -159,21 +172,50 @@ class EditMovie extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
         const {editMovie} = this.props;
         const {movieID} = this.props;
         const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
 
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+        
+        this.setState({
+            loadingUpdate: true
+        })
+
         //editMovie(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
         const res = await editMovieAsync(movieID, {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
 
-        if (res.data.success) {
-            this.props.history.push(`/movies/details/${movieID}`);
+        this.setState({
+            loadingUpdate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/movies/details/${movieID}`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, posterURL, trailerURL, movieURL} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, posterURL, trailerURL, movieURL, loadingUpdate, loading} = this.state;
+
+        if (loading) {
+            return (
+                <Container className="section-padding">
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                </Container>
+            )
+        }
 
         return (
             <div>
@@ -232,7 +274,7 @@ class EditMovie extends Component {
                         <div className="col-lg-12 col-md-12 col-sm-12">
                             <FormGroup>
                                 <Label>Description</Label>
-                                <TinyEditor description={description} handleEditorChange={handleEditorChange} />
+                                {description ? (<TinyEditor description={description} handleEditorChange={handleEditorChange} />) : <></>}
                             </FormGroup>
                         </div>
 
@@ -246,7 +288,7 @@ class EditMovie extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                                         Save
                                     </Button>
                             </FormGroup>

@@ -6,6 +6,7 @@ import {deleteEpisodesBySeasonID} from "./episodeRequests";
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const SEASON_URL = `${MAIN_PROXY_URL}/seasons`;
 
@@ -14,13 +15,28 @@ export const addSeasonAsync = async (newSeason) => {
         message.loading('Action in progress..', 0);
         const {name, description, posterFile, trailerFile, seriesID, seasonNum} = newSeason;
 
+        const validationRes = await axios.post(`${SEASON_URL}/validation/add`, {
+            seriesID,
+            seasonNum
+        });
+
+        if (validationRes.data.data.existedSeasonNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This season number has already been used");
+        }
+
         const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
         const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
 
         const posterURL = posterFileFirebaseURL;
         const trailerURL = trailerFileFirebaseURL;
 
-        const res = await axios.post(`${SEASON_URL}/add`, {seriesID, name, description, posterURL, trailerURL, seasonNum});
+        const res = await axios.post(`${SEASON_URL}/add`, {seriesID, name, description, posterURL, trailerURL, seasonNum}, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -42,8 +58,19 @@ export const editSeasonAsync = async (seasonID, updatedSeason) => {
 
         const response = await getSeasonByID(seasonID);
         let {trailerURL, posterURL} = response;
-        const {name, description, posterFile, trailerFile, seasonNum} = updatedSeason;
+        const {name, description, posterFile, trailerFile, seasonNum, seriesID} = updatedSeason;
         let updateSeasonObject = {name, description, seasonNum};
+
+        const validationRes = await axios.put(`${SEASON_URL}/validation/edit/${seasonID}`, {
+            seriesID,
+            seasonNum
+        });
+
+        if (validationRes.data.data.existedSeasonNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This season number has already been used");
+        }
 
         if (!isObjectEmpty(posterFile)) {
             console.log(posterFile);
@@ -63,7 +90,11 @@ export const editSeasonAsync = async (seasonID, updatedSeason) => {
             updateSeasonObject.trailerURL = trailerURL;
         }
 
-        const res = await axios.put(`${SEASON_URL}/edit/${seasonID}`, updateSeasonObject);
+        const res = await axios.put(`${SEASON_URL}/edit/${seasonID}`, updateSeasonObject, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -127,7 +158,11 @@ export const deleteSeasonsBySeriesID = async (seriesID) => {
         for (let index = 0; index < seasonList.length; index++) {
             const seasonItem = seasonList[index];
             await deleteEpisodesBySeasonID(seasonItem._id)
-            await axios.delete(`${SEASON_URL}/delete/${seasonItem._id}`);
+            await axios.delete(`${SEASON_URL}/delete/${seasonItem._id}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
         }
 
         return seasonList;

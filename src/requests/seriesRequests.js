@@ -7,6 +7,7 @@ import {deleteEpisodesBySeasonID} from "./episodeRequests";
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const SERIES_URL = `${MAIN_PROXY_URL}/series`;
 
@@ -15,13 +16,34 @@ export const addSeriesAsync = async (newSeries) => {
         message.loading('Action in progress..', 0);
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = newSeries;
 
+        const validationRes = await axios.post(`${SERIES_URL}/validation/add`, {
+            name,
+            IMDB_ID
+        });
+
+        if (validationRes.data.data.existedSeriesName.length > 0) {
+            message.destroy()
+
+            return message.warning("This name has already been used");
+        }
+
+        if (validationRes.data.data.existedSeriesIMDB.length > 0) {
+            message.destroy()
+
+            return message.warning("This IMDB ID has already been used");
+        }
+
         const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
         const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
 
         const posterURL = posterFileFirebaseURL;
         const trailerURL = trailerFileFirebaseURL;
 
-        const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL});
+        const res = await axios.post(`${SERIES_URL}/add`, {name, genres, description, IMDB_ID, posterURL, trailerURL}, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -44,6 +66,23 @@ export const editSeriesAsync = async (seriesID, updatedSeries) => {
         const {name, genres, description, IMDB_ID, posterFile, trailerFile} = updatedSeries;
         let updateSeriesObject = {name, genres, description, IMDB_ID};
 
+        const validationRes = await axios.put(`${SERIES_URL}/validation/edit/${seriesID}`, {
+            name,
+            IMDB_ID
+        });
+
+        if (validationRes.data.data.existedSeriesName.length > 0) {
+            message.destroy();
+
+            return message.warning("This name has already been used");
+        }
+
+        if (validationRes.data.data.existedSeriesIMDB.length > 0) {
+            message.destroy();
+
+            return message.warning("This IMDB ID has already been used");
+        }
+
         if (!isObjectEmpty(posterFile)) {
             const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
             const posterURL = posterFileFirebaseURL;
@@ -56,7 +95,11 @@ export const editSeriesAsync = async (seriesID, updatedSeries) => {
             updateSeriesObject.trailerURL = trailerURL;
         }
 
-        const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject);
+        const res = await axios.put(`${SERIES_URL}/edit/${seriesID}`, updateSeriesObject, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 

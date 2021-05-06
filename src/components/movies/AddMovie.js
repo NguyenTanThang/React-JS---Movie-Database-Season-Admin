@@ -8,6 +8,12 @@ import {
 import {
     addMovieAsync
 } from "../../requests/movieRequests";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils";
 import { Button, Select, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
@@ -33,7 +39,8 @@ class AddMovie extends Component {
         IMDB_ID: "",
         posterFile: {},
         trailerFile: {},
-        movieFile: {}
+        movieFile: {},
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -61,6 +68,11 @@ class AddMovie extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -90,6 +102,10 @@ class AddMovie extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -131,25 +147,60 @@ class AddMovie extends Component {
         try {
             e.preventDefault();
 
-            message.loading('Action in progress..', 0);
-
             //const {addMovie} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile} = this.state;
 
-            //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
-            const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
-            const {success, data} = res.data;
-            const resMessage = res.data.message;
-
-            message.destroy();
-
-            if (success) {
-                message.success(resMessage, 5);
-                this.props.history.push(`/movies/details/${data._id}`)
-            } else {
-                return message.warning(resMessage, 5);
+            if (!posterFile || isObjectEmpty(posterFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the poster file input. You might have leave some empty."
+                });
             }
 
+            if (!trailerFile || isObjectEmpty(trailerFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the trailer file input. You might have leave some empty."
+                });
+            }
+
+            if (!movieFile || isObjectEmpty(movieFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the movie file input. You might have leave some empty."
+                });
+            }
+
+            if (!description) {
+                return createNotification("error", {
+                    message: "Description",
+                    description: "Please check the description. You might have leave it empty."
+                });
+            }
+
+            this.setState({
+                loadingCreate: true
+            })
+
+            message.loading('Action in progress..', 0);
+
+            //addMovie({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+            const res = await addMovieAsync({name, genres, description, IMDB_ID, posterFile, trailerFile, movieFile});
+
+            this.setState({
+                loadingCreate: false
+            })
+
+            if (res.data) {
+                const {success, data} = res.data;
+                const resMessage = res.data.message;
+                if (success) {
+                    message.success(resMessage, 5);
+                    this.props.history.push(`/movies/details/${data._id}`)
+                } else {
+                    return message.warning(resMessage, 5);
+                }
+            }
         } catch (error) {
             console.log(error);
         }
@@ -157,7 +208,7 @@ class AddMovie extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, movieFile, loadingCreate} = this.state;
 
         return (
             <div>
@@ -218,7 +269,7 @@ class AddMovie extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block  loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>
@@ -229,7 +280,6 @@ class AddMovie extends Component {
         )
     }
 }
-
 
 const mapDispatchToProps = (dispatch) => {
     return {

@@ -11,14 +11,26 @@ import {
     setLoading,
     clearLoading
 } from "./loadingActions";
+import {
+    authenticationService
+} from "../services";
+import {authHeader} from "../helpers";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
 export const deleteManager = (managerID) => {
     return async (dispatch) => {
         try {
-            const res = await axios.delete(`${MANAGER_URL}/delete/${managerID}`);
+            message.destroy();
+            message.loading("Deleting...", 0);
+
+            const res = await axios.delete(`${MANAGER_URL}/delete/${managerID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
@@ -42,7 +54,11 @@ export const deleteManager = (managerID) => {
 export const editManager = (managerID, updatedManager) => {
     return async (dispatch) => {
         try {
-            const res = await axios.put(`${MANAGER_URL}/edit/${managerID}`, updatedManager);
+            const res = await axios.put(`${MANAGER_URL}/edit/${managerID}`, updatedManager, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -67,7 +83,11 @@ export const editManager = (managerID, updatedManager) => {
 export const addManager = (newManager) => {
     return async (dispatch) => {
         try {
-            const res = await axios.post(`${MANAGER_URL}/add`, newManager);
+            const res = await axios.post(`${MANAGER_URL}/add`, newManager, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -94,8 +114,12 @@ export const getAllManagers = () => {
         try {
             dispatch(setLoading());
 
-            const res = await axios.get(MANAGER_URL);
-            const userID = sessionStorage.getItem("userID");
+            const res = await axios.get(MANAGER_URL, {
+                headers: {
+                    ...authHeader()
+                }
+            });
+            const userID = authenticationService.currentUserValue._id;
     
             let managers = res.data.data;
             managers = managers.filter(managerItem => {

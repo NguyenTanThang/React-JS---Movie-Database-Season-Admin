@@ -6,14 +6,23 @@ import {
     DELETE_SUB,
     GET_SUBS_BY_CUSTOMER_ID
 } from "./types";   
+import {authHeader} from "../helpers";
 
 const SUB_URL = `${MAIN_PROXY_URL}/subscriptions`;
 
 export const deleteSubscription = (subID) => {
     return async (dispatch) => {
         try {
-            const res = await axios.delete(`${SUB_URL}/delete/${subID}`);
+            message.destroy();
+            message.loading("Deleting...", 0);
+
+            const res = await axios.delete(`${SUB_URL}/delete/${subID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {

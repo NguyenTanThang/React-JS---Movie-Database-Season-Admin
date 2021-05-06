@@ -16,7 +16,6 @@ class CustomerDetails extends Component {
     renderCustomerDescriptionItems = () => {
         const {customerItem, subscriptions} = this.props;
         const currentCustomer = customerItem.customerItem;
-        console.log(currentCustomer);
         let descriptionItems = [];
 
         for (var property in currentCustomer) {

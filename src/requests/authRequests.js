@@ -1,7 +1,7 @@
 import axios from "axios";
 import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
-import {authenticationService} from "../services"
+import {authenticationService} from "../services";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
@@ -48,4 +48,31 @@ export const getCurrentLoginStatus = async () => {
         ans = false;
     } 
     return ans;
+}
+
+export const validateManagerRole = async () => {
+    try {
+        const currentUser = authenticationService.currentUserValue;
+        const userID = currentUser._id;
+        const managerRecordRes = await axios.get(`${MANAGER_URL}/${userID}`);
+
+        if (currentUser) {
+            if (!managerRecordRes.data.success) {
+                return authenticationService.logout();
+            }
+            const managerRecord = managerRecordRes.data.data;
+            console.log("managerRecord.roleID.role != currentUser.roleID.role");
+            console.log(managerRecord.roleID);
+            console.log(managerRecord.roleID.role != currentUser.roleID.role);
+            if (managerRecord.roleID.role != currentUser.roleID.role) {
+                return authenticationService.logout();
+            }
+        } else {
+            return authenticationService.logout();
+        }
+
+        return managerRecordRes.data;
+    } catch (error) {
+        console.log(error);
+    }
 }

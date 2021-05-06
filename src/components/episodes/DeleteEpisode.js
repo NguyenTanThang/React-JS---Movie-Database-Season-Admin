@@ -15,14 +15,12 @@ class DeleteEpisode extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const episodeID = this.props.episodeItem._id;
     this.props.deleteEpisode(episodeID);
     this.setState({

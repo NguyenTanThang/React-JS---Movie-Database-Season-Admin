@@ -14,6 +14,7 @@ import {
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const MOVIE_URL = `${MAIN_PROXY_URL}/movies`;
 
@@ -28,6 +29,23 @@ export const addMovieAsync = async (newMovie) => {
             trailerFile,
             movieFile
         } = newMovie;
+
+        const validationRes = await axios.post(`${MOVIE_URL}/validation/add`, {
+            name,
+            IMDB_ID
+        });
+
+        if (validationRes.data.data.existedMoviesName.length > 0) {
+            message.destroy()
+
+            return message.warning("This name has already been used");
+        }
+
+        if (validationRes.data.data.existedMoviesIMDB.length > 0) {
+            message.destroy()
+
+            return message.warning("This IMDB ID has already been used");
+        }
 
         const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
         const trailerFileFirebaseURL = await uploadTrailerFirebase(trailerFile);
@@ -45,8 +63,14 @@ export const addMovieAsync = async (newMovie) => {
             movieURL,
             posterURL,
             trailerURL
+        }, {
+            headers: {
+                ...authHeader()
+            }
         });
 
+        message.destroy();
+        
         return res;
     } catch (error) {
         console.log(error);
@@ -83,6 +107,23 @@ export const editMovieAsync = async (movieID, updatedMovie) => {
             IMDB_ID
         };
 
+        const validationRes = await axios.put(`${MOVIE_URL}/validation/edit/${movieID}`, {
+            name,
+            IMDB_ID
+        });
+
+        if (validationRes.data.data.existedMoviesName.length > 0) {
+            message.destroy();
+
+            return message.warning("This name has already been used");
+        }
+
+        if (validationRes.data.data.existedMoviesIMDB.length > 0) {
+            message.destroy();
+
+            return message.warning("This IMDB ID has already been used");
+        }
+
         if (!isObjectEmpty(posterFile)) {
             const posterFileFirebaseURL = await uploadPosterFirebase(posterFile);
             posterURL = posterFileFirebaseURL;
@@ -101,7 +142,11 @@ export const editMovieAsync = async (movieID, updatedMovie) => {
             updateMovieObject.movieURL = movieURL;
         }
 
-        const res = await axios.put(`${MOVIE_URL}/edit/${movieID}`, updateMovieObject);
+        const res = await axios.put(`${MOVIE_URL}/edit/${movieID}`, updateMovieObject, {
+            headers: {
+                ...authHeader()
+            }
+        });
     
         if (res.data.success) {
             if (!isObjectEmpty(posterFile)) {

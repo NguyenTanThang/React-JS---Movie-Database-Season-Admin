@@ -15,14 +15,12 @@ class DeleteManager extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const managerID = this.props.managerItem._id;
     this.props.deleteManager(managerID);
     this.setState({

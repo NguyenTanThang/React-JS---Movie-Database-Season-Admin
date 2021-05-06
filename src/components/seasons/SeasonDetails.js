@@ -3,7 +3,9 @@ import { Descriptions } from 'antd';
 import {convertKeyToText, checkIfIn} from "../../utils/utils";
 import parse from 'html-react-parser';
 import EpisodeList from "../episodes/EpisodeList";
+import PhotoList from "../photos/PhotoList";
 import {Link} from "react-router-dom";
+import CommentList from "../comments/CommentList";
 
 class SeasonDetails extends Component {
 
@@ -13,7 +15,18 @@ class SeasonDetails extends Component {
         return <EpisodeList episodes={episodes} currentSeasonID={seasonItem._id}/>
     }
 
+    renderPhotoList = () => {
+        const {photos, seasonItem, addPhoto} = this.props;
+        return <PhotoList recordID={seasonItem._id} addPhoto={addPhoto} photos={photos}/>
+    }
+
+    renderCommentList = () => {
+        const {comments} = this.props;
+        return <CommentList comments={comments}/>
+    }
+
     renderSeasonDescriptionItems = () => {
+        const {renderCommentList} = this;
         const {seasonItem} = this.props;
         let descriptionItems = [];
         let key = `cd`
@@ -55,7 +68,7 @@ class SeasonDetails extends Component {
             if (seriesKey === "rating") {
                 return descriptionItems.push(
                     <Descriptions.Item key={privateKey} span={3} label={privateLabel}>
-                        {seasonItem[seriesKey]}/10
+                        {seasonItem[seriesKey]}/5
                     </Descriptions.Item>
                 )
             }
@@ -65,7 +78,17 @@ class SeasonDetails extends Component {
         })
 
         descriptionItems.push(
-            <Descriptions.Item key={"episode-list"} label={"Episodes"}>{this.renderEpisodeList()}</Descriptions.Item>
+            <Descriptions.Item key={"episode-list"} span={3} label={"Episodes"}>{this.renderEpisodeList()}</Descriptions.Item>
+        )
+
+        descriptionItems.push(
+            <Descriptions.Item key={"photo-list"} span={3} label={"Photo"}>{this.renderPhotoList()}</Descriptions.Item>
+        )
+
+        descriptionItems.push(
+            <Descriptions.Item key={"Comments"} span={3} label={"Comments"}>
+                {renderCommentList()}
+            </Descriptions.Item>
         )
 
         return descriptionItems;

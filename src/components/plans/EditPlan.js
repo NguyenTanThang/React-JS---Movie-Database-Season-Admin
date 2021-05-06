@@ -23,6 +23,7 @@ class EditPlan extends Component {
         price: "",
         description: "",
         durationInDays: "",
+        loadingUpdate: false
     }
 
     async componentDidMount() {
@@ -31,8 +32,6 @@ class EditPlan extends Component {
         const {name, price, description, durationInDays} = planItem;
         this.setState({
             name, price, description, durationInDays
-        }, () => {
-            console.log(this.state);
         })
     }
 
@@ -44,6 +43,11 @@ class EditPlan extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
+        this.setState({
+            loadingUpdate: true
+        })
+
         const {editPlan} = this.props;
         const {planID} = this.props;
         const {name, price, description, durationInDays} = this.state;
@@ -51,14 +55,20 @@ class EditPlan extends Component {
         //editPlan(planID, {name, price, description, durationInDays});
         const res = await editPlanAsync(planID, {name, price, description, durationInDays})
         
-        if (res.data.success) {
-            this.props.history.push(`/plans`);
+        this.setState({
+            loadingUpdate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/plans`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit} = this;
-        const {name, price, description, durationInDays} = this.state;
+        const {name, price, description, durationInDays, loadingUpdate} = this.state;
 
         return (
             <div>
@@ -80,7 +90,7 @@ class EditPlan extends Component {
                     <TextField id="description" name="description" label="Description" variant="outlined" className="material-input" required onChange={handleChange} value={description}/>
                 </FormGroup>
                     <FormGroup>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button type="primary" htmlType="submit" block loading={loadingUpdate}>
                             Save
                         </Button>
                     </FormGroup>

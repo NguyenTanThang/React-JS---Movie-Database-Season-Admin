@@ -21,6 +21,12 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils";
 
 const { Option } = Select;
 
@@ -32,7 +38,8 @@ class AddSeries extends Component {
         description: "",
         IMDB_ID: "",
         posterFile: {},
-        trailerFile: {}
+        trailerFile: {},
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -42,8 +49,6 @@ class AddSeries extends Component {
             genres: [],
             description: "",
             IMDB_ID: ""
-        }, () => {
-            console.log(this.state);
         })
     }
 
@@ -60,6 +65,11 @@ class AddSeries extends Component {
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -89,6 +99,10 @@ class AddSeries extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -129,11 +143,41 @@ class AddSeries extends Component {
     handleSubmit = async (e) => {
         try {
             e.preventDefault();
+
             const {addSeries} = this.props;
             const {name, genres, description, IMDB_ID, posterFile, trailerFile} = this.state;
 
+            if (!posterFile || isObjectEmpty(posterFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the poster file input. You might have leave some empty."
+                });
+            }
+    
+            if (!trailerFile || isObjectEmpty(trailerFile)) {
+                return createNotification("error", {
+                    message: "File Input",
+                    description: "Please check the trailer file input. You might have leave some empty."
+                });
+            }
+
+            if (!description) {
+                return createNotification("error", {
+                    message: "Description",
+                    description: "Please check the description. You might have leave it empty."
+                });
+            }
+
+            this.setState({
+                loadingCreate: true
+            })
+
             //addSeries({name, genres, description, IMDB_ID, posterFile, trailerFile});
             const res = await addSeriesAsync({name, genres, description, IMDB_ID, posterFile, trailerFile});
+
+            this.setState({
+                loadingCreate: false
+            })
 
             if (res.data.success) {
                 this.props.history.push(`/series/details/${res.data.data._id}`);
@@ -146,7 +190,7 @@ class AddSeries extends Component {
 
     render() {
         const {handleChange, handleSubmit, renderGenreOptions, handleGenreChange, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, IMDB_ID, description, genres, posterFile, trailerFile} = this.state;
+        const {name, IMDB_ID, description, genres, posterFile, trailerFile, loadingCreate} = this.state;
 
         return (
             <div>
@@ -202,7 +246,7 @@ class AddSeries extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

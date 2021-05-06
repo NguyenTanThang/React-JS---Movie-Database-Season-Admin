@@ -1,34 +1,30 @@
 import React, { Component } from 'react';
 import {Container} from "reactstrap";
 import SeriesDetails from "../components/series/SeriesDetails";
-import LayoutSide from "../components/partials/LayoutSide";
 import ComponentHeader from "../components/partials/ComponentHeader";
 import {getSeriesByID} from "../requests/seriesRequests";
 import {getCurrentLoginStatus} from "../requests/authRequests";
 import {getSeasonsBySeriesID} from "../actions/seasonActions";
+import {getAllPhotosBySeriesID} from "../actions/photoActions";
+import {getAllCommentsByMovieID} from "../actions/commentActions";
 import {message, Skeleton} from "antd";
 import {connect} from "react-redux";
+import {validateManagerRole} from "../requests/authRequests";
 
 class SeriesDetailsPage extends Component {
 
     state = {
         seriesItem: "",
-        loggedIn: false,
         loading: true
     }
 
     async componentDidMount() {
-        const loggedIn = await getCurrentLoginStatus();
-        this.setState({
-            loggedIn
-        })
-        if (!loggedIn) {
-            message.error("You need to login first");
-            return this.props.history.push("/login");
-        }
+        await validateManagerRole();
 
         const {seriesID} = this.props.match.params;
         this.props.getSeasonsBySeriesID(seriesID);
+        this.props.getAllPhotosBySeriesID(seriesID);
+        this.props.getAllCommentsByMovieID(seriesID);
         const seriesItem = await getSeriesByID(seriesID);
         this.setState({
             seriesItem,
@@ -37,8 +33,8 @@ class SeriesDetailsPage extends Component {
     }
 
     render() {
-        const {seriesItem, loggedIn, loading} = this.state;
-        const {seasons} = this.props;
+        const {seriesItem, loading} = this.state;
+        const {seasons, photos, comments} = this.props;
         localStorage.setItem("returnURL", this.props.location.pathname)
 
         if (loading) {
@@ -52,7 +48,7 @@ class SeriesDetailsPage extends Component {
             )
         }
 
-        if (!seriesItem || !loggedIn) {
+        if (!seriesItem) {
             return (<></>)
         }
 
@@ -68,7 +64,7 @@ class SeriesDetailsPage extends Component {
             */}
             <ComponentHeader returnURL="/series" title="Series Details"/>
                 <Container className="section-padding">
-                    <SeriesDetails seriesItem={seriesItem} seasons={seasons}/>
+                    <SeriesDetails seriesItem={seriesItem} seasons={seasons} photos={photos} comments={comments}/>
                 </Container>
             </>
         )
@@ -77,7 +73,9 @@ class SeriesDetailsPage extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        seasons: state.seasonReducer.seasons
+        seasons: state.seasonReducer.seasons,
+        photos: state.photoReducer.photos,
+        comments: state.commentReducer.comments
     }
 }
 
@@ -85,6 +83,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getSeasonsBySeriesID: (seriesID) => {
             dispatch(getSeasonsBySeriesID(seriesID))
+        },
+        getAllPhotosBySeriesID: (seriesID) => {
+            dispatch(getAllPhotosBySeriesID(seriesID))
+        },
+        getAllCommentsByMovieID: (movieID) => {
+            dispatch(getAllCommentsByMovieID(movieID))
         }
     }
 }

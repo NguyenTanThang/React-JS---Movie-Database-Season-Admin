@@ -15,6 +15,7 @@ import {
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const EPISODES_URL = `${MAIN_PROXY_URL}/episodes`;
 
@@ -23,11 +24,26 @@ export const addEpisodeAsync = async (newEpisode) => {
         message.loading('Action in progress..', 0);
         const {name, description, episodeFile, episodeNum, seasonID} = newEpisode;
 
+        const validationRes = await axios.post(`${EPISODES_URL}/validation/add`, {
+            seasonID,
+            episodeNum
+        });
+
+        if (validationRes.data.data.existedEpisodeNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This episode number has already been used");
+        }
+
         const episodeFileFirebaseURL = await uploadEpisodeFirebase(episodeFile);
 
         const episodeURL = episodeFileFirebaseURL;
 
-        const res = await axios.post(`${EPISODES_URL}/add`, {name, description, episodeFile, episodeNum, episodeURL, seasonID});
+        const res = await axios.post(`${EPISODES_URL}/add`, {name, description, episodeFile, episodeNum, episodeURL, seasonID}, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -49,8 +65,19 @@ export const editEpisodeAsync = async (episodeID, updatedEpisode) => {
 
         const response = await getEpisodeByID(episodeID);
         let {episodeURL} = response;
-        const {name, description, episodeFile, episodeNum} = updatedEpisode;
+        const {name, description, episodeFile, episodeNum, seasonID} = updatedEpisode;
         let updateEpisodeObject = {name, description, episodeNum};
+
+        const validationRes = await axios.post(`${EPISODES_URL}/validation/add`, {
+            seasonID,
+            episodeNum
+        });
+
+        if (validationRes.data.data.existedEpisodeNum.length > 0) {
+            message.destroy()
+
+            return message.warning("This episode number has already been used");
+        }
 
         if (!isObjectEmpty(episodeFile)) {
             await deleteFileFirebase(episodeURL);
@@ -60,7 +87,11 @@ export const editEpisodeAsync = async (episodeID, updatedEpisode) => {
             updateEpisodeObject.episodeURL = episodeURL;
         }
 
-        const res = await axios.put(`${EPISODES_URL}/edit/${episodeID}`, updateEpisodeObject);
+        const res = await axios.put(`${EPISODES_URL}/edit/${episodeID}`, updateEpisodeObject, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -162,7 +193,11 @@ export const deleteExceededEpisode = async (seriesID, totalEpisode) => {
 
 export const deleteEpisodeByID = async (episodeID) => {
     try {
-        const res = await axios.delete(`${EPISODES_URL}/delete/${episodeID}`);
+        const res = await axios.delete(`${EPISODES_URL}/delete/${episodeID}`, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         return res.data.data;
     } catch (error) {
@@ -176,7 +211,11 @@ export const deleteEpisodeBySeriesIDAndEpNum = async (seriesID, episodeObject) =
         const {
             episodeNum
         } = episodeObject;
-        const res = await axios.delete(`${EPISODES_URL}/delete/seriesID/${seriesID}/epNum/${episodeNum}`);
+        const res = await axios.delete(`${EPISODES_URL}/delete/seriesID/${seriesID}/epNum/${episodeNum}`, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         return res.data.data;
     } catch (error) {
@@ -219,6 +258,10 @@ export const addEpisode = async (seriesID, newEpisode) => {
             seriesID,
             episodeURL,
             episodeNum
+        }, {
+            headers: {
+                ...authHeader()
+            }
         });
 
         return res.data.data;
@@ -276,14 +319,22 @@ export const editMultipleEpisodes = async (seriesID, episodes) => {
 
 export const deleteEpisodesBySeasonID = async (seasonID) => {
     try {
-        const res = await axios.get(`${EPISODES_URL}/seasonID/${seasonID}`);
+        const res = await axios.get(`${EPISODES_URL}/seasonID/${seasonID}`, {
+            headers: {
+                ...authHeader()
+            }
+        });
         const episodeList = res.data.data;
 
         for (let index = 0; index < episodeList.length; index++) {
             const episodeItem = episodeList[index];
             await deleteFileFirebase(episodeItem.episodeURL);
             await removeSubtitleByEpisodeID(episodeItem._id);
-            const deleteRes = await axios.delete(`${EPISODES_URL}/delete/${episodeItem._id}`);
+            const deleteRes = await axios.delete(`${EPISODES_URL}/delete/${episodeItem._id}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             console.log(deleteRes);
         }
 

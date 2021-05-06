@@ -23,16 +23,25 @@ import {
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const SEASON_URL = `${MAIN_PROXY_URL}/seasons`;
 
 export const deleteSeason = (seasonID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
+            message.loading("Deleting...", 0);
+
             let res = await removeSeasonRelatedFiles(seasonID);
             res = await deleteEpisodesBySeasonID(seasonID);
-            res = await axios.delete(`${SEASON_URL}/delete/${seasonID}`);
+            res = await axios.delete(`${SEASON_URL}/delete/${seasonID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
             
+            message.destroy();
             if (res.data.success) {
                 message.success(res.data.message, 5);
             } else {
@@ -82,7 +91,11 @@ export const editSeason = (seasonID, updatedSeason) => {
                 updateSeasonObject.trailerURL = trailerURL;
             }
 
-            const res = await axios.put(`${SEASON_URL}/edit/${seasonID}`, updateSeasonObject);
+            const res = await axios.put(`${SEASON_URL}/edit/${seasonID}`, updateSeasonObject, {
+                headers: {
+                    ...authHeader()
+                }
+            });
 
             message.destroy()
     
@@ -118,7 +131,11 @@ export const addSeason = (newSeason) => {
             const posterURL = posterFileFirebaseURL;
             const trailerURL = trailerFileFirebaseURL;
 
-            const res = await axios.post(`${SEASON_URL}/add`, {seriesID, name, description, posterURL, trailerURL, seasonNum});
+            const res = await axios.post(`${SEASON_URL}/add`, {seriesID, name, description, posterURL, trailerURL, seasonNum}, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             message.destroy()
 

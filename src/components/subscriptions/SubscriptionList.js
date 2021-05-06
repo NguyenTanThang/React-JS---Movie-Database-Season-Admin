@@ -124,7 +124,7 @@ class SubscriptionList extends Component {
         key: 'created_date',
         sorter: {
             compare: (a, b) => {
-              return new Date(b.created_date) - new Date(a.created_date);
+              return new Date(a.created_date) - new Date(b.created_date);
             },
             multiple: 2,
         },
@@ -138,7 +138,7 @@ class SubscriptionList extends Component {
         key: 'ended_date',
         sorter: {
             compare: (a, b) => {
-              return new Date(b.ended_date) - new Date(a.ended_date);
+              return new Date(a.last_modified_date) - new Date(b.last_modified_date);
             },
             multiple: 1,
         },

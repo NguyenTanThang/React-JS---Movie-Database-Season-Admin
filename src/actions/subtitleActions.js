@@ -17,14 +17,21 @@ import { getSubtitleByID } from "../requests/subtitlesRequests";
 import {
     isObjectEmpty
 } from "../utils/validator";
+import {authHeader} from "../helpers";
 
 const SUB_URL = `${MAIN_PROXY_URL}/subtitles`;
 
 export const deleteSubtitle = (subtitleID) => {
     return async (dispatch) => {
         try {
+            message.destroy();
             message.loading('Action in progress..', 0);
-            const res = await axios.delete(`${SUB_URL}/delete/${subtitleID}`);
+
+            const res = await axios.delete(`${SUB_URL}/delete/${subtitleID}`, {
+                headers: {
+                    ...authHeader()
+                }
+            });
     
             if (res.data.success) {
                 message.success(res.data.message, 5);
@@ -76,7 +83,11 @@ export const editSubtitle = (subtitleID, updatedSubtitle) => {
             const last_modified_date = Date.now();
             const returnedSubtitle = Object.assign({}, subtitle, updatedSubtitle, {last_modified_date});
 
-            const res = await axios.put(`${SUB_URL}/edit/${subtitleID}`, updateSubtitleObject);
+            const res = await axios.put(`${SUB_URL}/edit/${subtitleID}`, updateSubtitleObject, {
+                headers: {
+                    ...authHeader()
+                }
+            });
 
             message.destroy()
     
@@ -115,6 +126,10 @@ export const addSubtitle = (newSubtitle) => {
             const subtitleURL = await uploadSubtitleFirebase(subtitleFile)
             const res = await axios.post(`${SUB_URL}/add`, {
                 videoID, languageLabel, subtitleURL
+            }, {
+                headers: {
+                    ...authHeader()
+                }
             });
     
             if (res.data.success) {

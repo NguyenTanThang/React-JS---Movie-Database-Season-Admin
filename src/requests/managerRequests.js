@@ -1,13 +1,18 @@
 import axios from "axios";
 import {MAIN_PROXY_URL} from "../config/config";
 import {message} from "antd";
+import {authHeader} from "../helpers";
 
 const MANAGER_URL = `${MAIN_PROXY_URL}/managers`;
 
 export const addManagerAsync = async (newManager) => {
     try {
         message.loading('Action in progress..', 0);
-        const res = await axios.post(`${MANAGER_URL}/add`, newManager);
+        const res = await axios.post(`${MANAGER_URL}/add`, newManager, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 
@@ -27,7 +32,11 @@ export const editManagerAsync = async (managerID, updatedManager) => {
     try {
         message.loading('Action in progress..', 0);
 
-        const res = await axios.put(`${MANAGER_URL}/edit/${managerID}`, updatedManager);
+        const res = await axios.put(`${MANAGER_URL}/edit/${managerID}`, updatedManager, {
+            headers: {
+                ...authHeader()
+            }
+        });
 
         message.destroy()
 

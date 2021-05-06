@@ -27,3 +27,13 @@ export const getRevenueData = async () => {
         message.error(error.message, 5);
     }
 }
+
+export const getNewCustomerData = async () => {
+    try {
+        const res = await axios.get(`${DASHBOARD_URL}/new-customer-data`);
+
+        return res.data.data;
+    } catch (error) {
+        message.error(error.message, 5);
+    }
+}

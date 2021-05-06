@@ -15,14 +15,12 @@ class DeleteSubscription extends Component {
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleOk = e => {
-    console.log(e);
     const subID = this.props.subItem._id;
     this.props.deleteSubscription(subID);
     this.setState({

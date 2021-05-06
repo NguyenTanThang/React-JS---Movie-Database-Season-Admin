@@ -21,6 +21,12 @@ import {
 import {
     withRouter
 } from "react-router-dom";
+import {
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils";
 
 class AddSeason extends Component {
 
@@ -29,22 +35,26 @@ class AddSeason extends Component {
         description: "",
         posterFile: {},
         trailerFile: {},
-        seasonNum: ""
+        seasonNum: "",
+        loadingCreate: false
     }
 
     onClear = (e) => {
-        e.preventDefault()
+        e.preventDefault();
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 
     handleFileChange = (e) => {
         const targetName = e.target.name;
         const file = e.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
         const fileExt = getFileExtension(file.name);
 
         if (targetName == "posterFile") {
@@ -74,6 +84,10 @@ class AddSeason extends Component {
             }
             message.warning("Movie can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
         }
+
+        return this.setState({
+            [e.target.name]: {}
+        })
     }
 
     handleChange = (e) => {
@@ -90,19 +104,52 @@ class AddSeason extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+        
         const {addSeason, seriesID} = this.props;
         const {name, description, posterFile, trailerFile, seasonNum} = this.state;
 
+        if (!posterFile || isObjectEmpty(posterFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the poster file input. You might have leave some empty."
+            });
+        }
+
+        if (!trailerFile || isObjectEmpty(trailerFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the trailer file input. You might have leave some empty."
+            });
+        }
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
+        this.setState({
+            loadingCreate: true
+        })
+
         //addSeason({name, seriesID, description, posterFile, trailerFile, seasonNum});
-        const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum})
-        if (res.data.success) {
-            this.props.history.push(`/seasons/details/${res.data.data._id}`);
+        const res = await addSeasonAsync({name, seriesID, description, posterFile, trailerFile, seasonNum});
+
+        this.setState({
+            loadingCreate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/seasons/details/${res.data.data._id}`);
+            }
         }
     }
 
     render() {
         const {handleChange, handleSubmit, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, description, posterFile, trailerFile, seasonNum} = this.state;
+        const {name, description, posterFile, trailerFile, seasonNum, loadingCreate} = this.state;
 
         return (
             <div>
@@ -149,7 +196,7 @@ class AddSeason extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>

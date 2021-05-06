@@ -8,7 +8,7 @@ import {
 import {
     addEpisodeAsync
 } from "../../requests/episodeRequests";
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import TextField from '@material-ui/core/TextField';
 import {Form, FormGroup, Row, Label} from 'reactstrap';
 import TinyEditor from "../partials/TinyEditor";
@@ -16,6 +16,14 @@ import FileUploader from "../partials/FileUploader";
 import {
     withRouter
 } from "react-router-dom";
+import {
+    acceptVideoExt,
+    getFileExtension,
+    isObjectEmpty
+} from "../../utils/validator";
+import {
+    createNotification
+} from "../../utils";
 
 class AddEpisode extends Component {
 
@@ -23,7 +31,8 @@ class AddEpisode extends Component {
         name: "",
         description: "",
         episodeFile: {},
-        episodeNum: ""
+        episodeNum: "",
+        loadingCreate: false
     }
 
     onClear = (e) => {
@@ -31,15 +40,29 @@ class AddEpisode extends Component {
         this.setState({
             name: "",
             description: "",
-        }, () => {
-            console.log(this.state);
         })
     }
 
     handleFileChange = (e) => {
+        const targetName = e.target.name;
         const file = e.target.files[0];
-        this.setState({
-            [e.target.name]: file
+        if (!file) {
+            return;
+        }
+        const fileExt = getFileExtension(file.name);
+
+        if (targetName == "episodeFile") {
+            if (acceptVideoExt(fileExt)) {
+                return this.setState({
+                    episodeURL: "",
+                    [e.target.name]: file
+                })
+            }
+            message.warning("Trailer can only be MP4 file.  Although the file's name is visible it will not be uploaded", 5)
+        }
+
+        return this.setState({
+            [e.target.name]: {}
         })
     }
 
@@ -57,19 +80,45 @@ class AddEpisode extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault();
+
         const {addEpisode, seasonID} = this.props;
         const {name, description, episodeFile, episodeNum} = this.state;
 
+        if (!episodeFile || isObjectEmpty(episodeFile)) {
+            return createNotification("error", {
+                message: "File Input",
+                description: "Please check the episode file input. You might have leave some empty."
+            });
+        }
+
+        if (!description) {
+            return createNotification("error", {
+                message: "Description",
+                description: "Please check the description. You might have leave it empty."
+            });
+        }
+
+        this.setState({
+            loadingCreate: true
+        })
+
         //addEpisode({name, description, episodeFile, episodeNum, seasonID});
         const res = await addEpisodeAsync({name, description, episodeFile, episodeNum, seasonID})
-        if (res.data.success) {
-            this.props.history.push(`/episodes/details/${res.data.data._id}`);
-        }
+
+        this.setState({
+            loadingCreate: false
+        })
+
+        if (res.data) {
+            if (res.data.success) {
+                this.props.history.push(`/episodes/details/${res.data.data._id}`);
+            }
+        } 
     }
 
     render() {
         const {handleChange, handleSubmit, handleEditorChange, handleFileChange, onClear} = this;
-        const {name, description, episodeFile, episodeNum} = this.state;
+        const {name, description, episodeFile, episodeNum, loadingCreate} = this.state;
 
         return (
             <div>
@@ -111,7 +160,7 @@ class AddEpisode extends Component {
 
                         <div className="col-lg-6 col-md-6 col-sm-12">
                             <FormGroup>
-                                    <Button type="primary" htmlType="submit" block>
+                                    <Button type="primary" htmlType="submit" block loading={loadingCreate}>
                                         Create
                                     </Button>
                             </FormGroup>
